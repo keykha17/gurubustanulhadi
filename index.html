@@ -347,6 +347,72 @@ main {
   height: 100%;
   background: var(--accent);
   border-radius: 999px;
+  transition: width 0.3s ease;
+}
+.vchart-wrap {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  height: 156px;
+  padding: 16px 10px 8px;
+  overflow-x: auto;
+  border-radius: 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  box-shadow: inset 3px 3px 7px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+}
+.vchart-col {
+  flex: 1;
+  min-width: 44px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+.vchart-val {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+.vchart-bar-bg {
+  width: 24px;
+  height: 92px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 7px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.vchart-bar-fill {
+  width: 100%;
+  background: var(--accent);
+  border-radius: 5px 5px 0 0;
+  transition: height 0.35s ease;
+}
+.vchart-lbl {
+  font-size: 10px;
+  color: var(--text-secondary);
+  text-align: center;
+  white-space: nowrap;
+  max-width: 56px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.dist-row {
+  margin-bottom: 10px;
+}
+.dist-row:last-child {
+  margin-bottom: 0;
+}
+.dist-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 4px;
 }
 .bottom-nav {
   position: fixed;
@@ -624,14 +690,46 @@ main {
 
   <section id="sec-analisa" class="section">
     <div class="section-header">
-      <h2 class="section-title">Analisa & Kejuaraan</h2>
+      <h2 class="section-title">Analisa & Grafik Kehadiran</h2>
       <div style="display:flex;gap:6px;">
         <button type="button" class="btn btn-sm" onclick="openModal('modalSettings')">Backup JSON</button>
         <button type="button" class="btn btn-sm" onclick="resetScores()">Reset Skor</button>
       </div>
     </div>
 
-    <div class="grid-2" style="margin-bottom:14px;" id="analisaSummary"></div>
+    <div class="neu-card">
+      <label>Periode Analisa Kehadiran</label>
+      <div class="pill-group" id="analisaPeriodPills" style="margin-bottom:10px;">
+        <button type="button" class="pill active" onclick="setAnalisaMode('semua', this)">Semua Sesi</button>
+        <button type="button" class="pill" onclick="setAnalisaMode('harian', this)">Harian</button>
+        <button type="button" class="pill" onclick="setAnalisaMode('mingguan', this)">Mingguan</button>
+        <button type="button" class="pill" onclick="setAnalisaMode('bulanan', this)">Bulanan</button>
+      </div>
+      <div id="analisaDateWrap" style="display:none;">
+        <label id="analisaDateLabel">Pilih Tanggal</label>
+        <input type="date" id="analisaRefDate" onchange="renderAnalisa()">
+      </div>
+      <div id="analisaMonthWrap" style="display:none;">
+        <label>Pilih Bulan</label>
+        <input type="month" id="analisaRefMonth" onchange="renderAnalisa()">
+      </div>
+      <div id="analisaPeriodRangeText" style="font-size:11px;color:var(--text-secondary);margin-top:6px;"></div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:14px;" id="analisaSummary"></div>
+
+    <div class="neu-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 style="font-size:14px;" id="trendChartTitle">Grafik Tren Kehadiran (%)</h3>
+        <span class="badge" id="trendChartBadge">Persentase Hadir</span>
+      </div>
+      <div id="trendChartBox"></div>
+    </div>
+
+    <div class="neu-card">
+      <h3 style="font-size:14px;margin-bottom:10px;">Grafik Komposisi Status Kehadiran</h3>
+      <div id="statusDistChart"></div>
+    </div>
 
     <div class="neu-card">
       <h3 style="font-size:14px;margin-bottom:10px;">Peringkat Kejuaraan Kuis Cerdas</h3>
@@ -639,7 +737,10 @@ main {
     </div>
 
     <div class="neu-card">
-      <h3 style="font-size:14px;margin-bottom:10px;">Analisa Kehadiran Per Santri</h3>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 style="font-size:14px;">Rata-Rata & Grafik Kehadiran Per Santri</h3>
+        <span class="badge" id="santriAvgBadge">Rata-rata: 0%</span>
+      </div>
       <div class="search-wrap" id="wrapSearchAnalisa">
         <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="searchAnalisa" placeholder="Cari nama santri..." oninput="onSearchInput('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">
@@ -1002,6 +1103,7 @@ let appState = sanitizeState(JSON.parse(localStorage.getItem("balai_pengajian_st
 let db = null;
 let docRef = null;
 let selectedKategori = "Semua";
+let analisaMode = "semua";
 
 function onSearchInput(inputId, wrapId, renderFn) {
   const inp = document.getElementById(inputId);
@@ -1745,22 +1847,107 @@ async function deleteLink(id) {
   showToast("Tautan dihapus");
 }
 
+function getWeekBounds(dateStr) {
+  const parts = dateStr.split("-").map(Number);
+  const d = new Date(parts[0], parts[1] - 1, parts[2]);
+  const day = d.getDay();
+  const diffToMon = (day === 0 ? -6 : 1 - day);
+  const mon = new Date(d);
+  mon.setDate(d.getDate() + diffToMon);
+  const sun = new Date(mon);
+  sun.setDate(mon.getDate() + 6);
+  const fmt = (dt) => `${dt.getFullYear()}-${String(dt.getMonth() + 1).padStart(2, "0")}-${String(dt.getDate()).padStart(2, "0")}`;
+  return { start: fmt(mon), end: fmt(sun), startObj: mon };
+}
+
+function setAnalisaMode(mode, btnEl) {
+  analisaMode = mode;
+  document.querySelectorAll("#analisaPeriodPills .pill").forEach(p => p.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+
+  const dateWrap = document.getElementById("analisaDateWrap");
+  const monthWrap = document.getElementById("analisaMonthWrap");
+  const dateLbl = document.getElementById("analisaDateLabel");
+
+  if (mode === "harian") {
+    dateWrap.style.display = "block";
+    monthWrap.style.display = "none";
+    dateLbl.textContent = "Pilih Tanggal Harian";
+  } else if (mode === "mingguan") {
+    dateWrap.style.display = "block";
+    monthWrap.style.display = "none";
+    dateLbl.textContent = "Pilih Salah Satu Tanggal di Minggu Tersebut";
+  } else if (mode === "bulanan") {
+    dateWrap.style.display = "none";
+    monthWrap.style.display = "block";
+  } else {
+    dateWrap.style.display = "none";
+    monthWrap.style.display = "none";
+  }
+  renderAnalisa();
+}
+
+function renderVerticalBarChart(items) {
+  if (!items || items.length === 0) {
+    return `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:24px 0;">Belum ada data sesi pada rentang waktu ini.</div>`;
+  }
+  return `
+    <div class="vchart-wrap">
+      ${items.map(it => `
+        <div class="vchart-col" title="${it.fullLabel}: ${it.pct}% (${it.detail})">
+          <div class="vchart-val">${it.pct}%</div>
+          <div class="vchart-bar-bg">
+            <div class="vchart-bar-fill" style="height:${Math.max(it.pct, it.pct > 0 ? 6 : 0)}%;"></div>
+          </div>
+          <div class="vchart-lbl">${it.label}</div>
+        </div>
+      `).join("")}
+    </div>
+  `;
+}
+
 function renderAnalisa() {
-  const sessionKeys = Object.keys(appState.absensi);
-  let totalHadir = 0;
-  let totalRecords = 0;
-  const q = getQuery("searchAnalisa");
+  const allKeys = Object.keys(appState.absensi).sort();
+  const refDate = document.getElementById("analisaRefDate").value || new Date().toISOString().slice(0, 10);
+  const refMonth = document.getElementById("analisaRefMonth").value || refDate.slice(0, 7);
+
+  let filteredKeys = [];
+  let rangeDesc = "";
+
+  if (analisaMode === "harian") {
+    filteredKeys = allKeys.filter(k => k.startsWith(refDate + "_"));
+    rangeDesc = `Menampilkan data harian tanggal ${refDate}`;
+  } else if (analisaMode === "mingguan") {
+    const wb = getWeekBounds(refDate);
+    filteredKeys = allKeys.filter(k => {
+      const tgl = k.split("_")[0];
+      return tgl >= wb.start && tgl <= wb.end;
+    });
+    rangeDesc = `Periode Mingguan: ${wb.start} s.d. ${wb.end}`;
+  } else if (analisaMode === "bulanan") {
+    filteredKeys = allKeys.filter(k => k.startsWith(refMonth + "-"));
+    rangeDesc = `Periode Bulanan: ${refMonth}`;
+  } else {
+    filteredKeys = allKeys;
+    rangeDesc = allKeys.length > 0
+      ? `Seluruh rekaman (${allKeys[0].split("_")[0]} s.d. ${allKeys[allKeys.length - 1].split("_")[0]})`
+      : "Belum ada sesi tercatat";
+  }
+
+  document.getElementById("analisaPeriodRangeText").textContent = rangeDesc;
+
+  let totalH = 0, totalI = 0, totalSk = 0, totalA = 0, totalRecords = 0;
 
   const perSantri = appState.santri.map(s => {
     let h = 0, i = 0, sk = 0, a = 0;
-    sessionKeys.forEach(k => {
+    filteredKeys.forEach(k => {
       const st = appState.absensi[k][s.id];
       if (st) {
         totalRecords++;
-        if (st === "Hadir") { h++; totalHadir++; }
-        else if (st === "Izin") i++;
-        else if (st === "Sakit") sk++;
-        else if (st === "Alpa") a++;
+        if (st === "Hadir") { h++; totalH++; }
+        else if (st === "Izin") { i++; totalI++; }
+        else if (st === "Sakit") { sk++; totalSk++; }
+        else if (st === "Alpa") { a++; totalA++; }
       }
     });
     const tot = h + i + sk + a;
@@ -1768,18 +1955,115 @@ function renderAnalisa() {
     return { ...s, h, i, sk, a, tot, pct };
   });
 
-  const avgPct = totalRecords > 0 ? Math.round((totalHadir / totalRecords) * 100) : 0;
+  const avgPct = totalRecords > 0 ? Math.round((totalH / totalRecords) * 100) : 0;
+  const santriWithData = perSantri.filter(s => s.tot > 0);
+  const avgPerSantri = santriWithData.length > 0
+    ? Math.round(santriWithData.reduce((acc, cur) => acc + cur.pct, 0) / santriWithData.length)
+    : 0;
 
   document.getElementById("analisaSummary").innerHTML = `
-    <div class="stat-box">
-      <div class="stat-val">${sessionKeys.length}</div>
-      <div class="stat-lbl">Total Sesi Pengajian</div>
+    <div class="stat-box" style="padding:10px 6px;">
+      <div class="stat-val" style="font-size:18px;">${filteredKeys.length}</div>
+      <div class="stat-lbl">Total Sesi</div>
     </div>
-    <div class="stat-box">
-      <div class="stat-val">${avgPct}%</div>
-      <div class="stat-lbl">Rata-Rata Kehadiran</div>
+    <div class="stat-box" style="padding:10px 6px;">
+      <div class="stat-val" style="font-size:18px;">${avgPct}%</div>
+      <div class="stat-lbl">Rata-Rata Hadir</div>
+    </div>
+    <div class="stat-box" style="padding:10px 6px;">
+      <div class="stat-val" style="font-size:18px;">${avgPerSantri}%</div>
+      <div class="stat-lbl">Rerata Santri</div>
+    </div>
+    <div class="stat-box" style="padding:10px 6px;">
+      <div class="stat-val" style="font-size:18px;">${totalH}</div>
+      <div class="stat-lbl">Total Hadir</div>
     </div>
   `;
+
+  document.getElementById("santriAvgBadge").textContent = `Rata-rata: ${avgPerSantri}%`;
+
+  let chartItems = [];
+  if (analisaMode === "harian") {
+    document.getElementById("trendChartTitle").textContent = `Grafik Kehadiran Harian (${refDate})`;
+    chartItems = filteredKeys.map(k => {
+      const sesi = k.split("_")[1] || "Sesi";
+      const rec = appState.absensi[k] || {};
+      const vals = Object.values(rec);
+      const hCount = vals.filter(v => v === "Hadir").length;
+      const pct = vals.length > 0 ? Math.round((hCount / vals.length) * 100) : 0;
+      return { label: sesi, fullLabel: `${refDate} (${sesi})`, pct, detail: `${hCount}/${vals.length} hadir` };
+    });
+  } else if (analisaMode === "mingguan") {
+    document.getElementById("trendChartTitle").textContent = "Grafik Kehadiran Mingguan (Senin - Minggu)";
+    const wb = getWeekBounds(refDate);
+    const hariNama = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+    for (let idx = 0; idx < 7; idx++) {
+      const cur = new Date(wb.startObj);
+      cur.setDate(wb.startObj.getDate() + idx);
+      const dStr = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, "0")}-${String(cur.getDate()).padStart(2, "0")}`;
+      const dayKeys = filteredKeys.filter(k => k.startsWith(dStr + "_"));
+      let dH = 0, dTot = 0;
+      dayKeys.forEach(k => {
+        const vals = Object.values(appState.absensi[k] || {});
+        dTot += vals.length;
+        dH += vals.filter(v => v === "Hadir").length;
+      });
+      const pct = dTot > 0 ? Math.round((dH / dTot) * 100) : 0;
+      chartItems.push({
+        label: `${hariNama[idx]} ${dStr.slice(8, 10)}`,
+        fullLabel: `${hariNama[idx]}, ${dStr}`,
+        pct,
+        detail: dTot > 0 ? `${dH}/${dTot} hadir` : "Tidak ada sesi"
+      });
+    }
+  } else {
+    document.getElementById("trendChartTitle").textContent = analisaMode === "bulanan"
+      ? `Grafik Kehadiran Bulanan (${refMonth})`
+      : "Grafik Tren Kehadiran Per Tanggal";
+    const byDate = {};
+    filteredKeys.forEach(k => {
+      const tgl = k.split("_")[0];
+      if (!byDate[tgl]) byDate[tgl] = { h: 0, tot: 0 };
+      const vals = Object.values(appState.absensi[k] || {});
+      byDate[tgl].tot += vals.length;
+      byDate[tgl].h += vals.filter(v => v === "Hadir").length;
+    });
+    chartItems = Object.keys(byDate).sort().map(tgl => {
+      const pct = byDate[tgl].tot > 0 ? Math.round((byDate[tgl].h / byDate[tgl].tot) * 100) : 0;
+      return {
+        label: tgl.slice(5),
+        fullLabel: tgl,
+        pct,
+        detail: `${byDate[tgl].h}/${byDate[tgl].tot} hadir`
+      };
+    });
+  }
+
+  document.getElementById("trendChartBox").innerHTML = renderVerticalBarChart(chartItems);
+
+  const distList = [
+    { label: "Hadir", count: totalH, opacity: "1" },
+    { label: "Izin", count: totalI, opacity: "0.72" },
+    { label: "Sakit", count: totalSk, opacity: "0.52" },
+    { label: "Alpa", count: totalA, opacity: "0.35" }
+  ];
+
+  document.getElementById("statusDistChart").innerHTML = totalRecords === 0
+    ? `<div style="font-size:12px;color:var(--text-secondary);">Belum ada catatan status kehadiran pada periode ini.</div>`
+    : distList.map(d => {
+        const pct = Math.round((d.count / totalRecords) * 100);
+        return `
+          <div class="dist-row">
+            <div class="dist-meta">
+              <span>${d.label}</span>
+              <span>${d.count} catatan (${pct}%)</span>
+            </div>
+            <div class="bar-track">
+              <div class="bar-fill" style="width:${pct}%;opacity:${d.opacity};"></div>
+            </div>
+          </div>
+        `;
+      }).join("");
 
   const sortedSkor = [...appState.skor].sort((a, b) => b.poin - a.poin);
   const lbEl = document.getElementById("leaderboardList");
@@ -1800,6 +2084,7 @@ function renderAnalisa() {
     `).join("");
   }
 
+  const q = getQuery("searchAnalisa");
   const filteredAnalisa = q
     ? perSantri.filter(s => (s.nama || "").toLowerCase().includes(q) || (s.kelas || "").toLowerCase().includes(q))
     : perSantri;
@@ -1816,7 +2101,7 @@ function renderAnalisa() {
         </div>
         <div class="bar-track"><div class="bar-fill" style="width:${s.pct}%;"></div></div>
         <div style="font-size:11px;color:var(--text-secondary);margin-top:5px;">
-          Hadir: ${s.h} • Izin: ${s.i} • Sakit: ${s.sk} • Alpa: ${s.a}
+          Hadir: ${s.h} • Izin: ${s.i} • Sakit: ${s.sk} • Alpa: ${s.a} (Total ${s.tot} sesi)
         </div>
       </div>
     `).join("");
@@ -1838,7 +2123,11 @@ function renderAll() {
   renderAnalisa();
 }
 
-document.getElementById("attDate").value = new Date().toISOString().slice(0, 10);
+const todayIso = new Date().toISOString().slice(0, 10);
+document.getElementById("attDate").value = todayIso;
+document.getElementById("analisaRefDate").value = todayIso;
+document.getElementById("analisaRefMonth").value = todayIso.slice(0, 7);
+
 if (localStorage.getItem("guru_permanent_unlocked") === "1") {
   document.getElementById("lockScreen").classList.add("hidden");
 }
