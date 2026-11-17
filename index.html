@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="color-scheme" content="light dark">
+<title>BUSTANUL HADI - Portal Guru</title>
+<style>
+:root {
+  --bg: #f0f0f0;
+  --surface: #f7f7f7;
+  --surface-elevated: #ffffff;
+  --border: #dcdcdc;
+  --text-primary: #141414;
+  --text-secondary: #525252;
+  --text-muted: #737373;
+  --accent: #141414;
+  --accent-text: #ffffff;
+  --shadow-dark: #d1d1d1;
+  --shadow-light: #ffffff;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121212;
+    --surface: #171717;
+    --surface-elevated: #1e1e1e;
+    --border: #2a2a2a;
+    --text-primary: #f5f5f5;
+    --text-secondary: #a3a3a3;
+    --text-muted: #737373;
+    --accent: #ffffff;
+    --accent-text: #121212;
+    --shadow-dark: #0a0a0a;
+    --shadow-light: #222222;
+  }
+}
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+body {
+  background-color: var(--bg);
+  color: var(--text-primary);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+  padding-bottom: 84px;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+.neu-card {
+  background: var(--surface);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  box-shadow: 6px 6px 14px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+  padding: 16px;
+  margin-bottom: 14px;
+}
+.neu-inset {
+  background: var(--bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: var(--surface-elevated);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 10px 14px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 4px 4px 8px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
+  transition: transform 0.12s ease;
+}
+.btn:active {
+  transform: scale(0.97);
+  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+}
+.btn-primary {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+.btn-sm {
+  padding: 7px 10px;
+  font-size: 12px;
+  border-radius: 10px;
+}
+.btn-block {
+  width: 100%;
+}
+input, select, textarea {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text-primary);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 13px;
+  font-size: 14px;
+  font-family: inherit;
+  box-shadow: inset 3px 3px 7px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+  outline: none;
+}
+input:focus, select:focus, textarea:focus {
+  border-color: var(--text-secondary);
+}
+label {
+  display: block;
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+.form-group {
+  margin-bottom: 12px;
+}
+.search-wrap {
+  position: relative;
+  margin-bottom: 12px;
+}
+.search-wrap svg.search-ico {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--text-muted);
+  pointer-events: none;
+}
+.search-wrap input {
+  padding-left: 36px;
+  padding-right: 34px;
+  font-size: 13px;
+}
+.search-clear {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 12px;
+  line-height: 1;
+}
+.search-wrap.has-text .search-clear {
+  display: flex;
+}
+header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.brand-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 11px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 3px 3px 7px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
+}
+.brand h1 {
+  font-size: 15px;
+  font-weight: 700;
+}
+.brand span {
+  font-size: 11px;
+  color: var(--text-secondary);
+  display: block;
+}
+.status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-secondary);
+  cursor: pointer;
+}
+.status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--text-muted);
+}
+.status-dot.online {
+  background: var(--accent);
+}
+main {
+  max-width: 680px;
+  margin: 0 auto;
+  padding: 16px;
+}
+.section {
+  display: none;
+}
+.section.active {
+  display: block;
+}
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.section-title {
+  font-size: 17px;
+  font-weight: 700;
+}
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.grid-4 {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+.stat-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  box-shadow: 4px 4px 10px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
+}
+.stat-val {
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--accent);
+}
+.stat-lbl {
+  font-size: 11px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+.pill-group {
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  margin-bottom: 12px;
+}
+.pill {
+  padding: 6px 12px;
+  border-radius: 999px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+  cursor: pointer;
+}
+.pill.active {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+.att-item {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  margin-bottom: 10px;
+}
+.att-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.att-btn {
+  padding: 7px 4px;
+  border-radius: 9px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+.att-btn.selected {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+  font-weight: 700;
+}
+.badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--surface-elevated);
+  border: 1px solid var(--border);
+  color: var(--text-secondary);
+}
+.bar-track {
+  width: 100%;
+  height: 8px;
+  background: var(--bg);
+  border-radius: 999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  margin-top: 6px;
+}
+.bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 999px;
+}
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 40;
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  padding: 6px 4px 10px;
+}
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 4px 0;
+}
+.nav-item.active {
+  color: var(--accent);
+}
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(0, 0, 0, 0.72);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+.modal-backdrop.open {
+  display: flex;
+}
+.modal-box {
+  width: 100%;
+  max-width: 460px;
+  max-height: 88vh;
+  overflow-y: auto;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 18px;
+}
+.lock-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+.lock-screen.hidden {
+  display: none;
+}
+.toast {
+  position: fixed;
+  top: 66px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 80;
+  background: var(--accent);
+  color: var(--accent-text);
+  padding: 9px 16px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  display: none;
+}
+.icon {
+  width: 18px;
+  height: 18px;
+  stroke: currentColor;
+  fill: none;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 14px 0;
+}
+</style>
+</head>
+<body>
+
+<div id="lockScreen" class="lock-screen">
+  <div class="neu-card" style="width:100%;max-width:360px;text-align:center;padding:24px;">
+    <div class="brand-icon" style="width:52px;height:52px;margin:0 auto 14px;">
+      <svg class="icon" style="width:26px;height:26px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </div>
+    <h2 style="font-size:18px;margin-bottom:4px;">BUSTANUL HADI</h2>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:18px;">Cukup masuk sekali, sesi tersimpan otomatis di HP</p>
+    <div class="form-group">
+      <input type="password" id="pinInput" inputmode="numeric" maxlength="8" placeholder="PIN (Default: 1234)" style="text-align:center;font-size:18px;letter-spacing:6px;">
+    </div>
+    <button type="button" class="btn btn-primary btn-block" onclick="verifyPin()">Masuk Portal Guru</button>
+    <p id="pinError" style="font-size:12px;color:var(--text-secondary);margin-top:10px;display:none;">PIN tidak sesuai. Silakan coba lagi.</p>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<header>
+  <div class="brand">
+    <div class="brand-icon">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+    </div>
+    <div>
+      <h1>BUSTANUL HADI</h1>
+      <span>Panel Kendali Guru • Tgk Khalil</span>
+    </div>
+  </div>
+  <div style="display:flex;align-items:center;gap:6px;">
+    <button type="button" class="status-pill" onclick="openModal('modalSettings')" title="Backup JSON & Pengaturan">
+      <span id="syncDot" class="status-dot"></span>
+      <span id="syncLabel">Lokal</span>
+    </button>
+    <button type="button" class="btn btn-sm" onclick="lockGuruPortal()" title="Kunci Portal">
+      <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    </button>
+  </div>
+</header>
+
+<main>
+  <section id="sec-absensi" class="section active">
+    <div class="section-header">
+      <h2 class="section-title">Absensi Santri</h2>
+      <div style="display:flex;gap:6px;">
+        <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">
+          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+          Kelas / Kitab
+        </button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalSantri')">
+          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Akun Santri
+        </button>
+      </div>
+    </div>
+
+    <div class="neu-card">
+      <div class="grid-2" style="margin-bottom:10px;">
+        <div>
+          <label>Tanggal Pengajian</label>
+          <input type="date" id="attDate" onchange="renderAbsensi()">
+        </div>
+        <div>
+          <label>Waktu / Sesi</label>
+          <select id="attSession" onchange="renderAbsensi()">
+            <option value="Subuh">Pengajian Subuh</option>
+            <option value="Magrib">Pengajian Magrib</option>
+            <option value="Isya" selected>Pengajian Isya / Malam</option>
+            <option value="Malam Jumat">Malam Jumat</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group" style="margin-bottom:10px;">
+        <label>Filter Kelas / Kitab Santri</label>
+        <select id="attKelasFilter" onchange="renderAbsensi()"></select>
+      </div>
+      <div class="search-wrap" id="wrapSearchAbsensi" style="margin-bottom:10px;">
+        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchAbsensi" placeholder="Cari nama santri atau username..." oninput="onSearchInput('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">
+        <button type="button" class="search-clear" onclick="clearSearch('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">×</button>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="btn btn-sm" style="flex:1;" onclick="markAllHadir()">Hadir Semua</button>
+        <button type="button" class="btn btn-primary btn-sm" style="flex:1;" onclick="saveAttendance()">Simpan Absensi</button>
+      </div>
+    </div>
+
+    <div class="grid-4" style="margin-bottom:14px;" id="attQuickStats"></div>
+    <div id="attList"></div>
+  </section>
+
+  <section id="sec-materi" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Materi & Kitab</h2>
+      <div style="display:flex;gap:6px;">
+        <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">Atur Kelas / Kitab</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="openMateriForm()">
+          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Materi Baru
+        </button>
+      </div>
+    </div>
+    <div class="search-wrap" id="wrapSearchMateri">
+      <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchMateri" placeholder="Cari judul materi, kitab, atau isi matan..." oninput="onSearchInput('searchMateri','wrapSearchMateri',renderMateri)">
+      <button type="button" class="search-clear" onclick="clearSearch('searchMateri','wrapSearchMateri',renderMateri)">×</button>
+    </div>
+    <div class="pill-group" id="materiFilter"></div>
+    <div id="materiList"></div>
+  </section>
+
+  <section id="sec-kuis" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Bank Soal Kuis Cerdas</h2>
+      <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalKuisConfig')">Atur Kuis</button>
+    </div>
+
+    <div class="neu-card">
+      <h3 style="font-size:14px;margin-bottom:10px;" id="soalFormTitle">Tambah Pertanyaan Kuis</h3>
+      <input type="hidden" id="editSoalId">
+      <div class="form-group">
+        <label>Pertanyaan</label>
+        <textarea id="soalTeks" rows="2" placeholder="Tulis pertanyaan kuis untuk santri..."></textarea>
+      </div>
+      <div class="grid-2">
+        <div class="form-group"><label>Pilihan A</label><input type="text" id="optA" placeholder="Jawaban A"></div>
+        <div class="form-group"><label>Pilihan B</label><input type="text" id="optB" placeholder="Jawaban B"></div>
+        <div class="form-group"><label>Pilihan C</label><input type="text" id="optC" placeholder="Jawaban C"></div>
+        <div class="form-group"><label>Pilihan D</label><input type="text" id="optD" placeholder="Jawaban D"></div>
+      </div>
+      <div class="grid-2">
+        <div class="form-group">
+          <label>Kunci Jawaban Benar</label>
+          <select id="soalKunci">
+            <option value="0">Pilihan A</option>
+            <option value="1">Pilihan B</option>
+            <option value="2">Pilihan C</option>
+            <option value="3">Pilihan D</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Bobot Poin</label>
+          <input type="number" id="soalPoin" value="20" min="5" max="100">
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Penjelasan Jawaban Benar (Tampil setelah santri selesai kuis)</label>
+        <textarea id="soalPenjelasan" rows="3" placeholder="Tuliskan dalil, rujukan kitab, atau alasan mengapa jawaban tersebut benar..."></textarea>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <button type="button" class="btn btn-primary" style="flex:1;" onclick="saveSoal()">Simpan Soal</button>
+        <button type="button" class="btn" id="btnCancelSoal" style="display:none;" onclick="resetSoalForm()">Batal</button>
+      </div>
+    </div>
+
+    <div class="search-wrap" id="wrapSearchSoal">
+      <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchSoal" placeholder="Cari pertanyaan, jawaban, atau penjelasan soal..." oninput="onSearchInput('searchSoal','wrapSearchSoal',renderSoal)">
+      <button type="button" class="search-clear" onclick="clearSearch('searchSoal','wrapSearchSoal',renderSoal)">×</button>
+    </div>
+    <div id="soalList"></div>
+  </section>
+
+  <section id="sec-pustaka" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Pustaka Kitab & Aplikasi</h2>
+      <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalLink')">
+        <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Tautan
+      </button>
+    </div>
+    <div class="search-wrap" id="wrapSearchPustaka">
+      <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchPustaka" placeholder="Cari nama kitab, PDF, atau aplikasi..." oninput="onSearchInput('searchPustaka','wrapSearchPustaka',renderLinks)">
+      <button type="button" class="search-clear" onclick="clearSearch('searchPustaka','wrapSearchPustaka',renderLinks)">×</button>
+    </div>
+    <div id="linkList"></div>
+  </section>
+
+  <section id="sec-analisa" class="section">
+    <div class="section-header">
+      <h2 class="section-title">Analisa & Kejuaraan</h2>
+      <div style="display:flex;gap:6px;">
+        <button type="button" class="btn btn-sm" onclick="openModal('modalSettings')">Backup JSON</button>
+        <button type="button" class="btn btn-sm" onclick="resetScores()">Reset Skor</button>
+      </div>
+    </div>
+
+    <div class="grid-2" style="margin-bottom:14px;" id="analisaSummary"></div>
+
+    <div class="neu-card">
+      <h3 style="font-size:14px;margin-bottom:10px;">Peringkat Kejuaraan Kuis Cerdas</h3>
+      <div id="leaderboardList"></div>
+    </div>
+
+    <div class="neu-card">
+      <h3 style="font-size:14px;margin-bottom:10px;">Analisa Kehadiran Per Santri</h3>
+      <div class="search-wrap" id="wrapSearchAnalisa">
+        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchAnalisa" placeholder="Cari nama santri..." oninput="onSearchInput('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">
+        <button type="button" class="search-clear" onclick="clearSearch('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">×</button>
+      </div>
+      <div id="analisaSantriList"></div>
+    </div>
+  </section>
+</main>
+
+<nav class="bottom-nav">
+  <button type="button" class="nav-item active" onclick="switchTab('absensi', this)">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    <span>Absensi</span>
+  </button>
+  <button type="button" class="nav-item" onclick="switchTab('materi', this)">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+    <span>Materi</span>
+  </button>
+  <button type="button" class="nav-item" onclick="switchTab('kuis', this)">
+    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+    <span>Kuis</span>
+  </button>
+  <button type="button" class="nav-item" onclick="switchTab('pustaka', this)">
+    <svg class="icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+    <span>Pustaka</span>
+  </button>
+  <button type="button" class="nav-item" onclick="switchTab('analisa', this)">
+    <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+    <span>Analisa</span>
+  </button>
+</nav>
+
+<div id="modalKelas" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:4px;">Daftar Kelas & Kitab Pengajian</h3>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">Jika kelas yang masih memiliki santri dihapus, seluruh santri & materi di kelas tersebut otomatis dipindahkan ke kelas <strong>Umum</strong>.</p>
+    <div class="form-group">
+      <label>Nama Kelas / Kitab Baru</label>
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="newKelasInput" placeholder="Contoh: Bajuri / Matan Jurumiyah">
+        <button type="button" class="btn btn-primary" onclick="addKelas()">Tambah</button>
+      </div>
+    </div>
+    <div id="kelasManageList" style="max-height:260px;overflow-y:auto;margin-bottom:14px;"></div>
+    <button type="button" class="btn btn-block" onclick="closeModal('modalKelas')">Selesai & Tutup</button>
+  </div>
+</div>
+
+<div id="modalSantri" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:4px;">Kelola Akun & Pindah Kelas Santri</h3>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">PIN default santri adalah <strong>1234</strong>. Santri login sekali menggunakan Username & PIN masing-masing.</p>
+    <div class="form-group">
+      <label>Nama Lengkap Santri</label>
+      <input type="text" id="newSantriName" placeholder="Contoh: Teuku Ahmad">
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Username Login</label>
+        <input type="text" id="newSantriUser" placeholder="contoh: ahmad">
+      </div>
+      <div class="form-group">
+        <label>PIN Santri</label>
+        <input type="text" id="newSantriPin" inputmode="numeric" maxlength="6" value="1234">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Pilih Kelas / Kitab</label>
+      <select id="newSantriKelas"></select>
+    </div>
+    <div style="display:flex;gap:8px;margin-bottom:12px;">
+      <button type="button" class="btn btn-primary" style="flex:1;" onclick="addSantri()">Buat Akun Santri</button>
+      <button type="button" class="btn" onclick="closeModal('modalSantri')">Tutup</button>
+    </div>
+    <div class="search-wrap" id="wrapSearchSantriModal">
+      <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="searchSantriModal" placeholder="Cari akun santri terdaftar..." oninput="onSearchInput('searchSantriModal','wrapSearchSantriModal',renderSantriManage)">
+      <button type="button" class="search-clear" onclick="clearSearch('searchSantriModal','wrapSearchSantriModal',renderSantriManage)">×</button>
+    </div>
+    <div id="santriManageList" style="max-height:240px;overflow-y:auto;"></div>
+  </div>
+</div>
+
+<div id="modalMateri" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:12px;" id="materiModalTitle">Tambah Materi Belajar</h3>
+    <input type="hidden" id="editMateriId">
+    <div class="form-group">
+      <label>Judul Materi / Bab Kitab</label>
+      <input type="text" id="materiJudul" placeholder="Contoh: Bab Thaharah - Syarat Wudhu">
+    </div>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Bidang Ilmu</label>
+        <select id="materiKategori">
+          <option value="Fiqih">Fiqih</option>
+          <option value="Tauhid">Tauhid</option>
+          <option value="Tasawuf">Tasawuf</option>
+          <option value="Tajwid">Tajwid</option>
+          <option value="Akhlak">Akhlak</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Kelas / Kitab Target</label>
+        <select id="materiKitabSelect"></select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Isi Penjelasan / Matan</label>
+      <textarea id="materiIsi" rows="5" placeholder="Tuliskan penjelasan materi pengajian..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="btn btn-primary" style="flex:1;" onclick="saveMateri()">Simpan Materi</button>
+      <button type="button" class="btn" onclick="closeModal('modalMateri')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalLink" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:12px;">Tambah Tautan Kitab / Aplikasi</h3>
+    <div class="form-group">
+      <label>Nama Kitab / Aplikasi</label>
+      <input type="text" id="linkJudul" placeholder="Contoh: Al-Maktabah Al-Shamela">
+    </div>
+    <div class="form-group">
+      <label>Jenis</label>
+      <select id="linkJenis">
+        <option value="Kitab Digital">Kitab Digital</option>
+        <option value="Buku PDF">Buku PDF</option>
+        <option value="Aplikasi Islami">Aplikasi Islami</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Alamat URL (https://...)</label>
+      <input type="url" id="linkUrl" placeholder="https://shamela.ws">
+    </div>
+    <div class="form-group">
+      <label>Keterangan Singkat</label>
+      <input type="text" id="linkDesc" placeholder="Referensi kitab turats lengkap">
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="btn btn-primary" style="flex:1;" onclick="saveLink()">Simpan Tautan</button>
+      <button type="button" class="btn" onclick="closeModal('modalLink')">Batal</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalKuisConfig" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:12px;">Pengaturan Kuis Cerdas</h3>
+    <div class="form-group">
+      <label>Judul Sesi Kuis</label>
+      <input type="text" id="cfgKuisJudul">
+    </div>
+    <div class="form-group">
+      <label>Durasi Pengerjaan (Detik)</label>
+      <input type="number" id="cfgKuisDurasi" min="30" max="3600">
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="btn btn-primary" style="flex:1;" onclick="saveKuisConfig()">Simpan Pengaturan</button>
+      <button type="button" class="btn" onclick="closeModal('modalKuisConfig')">Tutup</button>
+    </div>
+  </div>
+</div>
+
+<div id="modalSettings" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:10px;">Backup JSON, Cloud & PIN Guru</h3>
+    <div class="neu-inset" style="padding:12px;margin-bottom:14px;font-size:12px;">
+      <div><strong>Pesantren:</strong> BUSTANUL HADI</div>
+      <div><strong>Project ID:</strong> game-2d1e0 (balai_pengajian/data_utama)</div>
+      <div id="modalSyncDetail" style="margin-top:4px;color:var(--text-secondary);">Menggunakan penyimpanan lokal.</div>
+    </div>
+
+    <h4 style="font-size:13px;margin-bottom:8px;">Backup & Restore Data (JSON)</h4>
+    <div class="grid-2" style="margin-bottom:10px;">
+      <button type="button" class="btn btn-primary" onclick="exportJsonBackup()">
+        <svg class="icon" style="width:15px;height:15px;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Unduh Backup
+      </button>
+      <button type="button" class="btn" onclick="copyJsonBackup()">
+        <svg class="icon" style="width:15px;height:15px;" viewBox="0 0 24 24"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+        Salin JSON
+      </button>
+    </div>
+
+    <div class="form-group">
+      <label>Pulihkan dari File (.json)</label>
+      <input type="file" id="jsonFileInput" accept=".json,application/json" onchange="importJsonFile(event)">
+    </div>
+
+    <div class="form-group">
+      <label>Atau Tempel Teks JSON di Sini</label>
+      <textarea id="jsonPasteInput" rows="3" placeholder='Tempel kode JSON lengkap {"pin":...} lalu klik Pulihkan...'></textarea>
+      <button type="button" class="btn btn-sm btn-block" style="margin-top:6px;" onclick="importJsonText()">Pulihkan dari Teks JSON</button>
+    </div>
+
+    <div class="divider"></div>
+
+    <h4 style="font-size:13px;margin-bottom:8px;">Ubah PIN Akses Guru</h4>
+    <div class="grid-2">
+      <div class="form-group">
+        <label>PIN Lama</label>
+        <input type="password" id="oldPinInput" inputmode="numeric" maxlength="8" placeholder="1234">
+      </div>
+      <div class="form-group">
+        <label>PIN Baru</label>
+        <input type="password" id="newPinInput" inputmode="numeric" maxlength="8" placeholder="Min 4 digit">
+      </div>
+    </div>
+    <button type="button" class="btn btn-block" style="margin-bottom:10px;" onclick="updateGuruPin()">Simpan PIN Baru</button>
+    <button type="button" class="btn btn-block" style="margin-bottom:10px;" onclick="seedDefaultData()">Muat Ulang Data BUSTANUL HADI</button>
+    <button type="button" class="btn btn-primary btn-block" onclick="closeModal('modalSettings')">Tutup Pengaturan</button>
+  </div>
+</div>
+
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyA_NoIO1F_E5fDmVwex6ad3bT5h2OGmZPE",
+  authDomain: "game-2d1e0.firebaseapp.com",
+  projectId: "game-2d1e0",
+  storageBucket: "game-2d1e0.firebasestorage.app",
+  messagingSenderId: "501200973294",
+  appId: "1:501200973294:web:a423438c589d9ffb57b2ff",
+  measurementId: "G-KYHHP0XW7Z"
+};
+
+const defaultState = {
+  pin: "1234",
+  kelasList: [
+    "Umum",
+    "Matan Taqrib",
+    "Matan Al Jurumiah",
+    "Al Quran"
+  ],
+  santri: [
+    { id: "s1", nama: "Aswir", username: "aswir", pin: "1234", kelas: "Umum" },
+    { id: "s2", nama: "Ilham", username: "ilham", pin: "1234", kelas: "Umum" },
+    { id: "s3", nama: "Fikri", username: "fikri", pin: "1234", kelas: "Umum" },
+    { id: "s4", nama: "Radian", username: "radian", pin: "1234", kelas: "Umum" },
+    { id: "s5", nama: "Ardian", username: "ardian", pin: "1234", kelas: "Umum" },
+    { id: "s6", nama: "Arsya", username: "arsya", pin: "1234", kelas: "Umum" },
+    { id: "s7", nama: "Muhammad", username: "muhammad", pin: "1234", kelas: "Umum" },
+    { id: "s8", nama: "Afdal", username: "afdal", pin: "1234", kelas: "Umum" },
+    { id: "s9", nama: "Riski", username: "riski", pin: "1234", kelas: "Umum" },
+    { id: "s10", nama: "Rifki", username: "rifki", pin: "1234", kelas: "Umum" },
+    { id: "s11", nama: "Agi", username: "agi", pin: "1234", kelas: "Umum" },
+    { id: "s12", nama: "Ilyas", username: "ilyas", pin: "1234", kelas: "Umum" },
+    { id: "s13", nama: "Lia", username: "lia", pin: "1234", kelas: "Umum" },
+    { id: "s14", nama: "Nabila", username: "nabila", pin: "1234", kelas: "Umum" },
+    { id: "s15", nama: "Dila", username: "dila", pin: "1234", kelas: "Umum" },
+    { id: "s16", nama: "Indah", username: "indah", pin: "1234", kelas: "Umum" },
+    { id: "s17", nama: "Viani", username: "viani", pin: "1234", kelas: "Umum" },
+    { id: "s18", nama: "Pida", username: "pida", pin: "1234", kelas: "Umum" },
+    { id: "s19", nama: "Fatin", username: "fatin", pin: "1234", kelas: "Umum" },
+    { id: "s20", nama: "Azkia", username: "azkia", pin: "1234", kelas: "Umum" },
+    { id: "s21", nama: "Amira", username: "amira", pin: "1234", kelas: "Umum" },
+    { id: "s22", nama: "Nur", username: "nur", pin: "1234", kelas: "Umum" },
+    { id: "s23", nama: "Syakira", username: "syakira", pin: "1234", kelas: "Umum" },
+    { id: "s24", nama: "Amelia", username: "amelia", pin: "1234", kelas: "Umum" },
+    { id: "s25", nama: "Eliza", username: "eliza", pin: "1234", kelas: "Umum" },
+    { id: "s26", nama: "Nia", username: "nia", pin: "1234", kelas: "Umum" },
+    { id: "s27", nama: "Salsa", username: "salsa", pin: "1234", kelas: "Umum" },
+    { id: "s28", nama: "Aurel", username: "aurel", pin: "1234", kelas: "Umum" },
+    { id: "s29", nama: "Asyura", username: "asyura", pin: "1234", kelas: "Umum" },
+    { id: "s30", nama: "Bela", username: "bela", pin: "1234", kelas: "Umum" },
+    { id: "s31", nama: "Syifa", username: "syifa", pin: "1234", kelas: "Umum" },
+    { id: "s32", nama: "Laudia", username: "laudia", pin: "1234", kelas: "Umum" },
+    { id: "s33", nama: "Pia", username: "pia", pin: "1234", kelas: "Umum" },
+    { id: "sgj7h51", nama: "Intan", username: "intan", pin: "1234", kelas: "Umum" },
+    { id: "skobtzy", nama: "Adiba", username: "adiba", pin: "1234", kelas: "Umum" },
+    { id: "spq6hoz", nama: "Lisa", username: "lisa", pin: "1234", kelas: "Umum" },
+    { id: "s3n7ier", nama: "Nufus", username: "nufus", pin: "1234", kelas: "Umum" },
+    { id: "s8myfxi", nama: "Ula", username: "ula", pin: "1234", kelas: "Umum" },
+    { id: "s8b0lzr", nama: "Liza", username: "liza", pin: "1234", kelas: "Umum" },
+    { id: "sxqzifh", nama: "Putri", username: "putri", pin: "1234", kelas: "Umum" },
+    { id: "sctopcm", nama: "Pira", username: "pira", pin: "1234", kelas: "Umum" }
+  ],
+  absensi: {
+    "2026-11-15_Isya": {
+      "s1": "Hadir", "s2": "Alpa", "s3": "Alpa", "s4": "Alpa", "s5": "Alpa",
+      "s6": "Hadir", "s7": "Alpa", "s8": "Alpa", "s9": "Alpa", "s10": "Alpa",
+      "s11": "Hadir", "s12": "Alpa", "s13": "Hadir", "s14": "Hadir", "s15": "Hadir",
+      "s16": "Hadir", "s17": "Hadir", "s18": "Alpa", "s19": "Hadir", "s20": "Hadir",
+      "s21": "Hadir", "s22": "Hadir", "s23": "Hadir", "s24": "Alpa", "s25": "Alpa",
+      "s26": "Hadir", "s27": "Hadir", "s28": "Hadir", "s29": "Alpa", "s30": "Alpa",
+      "s31": "Alpa", "s32": "Alpa", "s33": "Alpa", "sgj7h51": "Hadir", "skobtzy": "Hadir",
+      "spq6hoz": "Hadir", "s3n7ier": "Hadir", "s8myfxi": "Hadir", "s8b0lzr": "Alpa"
+    },
+    "2026-11-16_Isya": {
+      "s1": "Hadir", "s2": "Hadir", "s3": "Hadir", "s4": "Hadir", "s5": "Hadir",
+      "s6": "Alpa", "s7": "Alpa", "s8": "Hadir", "s9": "Hadir", "s10": "Hadir",
+      "s11": "Hadir", "s12": "Hadir", "s13": "Alpa", "s14": "Hadir", "s15": "Hadir",
+      "s16": "Alpa", "s17": "Hadir", "s18": "Hadir", "s19": "Hadir", "s20": "Hadir",
+      "s21": "Hadir", "s22": "Hadir", "s23": "Hadir", "s24": "Alpa", "s25": "Hadir",
+      "s26": "Hadir", "s27": "Hadir", "s28": "Alpa", "s29": "Hadir", "s30": "Hadir",
+      "s31": "Hadir", "s32": "Hadir", "s33": "Hadir", "sgj7h51": "Izin", "skobtzy": "Alpa",
+      "spq6hoz": "Alpa", "s3n7ier": "Hadir", "s8myfxi": "Hadir", "s8b0lzr": "Hadir"
+    },
+    "2026-11-17_Isya": {
+      "s1": "Hadir", "s2": "Hadir", "s3": "Hadir", "s4": "Hadir", "s5": "Alpa",
+      "s6": "Alpa", "s7": "Hadir", "s8": "Hadir", "s9": "Hadir", "s10": "Hadir",
+      "s11": "Hadir", "s12": "Hadir", "s13": "Hadir", "s14": "Hadir", "s15": "Alpa",
+      "s16": "Hadir", "s17": "Hadir", "s18": "Alpa", "s19": "Hadir", "s20": "Hadir",
+      "s21": "Hadir", "s22": "Hadir", "s23": "Hadir", "s24": "Hadir", "s25": "Hadir",
+      "s26": "Hadir", "s27": "Hadir", "s28": "Hadir", "s29": "Alpa", "s30": "Alpa",
+      "s31": "Hadir", "s32": "Hadir", "s33": "Hadir", "sgj7h51": "Izin", "skobtzy": "Hadir",
+      "spq6hoz": "Hadir", "s3n7ier": "Hadir", "s8myfxi": "Hadir", "s8b0lzr": "Hadir",
+      "sxqzifh": "Hadir", "sctopcm": "Hadir"
+    },
+    "2026-11-18_Isya": {
+      "sgj7h51": "Izin"
+    }
+  },
+  materi: [],
+  kuisConfig: {
+    judul: "Musabaqah Fahmil Kutub BUSTANUL HADI",
+    durasi: 180
+  },
+  kuisSoal: [],
+  skor: [],
+  pustaka: [
+    {
+      id: "l1",
+      judul: "Al-Maktabah Al-Shamela",
+      jenis: "Kitab Digital",
+      url: "https://shamela.ws",
+      deskripsi: "Perpustakaan digital kitab-kitab turats Islam lengkap"
+    }
+  ]
+};
+
+function sanitizeState(stateObj) {
+  let list = Array.isArray(stateObj.kelasList) ? [...stateObj.kelasList] : [];
+  if (!list.includes("Umum")) list.unshift("Umum");
+  stateObj.kelasList = list;
+  stateObj.santri = Array.isArray(stateObj.santri) ? stateObj.santri : [];
+  stateObj.absensi = stateObj.absensi && typeof stateObj.absensi === "object" ? stateObj.absensi : {};
+  stateObj.materi = Array.isArray(stateObj.materi) ? stateObj.materi : [];
+  stateObj.kuisSoal = Array.isArray(stateObj.kuisSoal) ? stateObj.kuisSoal : [];
+  stateObj.skor = Array.isArray(stateObj.skor) ? stateObj.skor : [];
+  stateObj.pustaka = Array.isArray(stateObj.pustaka) ? stateObj.pustaka : [];
+  stateObj.kuisConfig = stateObj.kuisConfig || { judul: "Musabaqah Fahmil Kutub BUSTANUL HADI", durasi: 180 };
+
+  stateObj.santri.forEach(s => {
+    if (!s.kelas || !list.includes(s.kelas)) s.kelas = "Umum";
+    if (!s.pin) s.pin = "1234";
+  });
+  stateObj.materi.forEach(m => {
+    if (!m.kitab || !list.includes(m.kitab)) m.kitab = "Umum";
+  });
+  return stateObj;
+}
+
+let appState = sanitizeState(JSON.parse(localStorage.getItem("balai_pengajian_state")) || JSON.parse(JSON.stringify(defaultState)));
+let db = null;
+let docRef = null;
+let selectedKategori = "Semua";
+
+function onSearchInput(inputId, wrapId, renderFn) {
+  const inp = document.getElementById(inputId);
+  const wrap = document.getElementById(wrapId);
+  if (wrap) {
+    if (inp.value.length > 0) wrap.classList.add("has-text");
+    else wrap.classList.remove("has-text");
+  }
+  renderFn();
+}
+
+function clearSearch(inputId, wrapId, renderFn) {
+  const inp = document.getElementById(inputId);
+  const wrap = document.getElementById(wrapId);
+  if (inp) inp.value = "";
+  if (wrap) wrap.classList.remove("has-text");
+  renderFn();
+}
+
+function getQuery(inputId) {
+  const el = document.getElementById(inputId);
+  return el ? el.value.trim().toLowerCase() : "";
+}
+
+function showToast(msg) {
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.style.display = "block";
+  setTimeout(() => { t.style.display = "none"; }, 2600);
+}
+
+function updateSyncUI(online, detail) {
+  const dot = document.getElementById("syncDot");
+  const lbl = document.getElementById("syncLabel");
+  const mod = document.getElementById("modalSyncDetail");
+  if (online) {
+    dot.classList.add("online");
+    lbl.textContent = "Online";
+    mod.textContent = detail || "Terhubung real-time dengan Firestore.";
+  } else {
+    dot.classList.remove("online");
+    lbl.textContent = "Lokal";
+    mod.textContent = detail || "Menggunakan penyimpanan lokal perangkat.";
+  }
+}
+
+function initFirebase() {
+  try {
+    if (typeof firebase === "undefined") {
+      updateSyncUI(false, "Mode Offline (Penyimpanan Lokal Aktif).");
+      return;
+    }
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    db = firebase.firestore();
+    docRef = db.collection("balai_pengajian").doc("data_utama");
+    docRef.get().then((snap) => {
+      if (!snap.exists) {
+        docRef.set(appState);
+      }
+    }).catch(() => {});
+    docRef.onSnapshot((snapshot) => {
+      if (snapshot.exists) {
+        appState = sanitizeState({ ...defaultState, ...snapshot.data() });
+        localStorage.setItem("balai_pengajian_state", JSON.stringify(appState));
+        renderAll();
+        updateSyncUI(true, "Sinkronisasi aktif dengan server cloud.");
+      }
+    }, (err) => {
+      updateSyncUI(false, "Mode Lokal: " + err.message);
+    });
+  } catch (e) {
+    updateSyncUI(false, "Mode Lokal: " + e.message);
+  }
+}
+
+async function persistState() {
+  sanitizeState(appState);
+  localStorage.setItem("balai_pengajian_state", JSON.stringify(appState));
+  renderAll();
+  if (docRef) {
+    try {
+      await docRef.set(appState);
+      updateSyncUI(true, "Data tersimpan ke cloud.");
+    } catch (e) {
+      updateSyncUI(false, "Tersimpan lokal (Cloud offline).");
+    }
+  }
+}
+
+function exportJsonBackup() {
+  const dataStr = JSON.stringify(appState, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  const tgl = new Date().toISOString().slice(0, 10);
+  a.href = url;
+  a.download = `backup_bustanul_hadi_${tgl}.json`;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  showToast("File backup JSON berhasil diunduh");
+}
+
+async function copyJsonBackup() {
+  const dataStr = JSON.stringify(appState, null, 2);
+  try {
+    await navigator.clipboard.writeText(dataStr);
+    showToast("Backup JSON disalin ke clipboard");
+  } catch (e) {
+    document.getElementById("jsonPasteInput").value = dataStr;
+    showToast("JSON ditampilkan di kolom bawah untuk disalin");
+  }
+}
+
+async function applyParsedJson(parsed) {
+  if (!parsed || typeof parsed !== "object") {
+    return showToast("Format JSON tidak valid");
+  }
+  if (!Array.isArray(parsed.santri)) {
+    return showToast("JSON tidak memiliki daftar santri yang valid");
+  }
+  appState = sanitizeState({
+    pin: parsed.pin || appState.pin || "1234",
+    kelasList: parsed.kelasList || ["Umum"],
+    santri: parsed.santri,
+    absensi: parsed.absensi || {},
+    materi: parsed.materi || [],
+    kuisConfig: parsed.kuisConfig || appState.kuisConfig,
+    kuisSoal: parsed.kuisSoal || [],
+    skor: parsed.skor || [],
+    pustaka: parsed.pustaka || appState.pustaka
+  });
+  await persistState();
+  showToast(`Berhasil memulihkan ${appState.santri.length} data santri`);
+}
+
+function importJsonFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      await applyParsedJson(parsed);
+      event.target.value = "";
+    } catch (err) {
+      showToast("Gagal membaca file JSON: format rusak");
+    }
+  };
+  reader.readAsText(file);
+}
+
+async function importJsonText() {
+  const raw = document.getElementById("jsonPasteInput").value.trim();
+  if (!raw) return showToast("Tempelkan teks JSON terlebih dahulu");
+  try {
+    const parsed = JSON.parse(raw);
+    await applyParsedJson(parsed);
+    document.getElementById("jsonPasteInput").value = "";
+  } catch (err) {
+    showToast("Teks JSON tidak valid");
+  }
+}
+
+function verifyPin() {
+  const val = document.getElementById("pinInput").value.trim();
+  if (val === String(appState.pin || "1234")) {
+    document.getElementById("lockScreen").classList.add("hidden");
+    document.getElementById("pinInput").value = "";
+    document.getElementById("pinError").style.display = "none";
+    localStorage.setItem("guru_permanent_unlocked", "1");
+    showToast("Sesi Guru tersimpan permanen di perangkat");
+  } else {
+    document.getElementById("pinError").style.display = "block";
+  }
+}
+
+function lockGuruPortal() {
+  localStorage.removeItem("guru_permanent_unlocked");
+  document.getElementById("lockScreen").classList.remove("hidden");
+}
+
+function switchTab(tab, el) {
+  document.querySelectorAll(".section").forEach(s => s.classList.remove("active"));
+  document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
+  document.getElementById("sec-" + tab).classList.add("active");
+  el.classList.add("active");
+}
+
+function populateKelasDropdowns() {
+  const list = appState.kelasList || ["Umum"];
+
+  const attFilter = document.getElementById("attKelasFilter");
+  if (attFilter) {
+    const prev = attFilter.value || "ALL";
+    attFilter.innerHTML = `<option value="ALL">Semua Kelas & Kitab (${appState.santri.length} Santri)</option>` +
+      list.map(k => `<option value="${k}">${k === "Umum" ? "Umum (Mencakup Semua)" : k}</option>`).join("");
+    if ([...attFilter.options].some(o => o.value === prev)) attFilter.value = prev;
+  }
+
+  const santriKelas = document.getElementById("newSantriKelas");
+  if (santriKelas) {
+    santriKelas.innerHTML = list.map(k => `<option value="${k}">${k === "Umum" ? "Umum (Mencakup Semua)" : k}</option>`).join("");
+  }
+
+  const materiKitab = document.getElementById("materiKitabSelect");
+  if (materiKitab) {
+    materiKitab.innerHTML = list.map(k => `<option value="${k}">${k === "Umum" ? "Umum (Semua Santri)" : k}</option>`).join("");
+  }
+}
+
+function renderKelasManage() {
+  const el = document.getElementById("kelasManageList");
+  const list = appState.kelasList || ["Umum"];
+  el.innerHTML = list.map(k => {
+    const isUmum = k === "Umum";
+    const countSantri = appState.santri.filter(s => s.kelas === k).length;
+    const safeName = k.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+        <div>
+          <div style="font-size:13px;font-weight:700;">${k} ${isUmum ? "(Default)" : ""}</div>
+          <div style="font-size:11px;color:var(--text-secondary);">${isUmum ? "Mencakup semua santri & materi umum" : countSantri + " santri terdaftar"}</div>
+        </div>
+        ${isUmum ? `<span class="badge">Wajib</span>` : `<button type="button" class="btn btn-sm" onclick="deleteKelas('${safeName}')">${countSantri > 0 ? "Hapus & Pindah ke Umum" : "Hapus"}</button>`}
+      </div>
+    `;
+  }).join("");
+}
+
+async function addKelas() {
+  const input = document.getElementById("newKelasInput");
+  const nama = input.value.trim();
+  if (!nama) return showToast("Nama kelas atau kitab tidak boleh kosong");
+  if (appState.kelasList.some(k => k.toLowerCase() === nama.toLowerCase())) {
+    return showToast("Kelas / kitab sudah ada di daftar");
+  }
+  appState.kelasList.push(nama);
+  input.value = "";
+  renderKelasManage();
+  await persistState();
+  showToast("Kelas / Kitab ditambahkan");
+}
+
+async function deleteKelas(nama) {
+  if (nama === "Umum") return;
+  let movedSantri = 0;
+  let movedMateri = 0;
+
+  appState.santri.forEach(s => {
+    if (s.kelas === nama) {
+      s.kelas = "Umum";
+      movedSantri++;
+    }
+  });
+
+  appState.materi.forEach(m => {
+    if (m.kitab === nama) {
+      m.kitab = "Umum";
+      movedMateri++;
+    }
+  });
+
+  appState.kelasList = appState.kelasList.filter(k => k !== nama);
+  renderKelasManage();
+  await persistState();
+
+  if (movedSantri > 0 || movedMateri > 0) {
+    showToast(`Kelas dihapus • ${movedSantri} santri & ${movedMateri} materi dipindah ke Umum`);
+  } else {
+    showToast("Kelas / Kitab dihapus");
+  }
+}
+
+function openModal(id) {
+  populateKelasDropdowns();
+  if (id === "modalKuisConfig") {
+    document.getElementById("cfgKuisJudul").value = appState.kuisConfig.judul;
+    document.getElementById("cfgKuisDurasi").value = appState.kuisConfig.durasi;
+  }
+  if (id === "modalSettings") {
+    document.getElementById("oldPinInput").value = "";
+    document.getElementById("newPinInput").value = "";
+  }
+  if (id === "modalSantri") renderSantriManage();
+  if (id === "modalKelas") renderKelasManage();
+  document.getElementById(id).classList.add("open");
+}
+
+function closeModal(id) {
+  document.getElementById(id).classList.remove("open");
+}
+
+async function updateGuruPin() {
+  const op = document.getElementById("oldPinInput").value.trim();
+  const np = document.getElementById("newPinInput").value.trim();
+  if (op !== String(appState.pin || "1234")) return showToast("PIN lama tidak sesuai");
+  if (np.length < 4) return showToast("PIN baru minimal 4 digit");
+  appState.pin = np;
+  document.getElementById("oldPinInput").value = "";
+  document.getElementById("newPinInput").value = "";
+  await persistState();
+  showToast("PIN Guru diperbarui");
+}
+
+async function seedDefaultData() {
+  appState = JSON.parse(JSON.stringify(defaultState));
+  await persistState();
+  showToast("Data BUSTANUL HADI berhasil dimuat");
+}
+
+function getAttKey() {
+  const d = document.getElementById("attDate").value;
+  const s = document.getElementById("attSession").value;
+  return d + "_" + s;
+}
+
+function renderAbsensi() {
+  const key = getAttKey();
+  const currentRecord = appState.absensi[key] || {};
+  const listEl = document.getElementById("attList");
+  const filterKelas = document.getElementById("attKelasFilter").value || "ALL";
+  const q = getQuery("searchAbsensi");
+
+  const classSantri = filterKelas === "ALL"
+    ? appState.santri
+    : appState.santri.filter(s => s.kelas === filterKelas);
+
+  let counts = { Hadir: 0, Izin: 0, Sakit: 0, Alpa: 0 };
+  classSantri.forEach(st => {
+    const status = currentRecord[st.id] || "Hadir";
+    counts[status] = (counts[status] || 0) + 1;
+  });
+
+  const filteredSantri = q
+    ? classSantri.filter(st =>
+        (st.nama || "").toLowerCase().includes(q) ||
+        (st.username || "").toLowerCase().includes(q) ||
+        (st.kelas || "").toLowerCase().includes(q)
+      )
+    : classSantri;
+
+  if (filteredSantri.length === 0) {
+    listEl.innerHTML = `<div class="neu-card" style="text-align:center;color:var(--text-secondary);font-size:13px;">Tidak ada santri yang cocok dengan filter atau pencarian.</div>`;
+  } else {
+    listEl.innerHTML = filteredSantri.map(st => {
+      const status = currentRecord[st.id] || "Hadir";
+      return `
+        <div class="att-item">
+          <div class="att-top">
+            <div>
+              <div style="font-weight:700;font-size:14px;">${st.nama}</div>
+              <div style="font-size:11px;color:var(--text-secondary);">${st.kelas} • @${st.username || st.id}</div>
+            </div>
+            <span class="badge">${status}</span>
+          </div>
+          <div class="grid-4">
+            ${["Hadir", "Izin", "Sakit", "Alpa"].map(opt => `
+              <button type="button" class="att-btn ${status === opt ? "selected" : ""}" onclick="setSantriAtt('${st.id}', '${opt}')">${opt}</button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  document.getElementById("attQuickStats").innerHTML = ["Hadir", "Izin", "Sakit", "Alpa"].map(k => `
+    <div class="stat-box" style="padding:8px;">
+      <div class="stat-val" style="font-size:16px;">${counts[k]}</div>
+      <div class="stat-lbl">${k}</div>
+    </div>
+  `).join("");
+}
+
+function setSantriAtt(santriId, status) {
+  const key = getAttKey();
+  if (!appState.absensi[key]) {
+    appState.absensi[key] = {};
+    appState.santri.forEach(s => { appState.absensi[key][s.id] = "Hadir"; });
+  }
+  appState.absensi[key][santriId] = status;
+  renderAbsensi();
+}
+
+function markAllHadir() {
+  const key = getAttKey();
+  if (!appState.absensi[key]) appState.absensi[key] = {};
+  const filterKelas = document.getElementById("attKelasFilter").value || "ALL";
+  appState.santri.forEach(s => {
+    if (filterKelas === "ALL" || s.kelas === filterKelas) {
+      appState.absensi[key][s.id] = "Hadir";
+    }
+  });
+  renderAbsensi();
+  showToast("Santri pada kelas terpilih ditandai Hadir");
+}
+
+async function saveAttendance() {
+  const key = getAttKey();
+  if (!appState.absensi[key]) {
+    appState.absensi[key] = {};
+    appState.santri.forEach(s => { appState.absensi[key][s.id] = "Hadir"; });
+  }
+  await persistState();
+  showToast("Absensi tersimpan");
+}
+
+function renderSantriManage() {
+  const el = document.getElementById("santriManageList");
+  const list = appState.kelasList || ["Umum"];
+  const q = getQuery("searchSantriModal");
+  const filtered = q
+    ? appState.santri.filter(s =>
+        (s.nama || "").toLowerCase().includes(q) ||
+        (s.username || "").toLowerCase().includes(q) ||
+        (s.kelas || "").toLowerCase().includes(q)
+      )
+    : appState.santri;
+
+  if (filtered.length === 0) {
+    el.innerHTML = `<div style="text-align:center;color:var(--text-secondary);font-size:12px;padding:16px 0;">Santri tidak ditemukan.</div>`;
+    return;
+  }
+
+  el.innerHTML = filtered.map(s => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+      <div style="min-width:0;flex:1;">
+        <div style="font-size:13px;font-weight:700;">${s.nama}</div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">User: <strong>${s.username || s.id}</strong> • PIN: <strong>${s.pin || "1234"}</strong></div>
+        <select style="padding:6px 8px;font-size:12px;" onchange="changeSantriKelas('${s.id}', this.value)">
+          ${list.map(k => `<option value="${k}" ${s.kelas === k ? "selected" : ""}>Kelas: ${k}</option>`).join("")}
+        </select>
+      </div>
+      <button type="button" class="btn btn-sm" onclick="deleteSantri('${s.id}')">Hapus</button>
+    </div>
+  `).join("");
+}
+
+async function changeSantriKelas(santriId, newKelas) {
+  const st = appState.santri.find(x => x.id === santriId);
+  if (!st) return;
+  st.kelas = newKelas;
+  await persistState();
+  showToast(`${st.nama} dipindahkan ke ${newKelas}`);
+}
+
+async function addSantri() {
+  const nama = document.getElementById("newSantriName").value.trim();
+  const username = document.getElementById("newSantriUser").value.trim().toLowerCase().replace(/\s+/g, "");
+  const pin = document.getElementById("newSantriPin").value.trim() || "1234";
+  const kelas = document.getElementById("newSantriKelas").value || "Umum";
+  if (!nama || !username) return showToast("Nama dan username santri wajib diisi");
+  if (appState.santri.some(s => (s.username || "").toLowerCase() === username)) {
+    return showToast("Username sudah digunakan santri lain");
+  }
+  appState.santri.push({ id: "s" + Date.now(), nama, username, pin, kelas });
+  document.getElementById("newSantriName").value = "";
+  document.getElementById("newSantriUser").value = "";
+  document.getElementById("newSantriPin").value = "1234";
+  renderSantriManage();
+  await persistState();
+  showToast("Akun santri berhasil dibuat");
+}
+
+async function deleteSantri(id) {
+  appState.santri = appState.santri.filter(s => s.id !== id);
+  renderSantriManage();
+  await persistState();
+  showToast("Akun santri dihapus");
+}
+
+function renderMateri() {
+  const cats = ["Semua", "Fiqih", "Tauhid", "Tasawuf", "Tajwid", "Akhlak"];
+  document.getElementById("materiFilter").innerHTML = cats.map(c => `
+    <button type="button" class="pill ${selectedKategori === c ? "active" : ""}" onclick="filterMateri('${c}')">${c}</button>
+  `).join("");
+
+  const q = getQuery("searchMateri");
+  let filtered = selectedKategori === "Semua" ? appState.materi : appState.materi.filter(m => m.kategori === selectedKategori);
+  if (q) {
+    filtered = filtered.filter(m =>
+      (m.judul || "").toLowerCase().includes(q) ||
+      (m.kitab || "").toLowerCase().includes(q) ||
+      (m.isi || "").toLowerCase().includes(q)
+    );
+  }
+
+  const listEl = document.getElementById("materiList");
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="neu-card" style="text-align:center;color:var(--text-secondary);font-size:13px;">Tidak ada materi yang sesuai.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(m => `
+    <div class="neu-card">
+      <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;">
+        <div>
+          <span class="badge" style="margin-bottom:6px;">${m.kategori} • ${m.kitab}</span>
+          <h3 style="font-size:15px;font-weight:700;">${m.judul}</h3>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="btn btn-sm" onclick="editMateri('${m.id}')">Edit</button>
+          <button type="button" class="btn btn-sm" onclick="deleteMateri('${m.id}')">Hapus</button>
+        </div>
+      </div>
+      <p style="font-size:13px;color:var(--text-secondary);white-space:pre-line;">${m.isi}</p>
+    </div>
+  `).join("");
+}
+
+function filterMateri(cat) {
+  selectedKategori = cat;
+  renderMateri();
+}
+
+function openMateriForm() {
+  populateKelasDropdowns();
+  document.getElementById("materiModalTitle").textContent = "Tambah Materi Belajar";
+  document.getElementById("editMateriId").value = "";
+  document.getElementById("materiJudul").value = "";
+  document.getElementById("materiKitabSelect").value = "Umum";
+  document.getElementById("materiIsi").value = "";
+  openModal("modalMateri");
+}
+
+function editMateri(id) {
+  populateKelasDropdowns();
+  const m = appState.materi.find(x => x.id === id);
+  if (!m) return;
+  document.getElementById("materiModalTitle").textContent = "Edit Materi Belajar";
+  document.getElementById("editMateriId").value = m.id;
+  document.getElementById("materiJudul").value = m.judul;
+  document.getElementById("materiKategori").value = m.kategori;
+  document.getElementById("materiKitabSelect").value = m.kitab || "Umum";
+  document.getElementById("materiIsi").value = m.isi;
+  openModal("modalMateri");
+}
+
+async function saveMateri() {
+  const id = document.getElementById("editMateriId").value;
+  const judul = document.getElementById("materiJudul").value.trim();
+  const kategori = document.getElementById("materiKategori").value;
+  const kitab = document.getElementById("materiKitabSelect").value || "Umum";
+  const isi = document.getElementById("materiIsi").value.trim();
+  if (!judul || !isi) return showToast("Judul dan isi materi wajib diisi");
+
+  if (id) {
+    const idx = appState.materi.findIndex(x => x.id === id);
+    if (idx > -1) appState.materi[idx] = { ...appState.materi[idx], judul, kategori, kitab, isi };
+  } else {
+    appState.materi.unshift({
+      id: "m" + Date.now(),
+      judul,
+      kategori,
+      kitab,
+      isi,
+      tanggal: new Date().toISOString().slice(0, 10)
+    });
+  }
+  closeModal("modalMateri");
+  await persistState();
+  showToast("Materi berhasil disimpan");
+}
+
+async function deleteMateri(id) {
+  appState.materi = appState.materi.filter(m => m.id !== id);
+  await persistState();
+  showToast("Materi dihapus");
+}
+
+function renderSoal() {
+  const listEl = document.getElementById("soalList");
+  const huruf = ["A", "B", "C", "D"];
+  const q = getQuery("searchSoal");
+
+  const mapped = appState.kuisSoal.map((item, idx) => ({ ...item, origIndex: idx }));
+  const filtered = q
+    ? mapped.filter(item =>
+        (item.pertanyaan || "").toLowerCase().includes(q) ||
+        (item.penjelasan || "").toLowerCase().includes(q) ||
+        (item.opsi || []).some(o => o.toLowerCase().includes(q))
+      )
+    : mapped;
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="neu-card" style="text-align:center;color:var(--text-secondary);font-size:13px;">${appState.kuisSoal.length === 0 ? "Belum ada soal kuis. Buat soal di formulir atas." : "Soal kuis tidak ditemukan."}</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(item => `
+    <div class="neu-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+        <span class="badge">Soal #${item.origIndex + 1} • ${item.poin} Poin</span>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="btn btn-sm" onclick="editSoal('${item.id}')">Edit</button>
+          <button type="button" class="btn btn-sm" onclick="deleteSoal('${item.id}')">Hapus</button>
+        </div>
+      </div>
+      <div style="font-weight:700;font-size:14px;margin-bottom:8px;">${item.pertanyaan}</div>
+      <div style="display:grid;gap:4px;font-size:12px;">
+        ${item.opsi.map((op, idx) => `
+          <div style="padding:6px 10px;border-radius:8px;background:${idx === Number(item.kunci) ? "var(--accent)" : "var(--bg)"};color:${idx === Number(item.kunci) ? "var(--accent-text)" : "var(--text-secondary)"};font-weight:${idx === Number(item.kunci) ? "700" : "400"};">
+            ${huruf[idx]}. ${op} ${idx === Number(item.kunci) ? "(Kunci)" : ""}
+          </div>
+        `).join("")}
+      </div>
+      ${item.penjelasan ? `
+        <div class="neu-inset" style="margin-top:10px;padding:10px 12px;font-size:12px;color:var(--text-secondary);">
+          <strong style="color:var(--text-primary);display:block;margin-bottom:2px;">Penjelasan Jawaban:</strong>
+          <span style="white-space:pre-line;">${item.penjelasan}</span>
+        </div>
+      ` : ""}
+    </div>
+  `).join("");
+}
+
+async function saveSoal() {
+  const id = document.getElementById("editSoalId").value;
+  const pertanyaan = document.getElementById("soalTeks").value.trim();
+  const opsi = [
+    document.getElementById("optA").value.trim(),
+    document.getElementById("optB").value.trim(),
+    document.getElementById("optC").value.trim(),
+    document.getElementById("optD").value.trim()
+  ];
+  const kunci = Number(document.getElementById("soalKunci").value);
+  const poin = Number(document.getElementById("soalPoin").value) || 20;
+  const penjelasan = document.getElementById("soalPenjelasan").value.trim();
+
+  if (!pertanyaan || opsi.some(o => !o)) return showToast("Lengkapi pertanyaan dan 4 pilihan jawaban");
+
+  if (id) {
+    const idx = appState.kuisSoal.findIndex(x => x.id === id);
+    if (idx > -1) appState.kuisSoal[idx] = { id, pertanyaan, opsi, kunci, poin, penjelasan };
+  } else {
+    appState.kuisSoal.push({ id: "q" + Date.now(), pertanyaan, opsi, kunci, poin, penjelasan });
+  }
+  resetSoalForm();
+  await persistState();
+  showToast("Soal & penjelasan kuis disimpan");
+}
+
+function editSoal(id) {
+  const q = appState.kuisSoal.find(x => x.id === id);
+  if (!q) return;
+  document.getElementById("soalFormTitle").textContent = "Edit Pertanyaan Kuis";
+  document.getElementById("editSoalId").value = q.id;
+  document.getElementById("soalTeks").value = q.pertanyaan;
+  document.getElementById("optA").value = q.opsi[0];
+  document.getElementById("optB").value = q.opsi[1];
+  document.getElementById("optC").value = q.opsi[2];
+  document.getElementById("optD").value = q.opsi[3];
+  document.getElementById("soalKunci").value = q.kunci;
+  document.getElementById("soalPoin").value = q.poin;
+  document.getElementById("soalPenjelasan").value = q.penjelasan || "";
+  document.getElementById("btnCancelSoal").style.display = "inline-flex";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function resetSoalForm() {
+  document.getElementById("soalFormTitle").textContent = "Tambah Pertanyaan Kuis";
+  document.getElementById("editSoalId").value = "";
+  document.getElementById("soalTeks").value = "";
+  document.getElementById("optA").value = "";
+  document.getElementById("optB").value = "";
+  document.getElementById("optC").value = "";
+  document.getElementById("optD").value = "";
+  document.getElementById("soalKunci").value = "0";
+  document.getElementById("soalPoin").value = "20";
+  document.getElementById("soalPenjelasan").value = "";
+  document.getElementById("btnCancelSoal").style.display = "none";
+}
+
+async function deleteSoal(id) {
+  appState.kuisSoal = appState.kuisSoal.filter(q => q.id !== id);
+  await persistState();
+  showToast("Soal dihapus");
+}
+
+async function saveKuisConfig() {
+  appState.kuisConfig.judul = document.getElementById("cfgKuisJudul").value.trim() || "Musabaqah Fahmil Kutub BUSTANUL HADI";
+  appState.kuisConfig.durasi = Number(document.getElementById("cfgKuisDurasi").value) || 180;
+  closeModal("modalKuisConfig");
+  await persistState();
+  showToast("Pengaturan kuis disimpan");
+}
+
+function renderLinks() {
+  const listEl = document.getElementById("linkList");
+  const q = getQuery("searchPustaka");
+  const filtered = q
+    ? appState.pustaka.filter(l =>
+        (l.judul || "").toLowerCase().includes(q) ||
+        (l.jenis || "").toLowerCase().includes(q) ||
+        (l.deskripsi || "").toLowerCase().includes(q)
+      )
+    : appState.pustaka;
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div class="neu-card" style="text-align:center;color:var(--text-secondary);font-size:13px;">Tidak ada tautan pustaka yang cocok.</div>`;
+    return;
+  }
+  listEl.innerHTML = filtered.map(l => `
+    <div class="neu-card" style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
+      <div style="min-width:0;">
+        <span class="badge" style="margin-bottom:4px;">${l.jenis}</span>
+        <div style="font-weight:700;font-size:14px;">${l.judul}</div>
+        <div style="font-size:12px;color:var(--text-secondary);">${l.deskripsi}</div>
+      </div>
+      <div style="display:flex;gap:6px;flex-shrink:0;">
+        <a href="${l.url}" target="_blank" rel="noopener" class="btn btn-primary btn-sm" style="text-decoration:none;">Buka</a>
+        <button type="button" class="btn btn-sm" onclick="deleteLink('${l.id}')">Hapus</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+async function saveLink() {
+  const judul = document.getElementById("linkJudul").value.trim();
+  const jenis = document.getElementById("linkJenis").value;
+  let url = document.getElementById("linkUrl").value.trim();
+  const deskripsi = document.getElementById("linkDesc").value.trim();
+  if (!judul || !url) return showToast("Judul dan URL wajib diisi");
+  if (!/^https?:\/\//i.test(url)) url = "https://" + url;
+
+  appState.pustaka.unshift({ id: "l" + Date.now(), judul, jenis, url, deskripsi });
+  document.getElementById("linkJudul").value = "";
+  document.getElementById("linkUrl").value = "";
+  document.getElementById("linkDesc").value = "";
+  closeModal("modalLink");
+  await persistState();
+  showToast("Tautan ditambahkan");
+}
+
+async function deleteLink(id) {
+  appState.pustaka = appState.pustaka.filter(l => l.id !== id);
+  await persistState();
+  showToast("Tautan dihapus");
+}
+
+function renderAnalisa() {
+  const sessionKeys = Object.keys(appState.absensi);
+  let totalHadir = 0;
+  let totalRecords = 0;
+  const q = getQuery("searchAnalisa");
+
+  const perSantri = appState.santri.map(s => {
+    let h = 0, i = 0, sk = 0, a = 0;
+    sessionKeys.forEach(k => {
+      const st = appState.absensi[k][s.id];
+      if (st) {
+        totalRecords++;
+        if (st === "Hadir") { h++; totalHadir++; }
+        else if (st === "Izin") i++;
+        else if (st === "Sakit") sk++;
+        else if (st === "Alpa") a++;
+      }
+    });
+    const tot = h + i + sk + a;
+    const pct = tot > 0 ? Math.round((h / tot) * 100) : 0;
+    return { ...s, h, i, sk, a, tot, pct };
+  });
+
+  const avgPct = totalRecords > 0 ? Math.round((totalHadir / totalRecords) * 100) : 0;
+
+  document.getElementById("analisaSummary").innerHTML = `
+    <div class="stat-box">
+      <div class="stat-val">${sessionKeys.length}</div>
+      <div class="stat-lbl">Total Sesi Pengajian</div>
+    </div>
+    <div class="stat-box">
+      <div class="stat-val">${avgPct}%</div>
+      <div class="stat-lbl">Rata-Rata Kehadiran</div>
+    </div>
+  `;
+
+  const sortedSkor = [...appState.skor].sort((a, b) => b.poin - a.poin);
+  const lbEl = document.getElementById("leaderboardList");
+  if (sortedSkor.length === 0) {
+    lbEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);">Belum ada santri yang menyelesaikan kuis.</div>`;
+  } else {
+    lbEl.innerHTML = sortedSkor.map((sc, idx) => `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge" style="${idx < 3 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${idx + 1}</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;">${sc.nama}</div>
+            <div style="font-size:11px;color:var(--text-secondary);">Benar ${sc.benar}/${sc.total} • ${sc.waktu}</div>
+          </div>
+        </div>
+        <div style="font-weight:800;font-size:14px;">${sc.poin} Poin</div>
+      </div>
+    `).join("");
+  }
+
+  const filteredAnalisa = q
+    ? perSantri.filter(s => (s.nama || "").toLowerCase().includes(q) || (s.kelas || "").toLowerCase().includes(q))
+    : perSantri;
+
+  const analisaEl = document.getElementById("analisaSantriList");
+  if (filteredAnalisa.length === 0) {
+    analisaEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:12px 0;">Santri tidak ditemukan.</div>`;
+  } else {
+    analisaEl.innerHTML = filteredAnalisa.map(s => `
+      <div style="padding:10px 0;border-bottom:1px solid var(--border);">
+        <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;">
+          <span>${s.nama} <span style="font-weight:400;color:var(--text-secondary);">(${s.kelas})</span></span>
+          <span>${s.pct}% Hadir</span>
+        </div>
+        <div class="bar-track"><div class="bar-fill" style="width:${s.pct}%;"></div></div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:5px;">
+          Hadir: ${s.h} • Izin: ${s.i} • Sakit: ${s.sk} • Alpa: ${s.a}
+        </div>
+      </div>
+    `).join("");
+  }
+}
+
+async function resetScores() {
+  appState.skor = [];
+  await persistState();
+  showToast("Klasemen kuis direset");
+}
+
+function renderAll() {
+  populateKelasDropdowns();
+  renderAbsensi();
+  renderMateri();
+  renderSoal();
+  renderLinks();
+  renderAnalisa();
+}
+
+document.getElementById("attDate").value = new Date().toISOString().slice(0, 10);
+if (localStorage.getItem("guru_permanent_unlocked") === "1") {
+  document.getElementById("lockScreen").classList.add("hidden");
+}
+renderAll();
+initFirebase();
+</script>
+</body>
+</html>
