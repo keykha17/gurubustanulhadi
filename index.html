@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="color-scheme" content="light dark">
 <title>BUSTANUL HADI - Portal Guru</title>
+<meta name="theme-color" content="#141414">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="BUSTANUL HADI Guru">
+<link id="appFavicon" rel="icon" type="image/svg+xml" href="">
+<link id="appAppleIcon" rel="apple-touch-icon" href="">
+<link id="appManifest" rel="manifest" href="">
 <style>
 :root {
   --bg: #f0f0f0;
@@ -1584,7 +1592,6 @@ function renderAbsensi() {
     counts[status] = (counts[status] || 0) + 1;
   });
 
-  // Gabungkan status sesi saat ini dan statistik persentase
   let enrichedList = classSantri.map(st => {
     const isMarked = currentRecord[st.id] !== undefined;
     const status = currentRecord[st.id] || "Hadir";
@@ -1592,14 +1599,12 @@ function renderAbsensi() {
     return { ...st, status, isMarked, overallPct: stats.pct, overallTot: stats.tot };
   });
 
-  // 1. Filter status kehadiran
   if (attStatusFilter === "UNMARKED") {
     enrichedList = enrichedList.filter(st => !st.isMarked);
   } else if (attStatusFilter !== "ALL") {
     enrichedList = enrichedList.filter(st => st.status === attStatusFilter);
   }
 
-  // 2. Filter pencarian nama / username / kelas
   if (q) {
     enrichedList = enrichedList.filter(st =>
       (st.nama || "").toLowerCase().includes(q) ||
@@ -1608,7 +1613,6 @@ function renderAbsensi() {
     );
   }
 
-  // 3. Pengurutan daftar
   const statusWeight = { Hadir: 1, Izin: 2, Sakit: 3, Alpa: 4 };
   enrichedList.sort((a, b) => {
     if (sortBy === "NAMA_DESC") return (b.nama || "").localeCompare(a.nama || "");
@@ -1618,7 +1622,6 @@ function renderAbsensi() {
     return (a.nama || "").localeCompare(b.nama || "");
   });
 
-  // Indikator ringkasan & tombol reset filter
   const isFiltered = filterKelas !== "ALL" || attStatusFilter !== "ALL" || q !== "" || sortBy !== "NAMA_ASC";
   const summaryEl = document.getElementById("attFilterSummary");
   const resetBtn = document.getElementById("btnResetAttFilter");
@@ -2452,6 +2455,68 @@ if (localStorage.getItem("guru_permanent_unlocked") === "1") {
 }
 renderAll();
 initFirebase();
+
+(function setupBustanulHadiIconAndPWA() {
+  const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+    <defs>
+      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+        <stop offset="0%" stop-color="#e2a83e"/>
+        <stop offset="55%" stop-color="#4e8954"/>
+        <stop offset="100%" stop-color="#0d5c46"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="#e5aa3d"/>
+        <stop offset="100%" stop-color="#5d8242"/>
+      </linearGradient>
+    </defs>
+    <rect width="512" height="512" rx="112" fill="#ffffff"/>
+    <path d="M235 96 C125 115 72 225 102 325 C128 408 212 452 298 432 C222 422 162 362 152 282 C142 204 176 134 235 96 Z" fill="url(#g1)"/>
+    <path d="M168 355 C235 438 358 432 414 332 C432 298 438 262 434 230 C414 312 346 368 265 372 C225 374 192 366 168 355 Z" fill="#0d5c46"/>
+    <path d="M254 338 C258 292 246 254 218 228 C196 208 176 202 166 202 C174 232 194 256 226 268 C242 274 250 296 248 338 Z" fill="url(#g2)"/>
+    <path d="M262 324 C264 274 282 232 322 206 C346 190 368 186 378 186 C368 222 344 252 308 266 C286 274 272 296 268 324 Z" fill="url(#g1)"/>
+    <path d="M286 86 L296 124 L334 134 L296 144 L286 182 L276 144 L238 134 L276 124 Z" fill="url(#g2)"/>
+    <path d="M226 154 L231 170 L247 175 L231 180 L226 196 L221 180 L205 175 L221 170 Z" fill="#d99f38"/>
+    <path d="M188 184 L192 196 L204 200 L192 204 L188 216 L184 204 L172 200 L184 196 Z" fill="#d99f38"/>
+    <path d="M262 198 L266 210 L278 214 L266 218 L262 230 L258 218 L246 214 L258 210 Z" fill="#b4923f"/>
+    <path d="M332 162 L337 176 L351 181 L337 186 L332 200 L327 186 L313 181 L327 176 Z" fill="#b4923f"/>
+    <path d="M352 292 L358 310 L376 316 L358 322 L352 340 L346 322 L328 316 L346 310 Z" fill="#186048"/>
+  </svg>`;
+
+  const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(logoSvg);
+  const favEl = document.getElementById("appFavicon");
+  if (favEl) favEl.href = svgUrl;
+
+  const img = new Image();
+  img.onload = function () {
+    const canvas = document.createElement("canvas");
+    canvas.width = 512;
+    canvas.height = 512;
+    const ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0, 512, 512);
+    const pngDataUrl = canvas.toDataURL("image/png");
+
+    const appleEl = document.getElementById("appAppleIcon");
+    if (appleEl) appleEl.href = pngDataUrl;
+
+    const manifestObj = {
+      name: "BUSTANUL HADI - Portal Guru",
+      short_name: "Guru BH",
+      start_url: window.location.href,
+      display: "standalone",
+      background_color: "#121212",
+      theme_color: "#141414",
+      icons: [
+        { src: pngDataUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
+        { src: pngDataUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
+      ]
+    };
+
+    const manifestBlob = new Blob([JSON.stringify(manifestObj)], { type: "application/manifest+json" });
+    const manifestEl = document.getElementById("appManifest");
+    if (manifestEl) manifestEl.href = URL.createObjectURL(manifestBlob);
+  };
+  img.src = svgUrl;
+})();
 </script>
 </body>
 </html>
