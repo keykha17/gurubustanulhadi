@@ -674,7 +674,12 @@ main {
   <section id="sec-kuis" class="section">
     <div class="section-header">
       <h2 class="section-title">Bank Soal Kuis Cerdas</h2>
-      <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalKuisConfig')">Atur Kuis</button>
+      <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalKuisConfig')">Atur Kuis & Pengurangan</button>
+    </div>
+
+    <div class="neu-inset" style="padding:10px 12px;margin-bottom:12px;font-size:12px;display:flex;justify-content:space-between;align-items:center;">
+      <span>Aturan Skor Salah Saat Ini:</span>
+      <strong id="kuisPenaltyBanner">-5 Poin / Salah</strong>
     </div>
 
     <div class="neu-card">
@@ -701,7 +706,7 @@ main {
           </select>
         </div>
         <div class="form-group">
-          <label>Bobot Poin</label>
+          <label>Bobot Poin Benar</label>
           <input type="number" id="soalPoin" value="20" min="5" max="100">
         </div>
       </div>
@@ -1002,13 +1007,18 @@ main {
 
 <div id="modalKuisConfig" class="modal-backdrop">
   <div class="modal-box">
-    <h3 style="font-size:16px;margin-bottom:12px;">Pengaturan Kuis Cerdas</h3>
+    <h3 style="font-size:16px;margin-bottom:12px;">Pengaturan Kuis & Pengurangan Skor</h3>
     <div class="form-group">
       <label>Judul Sesi Kuis</label>
       <input type="text" id="cfgKuisJudul">
     </div>
     <div class="form-group">
-      <label>Durasi Pengerjaan (Detik)</label>
+      <label>Pengurangan Poin Jika Jawaban Salah (0 = Tanpa Pengurangan)</label>
+      <input type="number" id="cfgKuisPenalti" min="0" max="100" value="5">
+      <p style="font-size:11px;color:var(--text-secondary);margin-top:4px;">Contoh: Jika diisi 5, maka setiap jawaban yang salah dikurangi 5 poin (soal yang tidak dijawab bernilai 0).</p>
+    </div>
+    <div class="form-group">
+      <label>Durasi Referensi (Detik)</label>
       <input type="number" id="cfgKuisDurasi" min="30" max="3600">
     </div>
     <div style="display:flex;gap:8px;">
@@ -1172,7 +1182,8 @@ const defaultState = {
   materi: [],
   kuisConfig: {
     judul: "Musabaqah Fahmil Kutub BUSTANUL HADI",
-    durasi: 180
+    durasi: 180,
+    penaltiSalah: 5
   },
   kuisSoal: [],
   skor: [],
@@ -1197,7 +1208,8 @@ function sanitizeState(stateObj) {
   stateObj.kuisSoal = Array.isArray(stateObj.kuisSoal) ? stateObj.kuisSoal : [];
   stateObj.skor = Array.isArray(stateObj.skor) ? stateObj.skor : [];
   stateObj.pustaka = Array.isArray(stateObj.pustaka) ? stateObj.pustaka : [];
-  stateObj.kuisConfig = stateObj.kuisConfig || { judul: "Musabaqah Fahmil Kutub BUSTANUL HADI", durasi: 180 };
+  stateObj.kuisConfig = stateObj.kuisConfig || { judul: "Musabaqah Fahmil Kutub BUSTANUL HADI", durasi: 180, penaltiSalah: 5 };
+  if (stateObj.kuisConfig.penaltiSalah === undefined) stateObj.kuisConfig.penaltiSalah = 5;
 
   stateObj.santri.forEach(s => {
     if (!s.kelas || !list.includes(s.kelas)) s.kelas = "Umum";
@@ -1504,6 +1516,7 @@ function openModal(id) {
   populateKelasDropdowns();
   if (id === "modalKuisConfig") {
     document.getElementById("cfgKuisJudul").value = appState.kuisConfig.judul;
+    document.getElementById("cfgKuisPenalti").value = appState.kuisConfig.penaltiSalah !== undefined ? appState.kuisConfig.penaltiSalah : 5;
     document.getElementById("cfgKuisDurasi").value = appState.kuisConfig.durasi;
   }
   if (id === "modalSettings") {
@@ -1863,6 +1876,12 @@ async function deleteMateri(id) {
 }
 
 function renderSoal() {
+  const penalti = Number(appState.kuisConfig?.penaltiSalah ?? 5);
+  const penBanner = document.getElementById("kuisPenaltyBanner");
+  if (penBanner) {
+    penBanner.textContent = penalti > 0 ? `-${penalti} Poin / Jawaban Salah` : "0 Poin (Tanpa Pengurangan)";
+  }
+
   const listEl = document.getElementById("soalList");
   const huruf = ["A", "B", "C", "D"];
   const q = getQuery("searchSoal");
@@ -1884,7 +1903,7 @@ function renderSoal() {
   listEl.innerHTML = filtered.map(item => `
     <div class="neu-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <span class="badge">Soal #${item.origIndex + 1} • ${item.poin} Poin</span>
+        <span class="badge">Soal #${item.origIndex + 1} • +${item.poin} / -${penalti} Poin</span>
         <div style="display:flex;gap:6px;">
           <button type="button" class="btn btn-sm" onclick="editSoal('${item.id}')">Edit</button>
           <button type="button" class="btn btn-sm" onclick="deleteSoal('${item.id}')">Hapus</button>
@@ -1973,10 +1992,12 @@ async function deleteSoal(id) {
 
 async function saveKuisConfig() {
   appState.kuisConfig.judul = document.getElementById("cfgKuisJudul").value.trim() || "Musabaqah Fahmil Kutub BUSTANUL HADI";
+  const penVal = Number(document.getElementById("cfgKuisPenalti").value);
+  appState.kuisConfig.penaltiSalah = !isNaN(penVal) && penVal >= 0 ? penVal : 5;
   appState.kuisConfig.durasi = Number(document.getElementById("cfgKuisDurasi").value) || 180;
   closeModal("modalKuisConfig");
   await persistState();
-  showToast("Pengaturan kuis disimpan");
+  showToast("Pengaturan kuis & pengurangan poin disimpan");
 }
 
 function renderLinks() {
@@ -2185,12 +2206,15 @@ function openSantriDetailModal(santriId) {
   } else {
     skorBox.innerHTML = `
       <div style="font-size:12px;font-weight:700;margin-bottom:6px;">Skor Kuis Cerdas</div>
-      ${userScores.map(sc => `
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
-          <span>Benar <strong>${sc.benar}/${sc.total}</strong> soal • <span style="color:var(--text-secondary);">${sc.waktu}</span></span>
-          <span class="badge" style="background:var(--accent);color:var(--accent-text);">${sc.poin} Poin</span>
-        </div>
-      `).join("")}
+      ${userScores.map(sc => {
+        const salahTxt = sc.salah !== undefined ? ` • Salah ${sc.salah}` : "";
+        return `
+          <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
+            <span>Benar <strong>${sc.benar}/${sc.total}</strong>${salahTxt} • <span style="color:var(--text-secondary);">${sc.waktu}</span></span>
+            <span class="badge" style="background:var(--accent);color:var(--accent-text);">${sc.poin} Poin</span>
+          </div>
+        `;
+      }).join("")}
     `;
   }
 
@@ -2370,18 +2394,21 @@ function renderAnalisa() {
   if (sortedSkor.length === 0) {
     lbEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);">Belum ada santri yang menyelesaikan kuis pada kelas terpilih.</div>`;
   } else {
-    lbEl.innerHTML = sortedSkor.map((sc, idx) => `
-      <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" onclick="openSantriDetailModal('${sc.santriId}')">
-        <div style="display:flex;align-items:center;gap:10px;">
-          <span class="badge" style="${idx < 3 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${idx + 1}</span>
-          <div>
-            <div style="font-size:13px;font-weight:700;">${sc.nama}</div>
-            <div style="font-size:11px;color:var(--text-secondary);">Benar ${sc.benar}/${sc.total} • ${sc.waktu}</div>
+    lbEl.innerHTML = sortedSkor.map((sc, idx) => {
+      const salahTxt = sc.salah !== undefined ? ` • Salah ${sc.salah}` : "";
+      return `
+        <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" onclick="openSantriDetailModal('${sc.santriId}')">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="badge" style="${idx < 3 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${idx + 1}</span>
+            <div>
+              <div style="font-size:13px;font-weight:700;">${sc.nama}</div>
+              <div style="font-size:11px;color:var(--text-secondary);">Benar ${sc.benar}/${sc.total}${salahTxt} • ${sc.waktu}</div>
+            </div>
           </div>
+          <div style="font-weight:800;font-size:14px;">${sc.poin} Poin</div>
         </div>
-        <div style="font-weight:800;font-size:14px;">${sc.poin} Poin</div>
-      </div>
-    `).join("");
+      `;
+    }).join("");
   }
 
   let listSantri = [...perSantri];
@@ -2404,7 +2431,7 @@ function renderAnalisa() {
   if (sortBy === "PCT_DESC") listSantri.sort((a, b) => b.pct - a.pct);
   else if (sortBy === "PCT_ASC") listSantri.sort((a, b) => a.pct - b.pct);
   else if (sortBy === "ALPA_DESC") listSantri.sort((a, b) => b.a - a.a);
-  else if (sortBy === "SKOR_DESC") listSantri.sort((a, b) => (b.quizPoin ?? -1) - (a.quizPoin ?? -1));
+  else if (sortBy === "SKOR_DESC") listSantri.sort((a, b) => (b.quizPoin ?? -9999) - (a.quizPoin ?? -9999));
   else listSantri.sort((a, b) => a.nama.localeCompare(b.nama));
 
   const analisaEl = document.getElementById("analisaSantriList");
@@ -2500,7 +2527,7 @@ initFirebase();
 
     const manifestObj = {
       name: "BUSTANUL HADI - Portal Guru",
-      short_name: "Guru BustanulHadi",
+      short_name: "Guru BH",
       start_url: window.location.href,
       display: "standalone",
       background_color: "#121212",
