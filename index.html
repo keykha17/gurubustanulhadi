@@ -306,6 +306,7 @@ main {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  gap: 8px;
 }
 .att-btn {
   padding: 7px 4px;
@@ -593,15 +594,45 @@ main {
           </select>
         </div>
       </div>
-      <div class="form-group" style="margin-bottom:10px;">
-        <label>Filter Kelas / Kitab Santri</label>
-        <select id="attKelasFilter" onchange="renderAbsensi()"></select>
+
+      <div class="grid-2" style="margin-bottom:10px;">
+        <div>
+          <label>Filter Kelas / Kitab</label>
+          <select id="attKelasFilter" onchange="renderAbsensi()"></select>
+        </div>
+        <div>
+          <label>Urutkan Daftar</label>
+          <select id="attSortBy" onchange="renderAbsensi()">
+            <option value="NAMA_ASC">Nama (A - Z)</option>
+            <option value="NAMA_DESC">Nama (Z - A)</option>
+            <option value="STATUS_ORDER">Status (Hadir - Alpa)</option>
+            <option value="PCT_DESC">Kehadiran Tertinggi (%)</option>
+            <option value="PCT_ASC">Kehadiran Terendah (%)</option>
+          </select>
+        </div>
       </div>
+
+      <label>Filter Status Kehadiran</label>
+      <div class="pill-group" id="attStatusPills" style="margin-bottom:10px;">
+        <button type="button" class="pill active" onclick="setAttStatusFilter('ALL', this)">Semua</button>
+        <button type="button" class="pill" onclick="setAttStatusFilter('Hadir', this)">Hadir</button>
+        <button type="button" class="pill" onclick="setAttStatusFilter('Izin', this)">Izin</button>
+        <button type="button" class="pill" onclick="setAttStatusFilter('Sakit', this)">Sakit</button>
+        <button type="button" class="pill" onclick="setAttStatusFilter('Alpa', this)">Alpa</button>
+        <button type="button" class="pill" onclick="setAttStatusFilter('UNMARKED', this)">Belum Diabsen</button>
+      </div>
+
       <div class="search-wrap" id="wrapSearchAbsensi" style="margin-bottom:10px;">
         <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="searchAbsensi" placeholder="Cari nama santri atau username..." oninput="onSearchInput('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">
         <button type="button" class="search-clear" onclick="clearSearch('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">×</button>
       </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;color:var(--text-secondary);">
+        <span id="attFilterSummary">Menampilkan semua santri</span>
+        <button type="button" id="btnResetAttFilter" style="background:none;border:none;color:var(--text-primary);font-size:11px;font-weight:700;cursor:pointer;display:none;" onclick="resetAttFilters()">Reset Filter</button>
+      </div>
+
       <div style="display:flex;gap:8px;">
         <button type="button" class="btn btn-sm" style="flex:1;" onclick="markAllHadir()">Hadir Semua</button>
         <button type="button" class="btn btn-primary btn-sm" style="flex:1;" onclick="saveAttendance()">Simpan Absensi</button>
@@ -1175,6 +1206,7 @@ let db = null;
 let docRef = null;
 let selectedKategori = "Semua";
 let analisaMode = "semua";
+let attStatusFilter = "ALL";
 
 function onSearchInput(inputId, wrapId, renderFn) {
   const inp = document.getElementById(inputId);
@@ -1373,8 +1405,8 @@ function populateKelasDropdowns() {
   const attFilter = document.getElementById("attKelasFilter");
   if (attFilter) {
     const prev = attFilter.value || "ALL";
-    attFilter.innerHTML = `<option value="ALL">Semua Kelas & Kitab (${appState.santri.length} Santri)</option>` +
-      list.map(k => `<option value="${k}">${k === "Umum" ? "Umum (Mencakup Semua)" : k}</option>`).join("");
+    attFilter.innerHTML = `<option value="ALL">Semua Kelas (${appState.santri.length})</option>` +
+      list.map(k => `<option value="${k}">${k === "Umum" ? "Umum (Semua)" : k}</option>`).join("");
     if ([...attFilter.options].some(o => o.value === prev)) attFilter.value = prev;
   }
 
@@ -1503,11 +1535,43 @@ function getAttKey() {
   return d + "_" + s;
 }
 
+function getSantriOverallPct(santriId) {
+  const keys = Object.keys(appState.absensi || {});
+  let h = 0, tot = 0;
+  keys.forEach(k => {
+    const st = (appState.absensi[k] || {})[santriId];
+    if (st) {
+      tot++;
+      if (st === "Hadir") h++;
+    }
+  });
+  return { pct: tot > 0 ? Math.round((h / tot) * 100) : 0, tot };
+}
+
+function setAttStatusFilter(status, btnEl) {
+  attStatusFilter = status;
+  document.querySelectorAll("#attStatusPills .pill").forEach(p => p.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+  renderAbsensi();
+}
+
+function resetAttFilters() {
+  attStatusFilter = "ALL";
+  document.querySelectorAll("#attStatusPills .pill").forEach((p, idx) => {
+    if (idx === 0) p.classList.add("active");
+    else p.classList.remove("active");
+  });
+  document.getElementById("attKelasFilter").value = "ALL";
+  document.getElementById("attSortBy").value = "NAMA_ASC";
+  clearSearch("searchAbsensi", "wrapSearchAbsensi", renderAbsensi);
+}
+
 function renderAbsensi() {
   const key = getAttKey();
   const currentRecord = appState.absensi[key] || {};
   const listEl = document.getElementById("attList");
   const filterKelas = document.getElementById("attKelasFilter").value || "ALL";
+  const sortBy = document.getElementById("attSortBy") ? document.getElementById("attSortBy").value : "NAMA_ASC";
   const q = getQuery("searchAbsensi");
 
   const classSantri = filterKelas === "ALL"
@@ -1520,31 +1584,70 @@ function renderAbsensi() {
     counts[status] = (counts[status] || 0) + 1;
   });
 
-  const filteredSantri = q
-    ? classSantri.filter(st =>
-        (st.nama || "").toLowerCase().includes(q) ||
-        (st.username || "").toLowerCase().includes(q) ||
-        (st.kelas || "").toLowerCase().includes(q)
-      )
-    : classSantri;
+  // Gabungkan status sesi saat ini dan statistik persentase
+  let enrichedList = classSantri.map(st => {
+    const isMarked = currentRecord[st.id] !== undefined;
+    const status = currentRecord[st.id] || "Hadir";
+    const stats = getSantriOverallPct(st.id);
+    return { ...st, status, isMarked, overallPct: stats.pct, overallTot: stats.tot };
+  });
 
-  if (filteredSantri.length === 0) {
-    listEl.innerHTML = `<div class="neu-card" style="text-align:center;color:var(--text-secondary);font-size:13px;">Tidak ada santri yang cocok dengan filter atau pencarian.</div>`;
+  // 1. Filter status kehadiran
+  if (attStatusFilter === "UNMARKED") {
+    enrichedList = enrichedList.filter(st => !st.isMarked);
+  } else if (attStatusFilter !== "ALL") {
+    enrichedList = enrichedList.filter(st => st.status === attStatusFilter);
+  }
+
+  // 2. Filter pencarian nama / username / kelas
+  if (q) {
+    enrichedList = enrichedList.filter(st =>
+      (st.nama || "").toLowerCase().includes(q) ||
+      (st.username || "").toLowerCase().includes(q) ||
+      (st.kelas || "").toLowerCase().includes(q)
+    );
+  }
+
+  // 3. Pengurutan daftar
+  const statusWeight = { Hadir: 1, Izin: 2, Sakit: 3, Alpa: 4 };
+  enrichedList.sort((a, b) => {
+    if (sortBy === "NAMA_DESC") return (b.nama || "").localeCompare(a.nama || "");
+    if (sortBy === "STATUS_ORDER") return (statusWeight[a.status] || 9) - (statusWeight[b.status] || 9) || (a.nama || "").localeCompare(b.nama || "");
+    if (sortBy === "PCT_DESC") return b.overallPct - a.overallPct || (a.nama || "").localeCompare(b.nama || "");
+    if (sortBy === "PCT_ASC") return a.overallPct - b.overallPct || (a.nama || "").localeCompare(b.nama || "");
+    return (a.nama || "").localeCompare(b.nama || "");
+  });
+
+  // Indikator ringkasan & tombol reset filter
+  const isFiltered = filterKelas !== "ALL" || attStatusFilter !== "ALL" || q !== "" || sortBy !== "NAMA_ASC";
+  const summaryEl = document.getElementById("attFilterSummary");
+  const resetBtn = document.getElementById("btnResetAttFilter");
+  if (summaryEl) {
+    summaryEl.textContent = `Menampilkan ${enrichedList.length} dari ${classSantri.length} santri`;
+  }
+  if (resetBtn) {
+    resetBtn.style.display = isFiltered ? "inline-block" : "none";
+  }
+
+  if (enrichedList.length === 0) {
+    listEl.innerHTML = `<div class="neu-card" style="text-align:center;color:var(--text-secondary);font-size:13px;">Tidak ada santri yang sesuai dengan filter nama atau status kehadiran.</div>`;
   } else {
-    listEl.innerHTML = filteredSantri.map(st => {
-      const status = currentRecord[st.id] || "Hadir";
+    listEl.innerHTML = enrichedList.map(st => {
       return `
         <div class="att-item">
           <div class="att-top">
-            <div>
+            <div style="cursor:pointer;flex:1;min-width:0;" onclick="openSantriDetailModal('${st.id}')">
               <div style="font-weight:700;font-size:14px;">${st.nama}</div>
-              <div style="font-size:11px;color:var(--text-secondary);">${st.kelas} • @${st.username || st.id}</div>
+              <div style="font-size:11px;color:var(--text-secondary);">${st.kelas} • Hadir ${st.overallPct}% (${st.overallTot} sesi)</div>
             </div>
-            <span class="badge">${status}</span>
+            <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+              ${!st.isMarked ? `<span class="badge" style="font-size:10px;">Default</span>` : ""}
+              <span class="badge" style="${st.status === "Hadir" ? "background:var(--accent);color:var(--accent-text);" : ""}">${st.status}</span>
+            </div>
           </div>
           <div class="grid-4">
             ${["Hadir", "Izin", "Sakit", "Alpa"].map(opt => `
-              <button type="button" class="att-btn ${status === opt ? "selected" : ""}" onclick="setSantriAtt('${st.id}', '${opt}')">${opt}</button>
+              <button type="button" class="att-btn ${st.status === opt ? "selected" : ""}" onclick="setSantriAtt('${st.id}', '${opt}')">${opt}</button>
             `).join("")}
           </div>
         </div>
@@ -1553,7 +1656,7 @@ function renderAbsensi() {
   }
 
   document.getElementById("attQuickStats").innerHTML = ["Hadir", "Izin", "Sakit", "Alpa"].map(k => `
-    <div class="stat-box" style="padding:8px;">
+    <div class="stat-box" style="padding:8px;cursor:pointer;" onclick="setAttStatusFilter('${k}', document.querySelector('#attStatusPills .pill:nth-child(${["Hadir","Izin","Sakit","Alpa"].indexOf(k) + 2})'))">
       <div class="stat-val" style="font-size:16px;">${counts[k]}</div>
       <div class="stat-lbl">${k}</div>
     </div>
