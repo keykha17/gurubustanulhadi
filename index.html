@@ -2,13 +2,14 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>BUSTANUL HADI - Portal Guru</title>
-<meta name="theme-color" content="#141414">
+<meta name="theme-color" content="#f7f7f7" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="BUSTANUL HADI Guru">
 <link id="appFavicon" rel="icon" type="image/svg+xml" href="">
 <link id="appAppleIcon" rel="apple-touch-icon" href="">
@@ -54,7 +55,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   min-height: 100vh;
-  padding-bottom: 84px;
+  padding-bottom: calc(84px + env(safe-area-inset-bottom));
   transition: background-color 0.2s ease, color 0.2s ease;
 }
 .neu-card {
@@ -175,7 +176,7 @@ header {
   z-index: 40;
   background: var(--surface);
   border-bottom: 1px solid var(--border);
-  padding: 12px 16px;
+  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -457,7 +458,7 @@ main {
   border-top: 1px solid var(--border);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  padding: 6px 4px 10px;
+  padding: 6px 4px calc(10px + env(safe-area-inset-bottom));
 }
 .nav-item {
   display: flex;
@@ -2592,7 +2593,11 @@ function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
       const sum = masukTxList
         .filter(t => t.tanggal === dStr)
         .reduce((acc, c) => acc + (Number(c.nominal) || 0), 0);
-      dayTotals.push({ label: `${hariNama[idx]} ${dStr.slice(8, 10)}`, fullLabel: `${hariNama[idx]}, ${dStr}`, sum });
+      dayTotals.push({
+        label: `${hariNama[idx]} ${dStr.slice(8, 10)}`,
+        fullLabel: `${hariNama[idx]}, ${dStr}`,
+        sum
+      });
     }
     const maxVal = Math.max(...dayTotals.map(x => x.sum), 1);
     kasChartItems = dayTotals.map(d => ({
@@ -2624,7 +2629,7 @@ function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
 
   document.getElementById("kasTrendChartBox").innerHTML = renderVerticalBarChart(
     kasChartItems,
-    "Belum ada pemasukan kas pada rentang waktu ini."
+    "Belum ada pemasukan kas pada periode ini."
   );
 
   document.getElementById("kasPosDistTotalBadge").textContent = formatRupiah(kasMasuk);
@@ -2635,6 +2640,7 @@ function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
     const posEntries = Object.entries(posMasukMap)
       .filter(([, val]) => val > 0)
       .sort((a, b) => b[1] - a[1]);
+
     posDistEl.innerHTML = posEntries.map(([posName, val], idx) => {
       const pct = Math.round((val / kasMasuk) * 100);
       const opacity = Math.max(1 - idx * 0.16, 0.35);
@@ -2677,7 +2683,7 @@ function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
   const contribEl = document.getElementById("kasTopContributorsList");
 
   if (filteredContributors.length === 0) {
-    contribEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:8px 0;">${allContributors.length === 0 ? "Belum ada catatan setoran kas dari santri pada periode ini." : "Nama santri tidak ditemukan."}</div>`;
+    contribEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:8px 0;">${allContributors.length === 0 ? "Belum ada catatan setoran kas dari santri pada periode ini." : "Nama santri penyetor tidak ditemukan."}</div>`;
   } else {
     contribEl.innerHTML = filteredContributors.map(c => `
       <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" onclick="openSantriDetailModal('${c.santri.id}')">
@@ -2692,14 +2698,13 @@ function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
       </div>
     `).join("");
   }
+
+  return santriContribMap;
 }
 
 function renderAnalisa() {
   const sessionInfo = getFilteredSessionKeys();
-  const filteredKeys = sessionInfo.keys;
-  const refDate = sessionInfo.refDate;
-  const refMonth = sessionInfo.refMonth;
-
+  const keys = sessionInfo.keys;
   const kelasFilter = document.getElementById("analisaKelasFilter").value || "ALL";
   const statusFilter = document.getElementById("analisaStatusFilter").value || "ALL";
   const sortBy = document.getElementById("analisaSortBy").value || "NAMA_ASC";
@@ -2707,165 +2712,163 @@ function renderAnalisa() {
   const targetSantri = kelasFilter === "ALL"
     ? appState.santri
     : appState.santri.filter(s => s.kelas === kelasFilter);
-
   const targetIds = new Set(targetSantri.map(s => s.id));
 
   document.getElementById("analisaPeriodRangeText").textContent =
-    `${sessionInfo.desc} • Kelas: ${kelasFilter === "ALL" ? "Semua Kelas" : kelasFilter}`;
+    `${sessionInfo.desc} • ${keys.length} Sesi Pengajian • ${targetSantri.length} Santri`;
 
-  let totalH = 0, totalI = 0, totalSk = 0, totalA = 0, totalRecords = 0;
+  let totalH = 0, totalI = 0, totalS = 0, totalA = 0;
 
-  const perSantri = targetSantri.map(s => {
-    let h = 0, i = 0, sk = 0, a = 0;
-    filteredKeys.forEach(k => {
-      const st = (appState.absensi[k] || {})[s.id];
-      if (st) {
-        totalRecords++;
-        if (st === "Hadir") { h++; totalH++; }
-        else if (st === "Izin") { i++; totalI++; }
-        else if (st === "Sakit") { sk++; totalSk++; }
-        else if (st === "Alpa") { a++; totalA++; }
-      }
+  keys.forEach(k => {
+    const rec = appState.absensi[k] || {};
+    Object.entries(rec).forEach(([sid, val]) => {
+      if (!targetIds.has(sid)) return;
+      if (val === "Hadir") totalH++;
+      else if (val === "Izin") totalI++;
+      else if (val === "Sakit") totalS++;
+      else if (val === "Alpa") totalA++;
     });
-    const tot = h + i + sk + a;
-    const pct = tot > 0 ? Math.round((h / tot) * 100) : 0;
-    const scObj = appState.skor.find(sc => sc.santriId === s.id);
-    const quizPoin = scObj ? Number(scObj.poin || 0) : null;
-    const kasTotal = appState.kasTransaksi
-      .filter(t => t.santriId === s.id && t.jenis === "MASUK")
-      .reduce((acc, cur) => acc + (Number(cur.nominal) || 0), 0);
-    return { ...s, h, i, sk, a, tot, pct, quizPoin, kasTotal };
   });
 
-  const avgPct = totalRecords > 0 ? Math.round((totalH / totalRecords) * 100) : 0;
-  const santriWithData = perSantri.filter(s => s.tot > 0);
-  const avgPerSantri = santriWithData.length > 0
-    ? Math.round(santriWithData.reduce((acc, cur) => acc + cur.pct, 0) / santriWithData.length)
-    : 0;
+  const grandTotal = totalH + totalI + totalS + totalA;
+  const avgHadir = grandTotal > 0 ? Math.round((totalH / grandTotal) * 100) : 0;
 
   document.getElementById("analisaSummary").innerHTML = `
-    <div class="stat-box" style="padding:10px 6px;">
-      <div class="stat-val" style="font-size:18px;">${filteredKeys.length}</div>
-      <div class="stat-lbl">Total Sesi</div>
-    </div>
-    <div class="stat-box" style="padding:10px 6px;">
-      <div class="stat-val" style="font-size:18px;">${avgPct}%</div>
-      <div class="stat-lbl">Rata-Rata Hadir</div>
-    </div>
-    <div class="stat-box" style="padding:10px 6px;">
-      <div class="stat-val" style="font-size:18px;">${avgPerSantri}%</div>
-      <div class="stat-lbl">Rerata Santri</div>
-    </div>
-    <div class="stat-box" style="padding:10px 6px;">
-      <div class="stat-val" style="font-size:18px;">${totalH}</div>
-      <div class="stat-lbl">Total Hadir</div>
-    </div>
+    <div class="stat-box" style="padding:10px 4px;"><div class="stat-val" style="font-size:17px;">${avgHadir}%</div><div class="stat-lbl">Kehadiran</div></div>
+    <div class="stat-box" style="padding:10px 4px;"><div class="stat-val" style="font-size:17px;">${totalH}</div><div class="stat-lbl">Hadir</div></div>
+    <div class="stat-box" style="padding:10px 4px;"><div class="stat-val" style="font-size:17px;">${totalI + totalS}</div><div class="stat-lbl">Izin/Sakit</div></div>
+    <div class="stat-box" style="padding:10px 4px;"><div class="stat-val" style="font-size:17px;">${totalA}</div><div class="stat-lbl">Alpa</div></div>
   `;
-
-  document.getElementById("santriAvgBadge").textContent = `Rata-rata: ${avgPerSantri}%`;
 
   let chartItems = [];
   if (analisaMode === "harian") {
-    document.getElementById("trendChartTitle").textContent = `Grafik Kehadiran Harian (${refDate})`;
-    chartItems = filteredKeys.map(k => {
-      const sesi = k.split("_")[1] || "Sesi";
+    document.getElementById("trendChartTitle").textContent = `Grafik Kehadiran Harian (${sessionInfo.refDate})`;
+    document.getElementById("trendChartBadge").textContent = "Per Sesi";
+    chartItems = keys.map(k => {
       const rec = appState.absensi[k] || {};
-      const entries = Object.entries(rec).filter(([sid]) => targetIds.has(sid));
-      const hCount = entries.filter(([, v]) => v === "Hadir").length;
-      const pct = entries.length > 0 ? Math.round((hCount / entries.length) * 100) : 0;
-      return { label: sesi, fullLabel: `${refDate} (${sesi})`, pct, detail: `${hCount}/${entries.length} hadir` };
+      let h = 0, tot = 0;
+      Object.entries(rec).forEach(([sid, v]) => {
+        if (!targetIds.has(sid)) return;
+        tot++;
+        if (v === "Hadir") h++;
+      });
+      const pct = tot > 0 ? Math.round((h / tot) * 100) : 0;
+      const sesi = k.split("_")[1] || "Sesi";
+      return { label: sesi, fullLabel: `${sessionInfo.refDate} (${sesi})`, pct, detail: `${h}/${tot} Hadir` };
     });
   } else if (analisaMode === "mingguan") {
-    document.getElementById("trendChartTitle").textContent = "Grafik Kehadiran Mingguan (Senin - Minggu)";
-    const wb = getWeekBounds(refDate);
+    document.getElementById("trendChartTitle").textContent = "Grafik Kehadiran Mingguan (Senin - Ahad)";
+    document.getElementById("trendChartBadge").textContent = "Per Hari";
+    const wb = getWeekBounds(sessionInfo.refDate);
     const hariNama = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
     for (let idx = 0; idx < 7; idx++) {
       const cur = new Date(wb.startObj);
       cur.setDate(wb.startObj.getDate() + idx);
       const dStr = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, "0")}-${String(cur.getDate()).padStart(2, "0")}`;
-      const dayKeys = filteredKeys.filter(k => k.startsWith(dStr + "_"));
-      let dH = 0, dTot = 0;
+      const dayKeys = keys.filter(k => k.startsWith(dStr + "_"));
+      let h = 0, tot = 0;
       dayKeys.forEach(k => {
-        const entries = Object.entries(appState.absensi[k] || {}).filter(([sid]) => targetIds.has(sid));
-        dTot += entries.length;
-        dH += entries.filter(([, v]) => v === "Hadir").length;
+        Object.entries(appState.absensi[k] || {}).forEach(([sid, v]) => {
+          if (!targetIds.has(sid)) return;
+          tot++;
+          if (v === "Hadir") h++;
+        });
       });
-      const pct = dTot > 0 ? Math.round((dH / dTot) * 100) : 0;
+      const pct = tot > 0 ? Math.round((h / tot) * 100) : 0;
       chartItems.push({
         label: `${hariNama[idx]} ${dStr.slice(8, 10)}`,
         fullLabel: `${hariNama[idx]}, ${dStr}`,
         pct,
-        detail: dTot > 0 ? `${dH}/${dTot} hadir` : "Tidak ada sesi"
+        detail: tot > 0 ? `${h}/${tot} Hadir` : "Libur / Kosong"
       });
     }
-  } else {
-    document.getElementById("trendChartTitle").textContent = analisaMode === "bulanan"
-      ? `Grafik Kehadiran Bulanan (${refMonth})`
-      : "Grafik Tren Kehadiran Per Tanggal";
+  } else if (analisaMode === "bulanan") {
+    document.getElementById("trendChartTitle").textContent = `Grafik Kehadiran Bulanan (${sessionInfo.refMonth})`;
+    document.getElementById("trendChartBadge").textContent = "Per Tanggal";
     const byDate = {};
-    filteredKeys.forEach(k => {
+    keys.forEach(k => {
       const tgl = k.split("_")[0];
       if (!byDate[tgl]) byDate[tgl] = { h: 0, tot: 0 };
-      const entries = Object.entries(appState.absensi[k] || {}).filter(([sid]) => targetIds.has(sid));
-      byDate[tgl].tot += entries.length;
-      byDate[tgl].h += entries.filter(([, v]) => v === "Hadir").length;
+      Object.entries(appState.absensi[k] || {}).forEach(([sid, v]) => {
+        if (!targetIds.has(sid)) return;
+        byDate[tgl].tot++;
+        if (v === "Hadir") byDate[tgl].h++;
+      });
     });
     chartItems = Object.keys(byDate).sort().map(tgl => {
-      const pct = byDate[tgl].tot > 0 ? Math.round((byDate[tgl].h / byDate[tgl].tot) * 100) : 0;
-      return {
-        label: tgl.slice(5),
-        fullLabel: tgl,
-        pct,
-        detail: `${byDate[tgl].h}/${byDate[tgl].tot} hadir`
-      };
+      const d = byDate[tgl];
+      const pct = d.tot > 0 ? Math.round((d.h / d.tot) * 100) : 0;
+      return { label: tgl.slice(5), fullLabel: tgl, pct, detail: `${d.h}/${d.tot} Hadir` };
+    });
+  } else {
+    document.getElementById("trendChartTitle").textContent = "Grafik Tren Kehadiran Semua Sesi";
+    document.getElementById("trendChartBadge").textContent = "Per Sesi";
+    chartItems = keys.map(k => {
+      const rec = appState.absensi[k] || {};
+      let h = 0, tot = 0;
+      Object.entries(rec).forEach(([sid, v]) => {
+        if (!targetIds.has(sid)) return;
+        tot++;
+        if (v === "Hadir") h++;
+      });
+      const pct = tot > 0 ? Math.round((h / tot) * 100) : 0;
+      const [tgl, sesi] = k.split("_");
+      return { label: `${tgl.slice(5)} ${sesi.slice(0, 3)}`, fullLabel: `${tgl} (${sesi})`, pct, detail: `${h}/${tot} Hadir` };
     });
   }
 
   document.getElementById("trendChartBox").innerHTML = renderVerticalBarChart(chartItems);
 
-  const distList = [
-    { label: "Hadir", count: totalH, opacity: "1" },
-    { label: "Izin", count: totalI, opacity: "0.72" },
-    { label: "Sakit", count: totalSk, opacity: "0.52" },
-    { label: "Alpa", count: totalA, opacity: "0.35" }
-  ];
-
-  document.getElementById("statusDistChart").innerHTML = totalRecords === 0
-    ? `<div style="font-size:12px;color:var(--text-secondary);">Belum ada catatan status kehadiran pada filter ini.</div>`
-    : distList.map(d => {
-        const pct = Math.round((d.count / totalRecords) * 100);
-        return `
-          <div class="dist-row">
-            <div class="dist-meta">
-              <span>${d.label}</span>
-              <span>${d.count} catatan (${pct}%)</span>
-            </div>
-            <div class="bar-track">
-              <div class="bar-fill" style="width:${pct}%;opacity:${d.opacity};"></div>
-            </div>
+  const distEl = document.getElementById("statusDistChart");
+  if (grandTotal === 0) {
+    distEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);">Belum ada data status kehadiran pada filter ini.</div>`;
+  } else {
+    const statusRows = [
+      { label: "Hadir", count: totalH, opacity: "1" },
+      { label: "Izin", count: totalI, opacity: "0.7" },
+      { label: "Sakit", count: totalS, opacity: "0.5" },
+      { label: "Alpa", count: totalA, opacity: "0.3" }
+    ];
+    distEl.innerHTML = statusRows.map(r => {
+      const pct = Math.round((r.count / grandTotal) * 100);
+      return `
+        <div class="dist-row">
+          <div class="dist-meta">
+            <span>${r.label}</span>
+            <span>${r.count} catatan (${pct}%)</span>
           </div>
-        `;
-      }).join("");
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${pct}%;opacity:${r.opacity};"></div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
 
-  renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth);
+  const santriContribMap = renderAnalisaKas(targetIds, kelasFilter, sessionInfo.refDate, sessionInfo.refMonth);
 
-  const sortedSkor = [...appState.skor]
+  const santriAvgBadge = document.getElementById("santriAvgBadge");
+  if (santriAvgBadge) santriAvgBadge.textContent = `Rata-rata Hadir: ${avgHadir}%`;
+
+  const lbEl = document.getElementById("leaderboardList");
+  const sortedScores = [...appState.skor]
     .filter(sc => kelasFilter === "ALL" || targetIds.has(sc.santriId))
     .sort((a, b) => b.poin - a.poin);
 
-  const lbEl = document.getElementById("leaderboardList");
-  if (sortedSkor.length === 0) {
-    lbEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);">Belum ada santri yang menyelesaikan kuis pada kelas terpilih.</div>`;
+  if (sortedScores.length === 0) {
+    lbEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:8px 0;">Belum ada santri yang menyelesaikan kuis pada filter kelas ini.</div>`;
   } else {
-    lbEl.innerHTML = sortedSkor.map((sc, idx) => {
-      const salahTxt = sc.salah !== undefined ? ` • Salah ${sc.salah}` : "";
+    lbEl.innerHTML = sortedScores.map((sc, idx) => {
+      const stObj = appState.santri.find(x => x.id === sc.santriId || x.nama === sc.nama);
+      const clickAttr = stObj ? `onclick="openSantriDetailModal('${stObj.id}')"` : "";
+      const salahInfo = sc.salah !== undefined ? ` • Salah ${sc.salah}` : "";
       return `
-        <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" onclick="openSantriDetailModal('${sc.santriId}')">
+        <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" ${clickAttr}>
           <div style="display:flex;align-items:center;gap:10px;">
-            <span class="badge" style="${idx < 3 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${idx + 1}</span>
+            <span class="badge" style="${idx === 0 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${idx + 1}</span>
             <div>
-              <div style="font-size:13px;font-weight:700;">${sc.nama}</div>
-              <div style="font-size:11px;color:var(--text-secondary);">Benar ${sc.benar}/${sc.total}${salahTxt} • ${sc.waktu}</div>
+              <div style="font-weight:700;font-size:13px;">${sc.nama}</div>
+              <div style="font-size:11px;color:var(--text-secondary);">Benar ${sc.benar}/${sc.total}${salahInfo} • ${sc.waktu}</div>
             </div>
           </div>
           <div style="font-weight:800;font-size:14px;">${sc.poin} Poin</div>
@@ -2874,58 +2877,74 @@ function renderAnalisa() {
     }).join("");
   }
 
-  let listSantri = [...perSantri];
-
-  if (statusFilter === "RAJIN") listSantri = listSantri.filter(s => s.tot > 0 && s.pct >= 80);
-  else if (statusFilter === "CUKUP") listSantri = listSantri.filter(s => s.tot > 0 && s.pct >= 50 && s.pct < 80);
-  else if (statusFilter === "KURANG") listSantri = listSantri.filter(s => s.tot > 0 && s.pct < 50);
-  else if (statusFilter === "ADA_ALPA") listSantri = listSantri.filter(s => s.a > 0);
-  else if (statusFilter === "ADA_SKOR") listSantri = listSantri.filter(s => s.quizPoin !== null);
-
   const q = getQuery("searchAnalisa");
+  let santriStats = targetSantri.map(s => {
+    let h = 0, i = 0, sk = 0, a = 0;
+    keys.forEach(k => {
+      const st = (appState.absensi[k] || {})[s.id];
+      if (st === "Hadir") h++;
+      else if (st === "Izin") i++;
+      else if (st === "Sakit") sk++;
+      else if (st === "Alpa") a++;
+    });
+    const tot = h + i + sk + a;
+    const pct = tot > 0 ? Math.round((h / tot) * 100) : 0;
+    const scObj = appState.skor.find(x => x.santriId === s.id);
+    const bestSkor = scObj ? Number(scObj.poin) : -99999;
+    const kasInfo = santriContribMap[s.id] || { total: 0, count: 0 };
+    return { ...s, h, i, sk, a, tot, pct, bestSkor, kasTotal: kasInfo.total, kasCount: kasInfo.count };
+  });
+
+  if (statusFilter === "RAJIN") santriStats = santriStats.filter(s => s.tot > 0 && s.pct >= 80);
+  else if (statusFilter === "CUKUP") santriStats = santriStats.filter(s => s.tot > 0 && s.pct >= 50 && s.pct < 80);
+  else if (statusFilter === "KURANG") santriStats = santriStats.filter(s => s.tot > 0 && s.pct < 50);
+  else if (statusFilter === "ADA_ALPA") santriStats = santriStats.filter(s => s.a > 0);
+  else if (statusFilter === "ADA_SKOR") santriStats = santriStats.filter(s => s.bestSkor > -99999);
+
   if (q) {
-    listSantri = listSantri.filter(s =>
+    santriStats = santriStats.filter(s =>
       (s.nama || "").toLowerCase().includes(q) ||
-      (s.kelas || "").toLowerCase().includes(q) ||
-      (s.username || "").toLowerCase().includes(q)
+      (s.kelas || "").toLowerCase().includes(q)
     );
   }
 
-  if (sortBy === "PCT_DESC") listSantri.sort((a, b) => b.pct - a.pct);
-  else if (sortBy === "PCT_ASC") listSantri.sort((a, b) => a.pct - b.pct);
-  else if (sortBy === "ALPA_DESC") listSantri.sort((a, b) => b.a - a.a);
-  else if (sortBy === "KAS_DESC") listSantri.sort((a, b) => b.kasTotal - a.kasTotal);
-  else if (sortBy === "SKOR_DESC") listSantri.sort((a, b) => (b.quizPoin ?? -9999) - (a.quizPoin ?? -9999));
-  else listSantri.sort((a, b) => a.nama.localeCompare(b.nama));
+  santriStats.sort((a, b) => {
+    if (sortBy === "PCT_DESC") return b.pct - a.pct || (a.nama || "").localeCompare(b.nama || "");
+    if (sortBy === "PCT_ASC") return a.pct - b.pct || (a.nama || "").localeCompare(b.nama || "");
+    if (sortBy === "ALPA_DESC") return b.a - a.a || (a.nama || "").localeCompare(b.nama || "");
+    if (sortBy === "KAS_DESC") return b.kasTotal - a.kasTotal || (a.nama || "").localeCompare(b.nama || "");
+    if (sortBy === "SKOR_DESC") return b.bestSkor - a.bestSkor || (a.nama || "").localeCompare(b.nama || "");
+    return (a.nama || "").localeCompare(b.nama || "");
+  });
 
-  const analisaEl = document.getElementById("analisaSantriList");
-  if (listSantri.length === 0) {
-    analisaEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:12px 0;">Tidak ada santri yang sesuai dengan filter analisa.</div>`;
-  } else {
-    analisaEl.innerHTML = listSantri.map(s => `
+  const analisaSantriEl = document.getElementById("analisaSantriList");
+  if (santriStats.length === 0) {
+    analisaSantriEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:12px 0;">Tidak ada santri yang sesuai dengan filter yang dipilih.</div>`;
+    return;
+  }
+
+  analisaSantriEl.innerHTML = santriStats.map(s => {
+    return `
       <div class="clickable-row" onclick="openSantriDetailModal('${s.id}')">
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;gap:8px;">
-          <span>${s.nama} <span style="font-weight:400;color:var(--text-secondary);">(${s.kelas})</span></span>
-          <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;gap:6px;">
+          <span>${s.nama} <span style="font-weight:400;color:var(--text-secondary);font-size:11px;">(${s.kelas})</span></span>
+          <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
             ${s.kasTotal > 0 ? `<span class="badge">${formatRupiahShort(s.kasTotal)}</span>` : ""}
-            ${s.quizPoin !== null ? `<span class="badge">${s.quizPoin} Poin</span>` : ""}
-            <span>${s.pct}%</span>
+            ${s.bestSkor > -99999 ? `<span class="badge">${s.bestSkor} Poin</span>` : ""}
+            <span class="badge" style="${s.pct >= 80 ? "background:var(--accent);color:var(--accent-text);" : ""}">${s.pct}%</span>
           </div>
         </div>
+        <div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">Hadir ${s.h} • Izin ${s.i} • Sakit ${s.sk} • Alpa ${s.a} • Kas: ${formatRupiah(s.kasTotal)}</div>
         <div class="bar-track"><div class="bar-fill" style="width:${s.pct}%;"></div></div>
-        <div style="display:flex;justify-content:space-between;align-items:center;font-size:11px;color:var(--text-secondary);margin-top:6px;">
-          <span>Hadir: ${s.h} • Izin: ${s.i} • Sakit: ${s.sk} • Alpa: ${s.a}</span>
-          <span style="font-weight:600;color:var(--text-primary);">Detail &rsaquo;</span>
-        </div>
       </div>
-    `).join("");
-  }
+    `;
+  }).join("");
 }
 
 async function resetScores() {
   appState.skor = [];
   await persistState();
-  showToast("Klasemen kuis direset");
+  showToast("Papan skor kuis direset");
 }
 
 function renderAll() {
@@ -2950,29 +2969,34 @@ updateSyncUI(hasPendingSync ? "pending" : (navigator.onLine ? "online" : "offlin
 initFirebase(true);
 
 (function setupBustanulHadiIconAndPWA() {
+  function syncThemeColorMeta() {
+    const darkNow = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const color = darkNow ? "#171717" : "#f7f7f7";
+    let meta = document.querySelector('meta[name="theme-color"]:not([media])');
+    if (!meta) {
+      meta = document.createElement("meta");
+      meta.name = "theme-color";
+      document.head.appendChild(meta);
+    }
+    meta.setAttribute("content", color);
+  }
+  syncThemeColorMeta();
+  if (window.matchMedia) {
+    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeColorMeta);
+  }
+
   const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <defs>
-      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
-        <stop offset="0%" stop-color="#e2a83e"/>
-        <stop offset="55%" stop-color="#4e8954"/>
-        <stop offset="100%" stop-color="#0d5c46"/>
-      </linearGradient>
-      <linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#e5aa3d"/>
-        <stop offset="100%" stop-color="#5d8242"/>
-      </linearGradient>
-    </defs>
-    <rect width="512" height="512" rx="112" fill="#ffffff"/>
-    <path d="M235 96 C125 115 72 225 102 325 C128 408 212 452 298 432 C222 422 162 362 152 282 C142 204 176 134 235 96 Z" fill="url(#g1)"/>
-    <path d="M168 355 C235 438 358 432 414 332 C432 298 438 262 434 230 C414 312 346 368 265 372 C225 374 192 366 168 355 Z" fill="#0d5c46"/>
-    <path d="M254 338 C258 292 246 254 218 228 C196 208 176 202 166 202 C174 232 194 256 226 268 C242 274 250 296 248 338 Z" fill="url(#g2)"/>
-    <path d="M262 324 C264 274 282 232 322 206 C346 190 368 186 378 186 C368 222 344 252 308 266 C286 274 272 296 268 324 Z" fill="url(#g1)"/>
-    <path d="M286 86 L296 124 L334 134 L296 144 L286 182 L276 144 L238 134 L276 124 Z" fill="url(#g2)"/>
-    <path d="M226 154 L231 170 L247 175 L231 180 L226 196 L221 180 L205 175 L221 170 Z" fill="#d99f38"/>
-    <path d="M188 184 L192 196 L204 200 L192 204 L188 216 L184 204 L172 200 L184 196 Z" fill="#d99f38"/>
-    <path d="M262 198 L266 210 L278 214 L266 218 L262 230 L258 218 L246 214 L258 210 Z" fill="#b4923f"/>
-    <path d="M332 162 L337 176 L351 181 L337 186 L332 200 L327 186 L313 181 L327 176 Z" fill="#b4923f"/>
-    <path d="M352 292 L358 310 L376 316 L358 322 L352 340 L346 322 L328 316 L346 310 Z" fill="#186048"/>
+    <rect width="512" height="512" rx="112" fill="#141414"/>
+    <rect x="34" y="34" width="444" height="444" rx="88" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="6"/>
+    <g transform="translate(88, 96)" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M168 56 C128 24, 56 24, 16 48 L16 256 C56 232, 128 232, 168 264 Z"/>
+      <path d="M168 56 C208 24, 280 24, 320 48 L320 256 C280 232, 208 232, 168 264 Z"/>
+      <path d="M56 104 C88 94, 120 98, 138 110" stroke-width="16" stroke-opacity="0.7"/>
+      <path d="M56 148 C88 138, 120 142, 138 154" stroke-width="16" stroke-opacity="0.7"/>
+      <path d="M280 104 C248 94, 216 98, 198 110" stroke-width="16" stroke-opacity="0.7"/>
+      <path d="M280 148 C248 138, 216 142, 198 154" stroke-width="16" stroke-opacity="0.7"/>
+    </g>
+    <text x="256" y="428" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="800" letter-spacing="4">BUSTANUL HADI</text>
   </svg>`;
 
   const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(logoSvg);
@@ -2991,13 +3015,14 @@ initFirebase(true);
     const appleEl = document.getElementById("appAppleIcon");
     if (appleEl) appleEl.href = pngDataUrl;
 
+    const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     const manifestObj = {
       name: "BUSTANUL HADI - Portal Guru",
       short_name: "Guru BH",
       start_url: window.location.href,
       display: "standalone",
-      background_color: "#121212",
-      theme_color: "#141414",
+      background_color: isDark ? "#121212" : "#f0f0f0",
+      theme_color: isDark ? "#171717" : "#f7f7f7",
       icons: [
         { src: pngDataUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
         { src: pngDataUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
