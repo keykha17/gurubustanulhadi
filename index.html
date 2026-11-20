@@ -226,6 +226,9 @@ header {
 .status-dot.online {
   background: var(--accent);
 }
+.status-dot.pending {
+  background: #eab308;
+}
 main {
   max-width: 680px;
   margin: 0 auto;
@@ -253,6 +256,11 @@ main {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 10px;
+}
+.grid-3 {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
 }
 .grid-4 {
   display: grid;
@@ -372,7 +380,7 @@ main {
 }
 .vchart-col {
   flex: 1;
-  min-width: 44px;
+  min-width: 48px;
   height: 100%;
   display: flex;
   flex-direction: column;
@@ -381,9 +389,10 @@ main {
   gap: 4px;
 }
 .vchart-val {
-  font-size: 10px;
+  font-size: 9.5px;
   font-weight: 700;
   color: var(--text-primary);
+  white-space: nowrap;
 }
 .vchart-bar-bg {
   width: 24px;
@@ -406,7 +415,7 @@ main {
   color: var(--text-secondary);
   text-align: center;
   white-space: nowrap;
-  max-width: 56px;
+  max-width: 58px;
   overflow: hidden;
   text-overflow: ellipsis;
 }
@@ -432,6 +441,9 @@ main {
   margin-bottom: 8px;
   transition: transform 0.12s ease;
 }
+.clickable-row:last-child {
+  margin-bottom: 0;
+}
 .clickable-row:active {
   transform: scale(0.985);
 }
@@ -452,7 +464,7 @@ main {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 4px;
+  gap: 3px;
   background: none;
   border: none;
   color: var(--text-muted);
@@ -528,6 +540,18 @@ main {
   background: var(--border);
   margin: 14px 0;
 }
+.sub-heading-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 18px 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+}
+.sub-heading-bar h3 {
+  font-size: 15px;
+  font-weight: 800;
+}
 </style>
 </head>
 <body>
@@ -538,7 +562,7 @@ main {
       <svg class="icon" style="width:26px;height:26px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
     <h2 style="font-size:18px;margin-bottom:4px;">BUSTANUL HADI</h2>
-    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:18px;">Cukup masuk sekali, sesi tersimpan otomatis di HP</p>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:18px;">Offline-First • Otomatis Sinkron Saat Online</p>
     <div class="form-group">
       <input type="password" id="pinInput" inputmode="numeric" maxlength="8" placeholder="PIN (Default: 1234)" style="text-align:center;font-size:18px;letter-spacing:6px;">
     </div>
@@ -556,13 +580,13 @@ main {
     </div>
     <div>
       <h1>BUSTANUL HADI</h1>
-      <span>Panel Kendali Guru • Tgk Khalil</span>
+      <span>Panel Kendali Guru • Offline & Auto-Sync</span>
     </div>
   </div>
   <div style="display:flex;align-items:center;gap:6px;">
-    <button type="button" class="status-pill" onclick="openModal('modalSettings')" title="Backup JSON & Pengaturan">
+    <button type="button" class="status-pill" onclick="openModal('modalSettings')" title="Status Sinkronisasi & Backup JSON">
       <span id="syncDot" class="status-dot"></span>
-      <span id="syncLabel">Lokal</span>
+      <span id="syncLabel">Offline</span>
     </button>
     <button type="button" class="btn btn-sm" onclick="lockGuruPortal()" title="Kunci Portal">
       <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
@@ -571,6 +595,7 @@ main {
 </header>
 
 <main>
+  <!-- TAB 1: ABSENSI -->
   <section id="sec-absensi" class="section active">
     <div class="section-header">
       <h2 class="section-title">Absensi Santri</h2>
@@ -651,6 +676,7 @@ main {
     <div id="attList"></div>
   </section>
 
+  <!-- TAB 2: MATERI -->
   <section id="sec-materi" class="section">
     <div class="section-header">
       <h2 class="section-title">Materi & Kitab</h2>
@@ -671,6 +697,7 @@ main {
     <div id="materiList"></div>
   </section>
 
+  <!-- TAB 3: KUIS -->
   <section id="sec-kuis" class="section">
     <div class="section-header">
       <h2 class="section-title">Bank Soal Kuis Cerdas</h2>
@@ -728,6 +755,7 @@ main {
     <div id="soalList"></div>
   </section>
 
+  <!-- TAB 4: PUSTAKA -->
   <section id="sec-pustaka" class="section">
     <div class="section-header">
       <h2 class="section-title">Pustaka Kitab & Aplikasi</h2>
@@ -744,9 +772,10 @@ main {
     <div id="linkList"></div>
   </section>
 
+  <!-- TAB 5: ANALISA KEHADIRAN, KAS & KUIS -->
   <section id="sec-analisa" class="section">
     <div class="section-header">
-      <h2 class="section-title">Analisa & Grafik Kehadiran</h2>
+      <h2 class="section-title">Analisa Kehadiran & Kas</h2>
       <div style="display:flex;gap:6px;">
         <button type="button" class="btn btn-sm" onclick="openModal('modalSettings')">Backup JSON</button>
         <button type="button" class="btn btn-sm" onclick="resetScores()">Reset Skor</button>
@@ -795,6 +824,7 @@ main {
           <option value="PCT_DESC">Kehadiran Tertinggi (%)</option>
           <option value="PCT_ASC">Kehadiran Terendah (%)</option>
           <option value="ALPA_DESC">Alpa Terbanyak</option>
+          <option value="KAS_DESC">Setoran Kas Tertinggi</option>
           <option value="SKOR_DESC">Skor Kuis Tertinggi</option>
         </select>
       </div>
@@ -817,6 +847,47 @@ main {
       <div id="statusDistChart"></div>
     </div>
 
+    <div class="sub-heading-bar">
+      <h3>Analisa Kas & Infaq</h3>
+      <span class="badge" id="analisaKasBadge">0 Transaksi</span>
+    </div>
+
+    <div class="grid-3" style="margin-bottom:14px;" id="analisaKasSummary"></div>
+
+    <div class="neu-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 style="font-size:14px;" id="kasTrendChartTitle">Grafik Pemasukan Kas</h3>
+        <span class="badge">Dana Masuk</span>
+      </div>
+      <div id="kasTrendChartBox"></div>
+    </div>
+
+    <div class="neu-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 style="font-size:14px;">Distribusi Pemasukan Per Pos Dana</h3>
+        <span class="badge" id="kasPosDistTotalBadge">Rp 0</span>
+      </div>
+      <div id="kasPosDistChart"></div>
+    </div>
+
+    <div class="neu-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+        <h3 style="font-size:14px;">Peringkat Kontribusi Setoran Santri</h3>
+        <span class="badge" id="kasContributorCountBadge">0 Santri</span>
+      </div>
+      <div class="search-wrap" id="wrapSearchKasContrib" style="margin-bottom:10px;">
+        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchKasContrib" placeholder="Cari nama santri penyetor..." oninput="onSearchInput('searchKasContrib','wrapSearchKasContrib',renderAnalisa)">
+        <button type="button" class="search-clear" onclick="clearSearch('searchKasContrib','wrapSearchKasContrib',renderAnalisa)">×</button>
+      </div>
+      <div id="kasTopContributorsList"></div>
+    </div>
+
+    <div class="sub-heading-bar">
+      <h3>Klasemen Kuis & Rekap Santri</h3>
+      <span class="badge" id="santriAvgBadge">Rata-rata: 0%</span>
+    </div>
+
     <div class="neu-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
         <h3 style="font-size:14px;">Peringkat Kejuaraan Kuis Cerdas</h3>
@@ -828,9 +899,9 @@ main {
     <div class="neu-card">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
         <h3 style="font-size:14px;">Rata-Rata & Detail Santri</h3>
-        <span class="badge" id="santriAvgBadge">Rata-rata: 0%</span>
+        <span class="badge">Absensi • Kas • Kuis</span>
       </div>
-      <p style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;">Klik kartu santri di bawah untuk melihat rincian absensi per sesi dan skor kuis.</p>
+      <p style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;">Klik kartu santri di bawah untuk melihat rincian absensi, setoran kas, dan skor kuis.</p>
       <div class="search-wrap" id="wrapSearchAnalisa">
         <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
         <input type="text" id="searchAnalisa" placeholder="Cari nama santri..." oninput="onSearchInput('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">
@@ -864,6 +935,7 @@ main {
   </button>
 </nav>
 
+<!-- MODAL DETAIL SANTRI -->
 <div id="modalDetailSantri" class="modal-backdrop">
   <div class="modal-box">
     <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px;">
@@ -876,6 +948,8 @@ main {
     </div>
 
     <div class="grid-4" style="margin-bottom:14px;" id="detSantriStats"></div>
+
+    <div class="neu-inset" style="padding:12px;margin-bottom:14px;" id="detSantriKasBox"></div>
 
     <div class="neu-inset" style="padding:12px;margin-bottom:14px;" id="detSantriSkorBox"></div>
 
@@ -1030,16 +1104,22 @@ main {
 
 <div id="modalSettings" class="modal-backdrop">
   <div class="modal-box">
-    <h3 style="font-size:16px;margin-bottom:10px;">Backup JSON, Cloud & PIN Guru</h3>
-    <div class="neu-inset" style="padding:12px;margin-bottom:14px;font-size:12px;">
+    <h3 style="font-size:16px;margin-bottom:10px;">Sinkronisasi Offline-First, Backup & PIN</h3>
+    <div class="neu-inset" style="padding:12px;margin-bottom:12px;font-size:12px;">
       <div><strong>Pesantren:</strong> BUSTANUL HADI</div>
-      <div><strong>Project ID:</strong> game-2d1e0 (balai_pengajian/data_utama)</div>
-      <div id="modalSyncDetail" style="margin-top:4px;color:var(--text-secondary);">Menggunakan penyimpanan lokal.</div>
+      <div><strong>Penyimpanan Utama:</strong> Lokal Perangkat (Offline-First)</div>
+      <div id="modalSyncDetail" style="margin-top:4px;color:var(--text-secondary);">Menunggu koneksi internet untuk sinkronisasi otomatis.</div>
+      <div id="modalLastSyncTime" style="margin-top:3px;font-size:11px;color:var(--text-muted);">Sinkronisasi terakhir: Belum ada</div>
     </div>
+
+    <button type="button" class="btn btn-primary btn-block" style="margin-bottom:14px;" onclick="syncNowManual()">
+      <svg class="icon" style="width:15px;height:15px;" viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+      Sinkronkan Sekarang ke Cloud
+    </button>
 
     <h4 style="font-size:13px;margin-bottom:8px;">Backup & Restore Data (JSON)</h4>
     <div class="grid-2" style="margin-bottom:10px;">
-      <button type="button" class="btn btn-primary" onclick="exportJsonBackup()">
+      <button type="button" class="btn" onclick="exportJsonBackup()">
         <svg class="icon" style="width:15px;height:15px;" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
         Unduh Backup
       </button>
@@ -1092,6 +1172,17 @@ const firebaseConfig = {
   measurementId: "G-KYHHP0XW7Z"
 };
 
+const STORAGE_KEY = "balai_pengajian_state";
+const PENDING_SYNC_KEY = "guru_pending_sync";
+const LAST_SYNC_KEY = "guru_last_sync";
+
+const defaultDanaKategori = [
+  "Kas Umum Pengajian",
+  "Infaq Malam Jumat",
+  "Dana Sosial / Ta'ziah",
+  "Iuran Kitab & Fasilitas"
+];
+
 const defaultState = {
   pin: "1234",
   kelasList: [
@@ -1100,6 +1191,8 @@ const defaultState = {
     "Matan Al Jurumiah",
     "Al Quran"
   ],
+  danaKategori: [...defaultDanaKategori],
+  kasTransaksi: [],
   santri: [
     { id: "s1", nama: "Aswir", username: "aswir", pin: "1234", kelas: "Umum" },
     { id: "s2", nama: "Ilham", username: "ilham", pin: "1234", kelas: "Umum" },
@@ -1202,6 +1295,14 @@ function sanitizeState(stateObj) {
   let list = Array.isArray(stateObj.kelasList) ? [...stateObj.kelasList] : [];
   if (!list.includes("Umum")) list.unshift("Umum");
   stateObj.kelasList = list;
+
+  let danaList = Array.isArray(stateObj.danaKategori) && stateObj.danaKategori.length > 0
+    ? [...stateObj.danaKategori]
+    : [...defaultDanaKategori];
+  if (!danaList.includes("Kas Umum Pengajian")) danaList.unshift("Kas Umum Pengajian");
+  stateObj.danaKategori = danaList;
+
+  stateObj.kasTransaksi = Array.isArray(stateObj.kasTransaksi) ? stateObj.kasTransaksi : [];
   stateObj.santri = Array.isArray(stateObj.santri) ? stateObj.santri : [];
   stateObj.absensi = stateObj.absensi && typeof stateObj.absensi === "object" ? stateObj.absensi : {};
   stateObj.materi = Array.isArray(stateObj.materi) ? stateObj.materi : [];
@@ -1218,20 +1319,40 @@ function sanitizeState(stateObj) {
   stateObj.materi.forEach(m => {
     if (!m.kitab || !list.includes(m.kitab)) m.kitab = "Umum";
   });
+  stateObj.kasTransaksi.forEach(t => {
+    if (!t.kategori || !danaList.includes(t.kategori)) t.kategori = "Kas Umum Pengajian";
+    t.nominal = Number(t.nominal) || 0;
+    t.jenis = t.jenis === "KELUAR" ? "KELUAR" : "MASUK";
+  });
   return stateObj;
 }
 
-let appState = sanitizeState(JSON.parse(localStorage.getItem("balai_pengajian_state")) || JSON.parse(JSON.stringify(defaultState)));
+let appState = sanitizeState(JSON.parse(localStorage.getItem(STORAGE_KEY)) || JSON.parse(JSON.stringify(defaultState)));
+let hasPendingSync = localStorage.getItem(PENDING_SYNC_KEY) === "1";
+let isSyncingNow = false;
+let firebaseLoadingPromise = null;
 let db = null;
 let docRef = null;
 let selectedKategori = "Semua";
 let analisaMode = "semua";
 let attStatusFilter = "ALL";
 
+function formatRupiah(num) {
+  const val = Number(num) || 0;
+  return "Rp " + val.toLocaleString("id-ID");
+}
+
+function formatRupiahShort(num) {
+  const val = Number(num) || 0;
+  if (Math.abs(val) >= 1000000) return "Rp " + (val / 1000000).toFixed(1).replace(".0", "") + "jt";
+  if (Math.abs(val) >= 1000) return "Rp " + Math.round(val / 1000) + "rb";
+  return "Rp " + val;
+}
+
 function onSearchInput(inputId, wrapId, renderFn) {
   const inp = document.getElementById(inputId);
   const wrap = document.getElementById(wrapId);
-  if (wrap) {
+  if (wrap && inp) {
     if (inp.value.length > 0) wrap.classList.add("has-text");
     else wrap.classList.remove("has-text");
   }
@@ -1258,65 +1379,179 @@ function showToast(msg) {
   setTimeout(() => { t.style.display = "none"; }, 2600);
 }
 
-function updateSyncUI(online, detail) {
-  const dot = document.getElementById("syncDot");
-  const lbl = document.getElementById("syncLabel");
-  const mod = document.getElementById("modalSyncDetail");
-  if (online) {
-    dot.classList.add("online");
-    lbl.textContent = "Online";
-    mod.textContent = detail || "Terhubung real-time dengan Firestore.";
-  } else {
-    dot.classList.remove("online");
-    lbl.textContent = "Lokal";
-    mod.textContent = detail || "Menggunakan penyimpanan lokal perangkat.";
+function refreshLastSyncLabel() {
+  const el = document.getElementById("modalLastSyncTime");
+  const last = localStorage.getItem(LAST_SYNC_KEY);
+  if (el) {
+    el.textContent = last ? `Sinkronisasi terakhir: ${last}` : "Sinkronisasi terakhir: Belum ada";
   }
 }
 
-function initFirebase() {
-  try {
-    if (typeof firebase === "undefined") {
-      updateSyncUI(false, "Mode Offline (Penyimpanan Lokal Aktif).");
+function updateSyncUI(mode, detail) {
+  const dot = document.getElementById("syncDot");
+  const lbl = document.getElementById("syncLabel");
+  const mod = document.getElementById("modalSyncDetail");
+  dot.classList.remove("online", "pending");
+
+  if (mode === "online") {
+    dot.classList.add("online");
+    lbl.textContent = "Online";
+    mod.textContent = detail || "Data lokal & cloud sudah sinkron.";
+  } else if (mode === "pending") {
+    dot.classList.add("pending");
+    lbl.textContent = navigator.onLine ? "Menyinkron..." : "Antre Sync";
+    mod.textContent = detail || "Perubahan tersimpan di lokal, menunggu internet untuk update otomatis.";
+  } else {
+    lbl.textContent = "Offline";
+    mod.textContent = detail || "Mode Offline: Semua data aman tersimpan di penyimpanan lokal.";
+  }
+  refreshLastSyncLabel();
+}
+
+function setPendingFlag(flag) {
+  hasPendingSync = flag;
+  if (flag) localStorage.setItem(PENDING_SYNC_KEY, "1");
+  else localStorage.removeItem(PENDING_SYNC_KEY);
+}
+
+function loadScriptOnce(src) {
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector(`script[src="${src}"]`);
+    if (existing && window.firebase) return resolve();
+    const s = document.createElement("script");
+    s.src = src;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+function attachFirestoreListener() {
+  if (!docRef) return;
+  docRef.onSnapshot((snapshot) => {
+    if (hasPendingSync) {
+      flushPendingSync(true);
       return;
     }
-    if (!firebase.apps.length) {
-      firebase.initializeApp(firebaseConfig);
+    if (snapshot.exists) {
+      appState = sanitizeState({ ...defaultState, ...appState, ...snapshot.data() });
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+      renderAll();
+      localStorage.setItem(LAST_SYNC_KEY, new Date().toLocaleString("id-ID"));
+      updateSyncUI("online", "Sinkronisasi real-time aktif dengan Portal Santri & Bendahara.");
+    } else if (appState.santri.length > 0) {
+      flushPendingSync(true);
     }
-    db = firebase.firestore();
-    docRef = db.collection("balai_pengajian").doc("data_utama");
-    docRef.get().then((snap) => {
-      if (!snap.exists) {
-        docRef.set(appState);
+  }, (err) => {
+    updateSyncUI(hasPendingSync ? "pending" : "offline", "Mode Lokal: " + err.message);
+  });
+}
+
+async function ensureFirebaseReady() {
+  if (docRef) return true;
+  if (!navigator.onLine) return false;
+  if (firebaseLoadingPromise) return firebaseLoadingPromise;
+
+  firebaseLoadingPromise = (async () => {
+    try {
+      if (typeof firebase === "undefined") {
+        await loadScriptOnce("https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js");
+        await loadScriptOnce("https://www.gstatic.com/firebasejs/10.14.1/firebase-firestore-compat.js");
       }
-    }).catch(() => {});
-    docRef.onSnapshot((snapshot) => {
-      if (snapshot.exists) {
-        appState = sanitizeState({ ...defaultState, ...snapshot.data() });
-        localStorage.setItem("balai_pengajian_state", JSON.stringify(appState));
-        renderAll();
-        updateSyncUI(true, "Sinkronisasi aktif dengan server cloud.");
+      if (!firebase.apps.length) {
+        firebase.initializeApp(firebaseConfig);
       }
-    }, (err) => {
-      updateSyncUI(false, "Mode Lokal: " + err.message);
-    });
+      db = firebase.firestore();
+      docRef = db.collection("balai_pengajian").doc("data_utama");
+      attachFirestoreListener();
+      return true;
+    } catch (e) {
+      return false;
+    } finally {
+      firebaseLoadingPromise = null;
+    }
+  })();
+
+  return firebaseLoadingPromise;
+}
+
+async function flushPendingSync(silent = true) {
+  if (isSyncingNow) return;
+  if (!navigator.onLine) {
+    updateSyncUI(hasPendingSync ? "pending" : "offline", hasPendingSync
+      ? "Offline: Perubahan tersimpan lokal & otomatis dikirim saat internet aktif."
+      : "Offline: Menggunakan database lokal perangkat.");
+    return;
+  }
+
+  const ready = await ensureFirebaseReady();
+  if (!ready || !docRef) {
+    updateSyncUI(hasPendingSync ? "pending" : "offline", "Menunggu sambungan ke server cloud...");
+    return;
+  }
+
+  isSyncingNow = true;
+  updateSyncUI("pending", "Mengunggah perubahan lokal ke cloud...");
+
+  try {
+    sanitizeState(appState);
+    await docRef.set(appState, { merge: true });
+    setPendingFlag(false);
+    localStorage.setItem(LAST_SYNC_KEY, new Date().toLocaleString("id-ID"));
+    updateSyncUI("online", "Tersinkron otomatis dengan Portal Santri & Bendahara.");
+    if (!silent) showToast("Sinkronisasi ke cloud berhasil");
   } catch (e) {
-    updateSyncUI(false, "Mode Lokal: " + e.message);
+    setPendingFlag(true);
+    updateSyncUI("pending", "Koneksi tidak stabil, perubahan tetap aman di lokal & akan dicoba ulang otomatis.");
+    if (!silent) showToast("Belum terhubung ke server, data aman di lokal");
+  } finally {
+    isSyncingNow = false;
+  }
+}
+
+function syncNowManual() {
+  if (!navigator.onLine) {
+    return showToast("Tidak ada internet. Data sudah aman di lokal & akan sync otomatis saat online.");
+  }
+  flushPendingSync(false);
+}
+
+async function initFirebase(autoFlush = true) {
+  const ready = await ensureFirebaseReady();
+  if (ready && autoFlush && hasPendingSync) {
+    await flushPendingSync(true);
   }
 }
 
 async function persistState() {
   sanitizeState(appState);
-  localStorage.setItem("balai_pengajian_state", JSON.stringify(appState));
+  appState.guruUpdatedAt = Date.now();
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+  setPendingFlag(true);
   renderAll();
-  if (docRef) {
-    try {
-      await docRef.set(appState);
-      updateSyncUI(true, "Data tersimpan ke cloud.");
-    } catch (e) {
-      updateSyncUI(false, "Tersimpan lokal (Cloud offline).");
-    }
+
+  if (navigator.onLine) {
+    await flushPendingSync(true);
+  } else {
+    updateSyncUI("pending", "Tersimpan di lokal. Akan otomatis update ke server saat internet terhubung.");
   }
 }
+
+window.addEventListener("online", () => {
+  showToast("Internet terhubung • Menyinkronkan data lokal...");
+  flushPendingSync(true);
+});
+
+window.addEventListener("offline", () => {
+  updateSyncUI(hasPendingSync ? "pending" : "offline", "Koneksi terputus. Perubahan tetap tersimpan di lokal perangkat.");
+  showToast("Mode Offline aktif • Data tetap tersimpan di lokal");
+});
+
+setInterval(() => {
+  if (navigator.onLine && (hasPendingSync || !docRef)) {
+    flushPendingSync(true);
+  }
+}, 8000);
 
 function exportJsonBackup() {
   const dataStr = JSON.stringify(appState, null, 2);
@@ -1352,8 +1587,12 @@ async function applyParsedJson(parsed) {
     return showToast("JSON tidak memiliki daftar santri yang valid");
   }
   appState = sanitizeState({
+    ...appState,
+    ...parsed,
     pin: parsed.pin || appState.pin || "1234",
     kelasList: parsed.kelasList || ["Umum"],
+    danaKategori: parsed.danaKategori || appState.danaKategori || [...defaultDanaKategori],
+    kasTransaksi: parsed.kasTransaksi || appState.kasTransaksi || [],
     santri: parsed.santri,
     absensi: parsed.absensi || {},
     materi: parsed.materi || [],
@@ -1479,7 +1718,7 @@ async function addKelas() {
   input.value = "";
   renderKelasManage();
   await persistState();
-  showToast("Kelas / Kitab ditambahkan");
+  showToast(navigator.onLine ? "Kelas ditambahkan & disinkronkan" : "Kelas tersimpan di lokal");
 }
 
 async function deleteKelas(nama) {
@@ -1522,6 +1761,7 @@ function openModal(id) {
   if (id === "modalSettings") {
     document.getElementById("oldPinInput").value = "";
     document.getElementById("newPinInput").value = "";
+    refreshLastSyncLabel();
   }
   if (id === "modalSantri") renderSantriManage();
   if (id === "modalKelas") renderKelasManage();
@@ -1709,7 +1949,7 @@ async function saveAttendance() {
     appState.santri.forEach(s => { appState.absensi[key][s.id] = "Hadir"; });
   }
   await persistState();
-  showToast("Absensi tersimpan");
+  showToast(navigator.onLine ? "Absensi tersimpan & tersinkron" : "Absensi tersimpan di lokal (sync saat online)");
 }
 
 function renderSantriManage() {
@@ -1766,7 +2006,7 @@ async function addSantri() {
   document.getElementById("newSantriPin").value = "1234";
   renderSantriManage();
   await persistState();
-  showToast("Akun santri berhasil dibuat");
+  showToast(navigator.onLine ? "Akun santri dibuat & tersinkron" : "Akun santri tersimpan di lokal");
 }
 
 async function deleteSantri(id) {
@@ -1866,7 +2106,7 @@ async function saveMateri() {
   }
   closeModal("modalMateri");
   await persistState();
-  showToast("Materi berhasil disimpan");
+  showToast(navigator.onLine ? "Materi tersimpan & tersinkron" : "Materi tersimpan di lokal (sync saat online)");
 }
 
 async function deleteMateri(id) {
@@ -1950,7 +2190,7 @@ async function saveSoal() {
   }
   resetSoalForm();
   await persistState();
-  showToast("Soal & penjelasan kuis disimpan");
+  showToast(navigator.onLine ? "Soal kuis tersimpan & tersinkron" : "Soal tersimpan di lokal (sync saat online)");
 }
 
 function editSoal(id) {
@@ -1997,7 +2237,7 @@ async function saveKuisConfig() {
   appState.kuisConfig.durasi = Number(document.getElementById("cfgKuisDurasi").value) || 180;
   closeModal("modalKuisConfig");
   await persistState();
-  showToast("Pengaturan kuis & pengurangan poin disimpan");
+  showToast("Pengaturan kuis disimpan");
 }
 
 function renderLinks() {
@@ -2108,6 +2348,24 @@ function getFilteredSessionKeys() {
   }
 }
 
+function getFilteredKasTransactions(targetIds, kelasFilter) {
+  const refDate = document.getElementById("analisaRefDate").value || new Date().toISOString().slice(0, 10);
+  const refMonth = document.getElementById("analisaRefMonth").value || refDate.slice(0, 7);
+  const wb = analisaMode === "mingguan" ? getWeekBounds(refDate) : null;
+
+  return appState.kasTransaksi.filter(t => {
+    const tgl = t.tanggal || "";
+    if (analisaMode === "harian" && tgl !== refDate) return false;
+    if (analisaMode === "mingguan" && (tgl < wb.start || tgl > wb.end)) return false;
+    if (analisaMode === "bulanan" && !tgl.startsWith(refMonth + "-")) return false;
+
+    if (kelasFilter !== "ALL") {
+      if (!t.santriId || !targetIds.has(t.santriId)) return false;
+    }
+    return true;
+  });
+}
+
 function setAnalisaMode(mode, btnEl) {
   analisaMode = mode;
   document.querySelectorAll("#analisaPeriodPills .pill").forEach(p => p.classList.remove("active"));
@@ -2135,21 +2393,24 @@ function setAnalisaMode(mode, btnEl) {
   renderAnalisa();
 }
 
-function renderVerticalBarChart(items) {
+function renderVerticalBarChart(items, emptyMsg = "Belum ada data sesi pada rentang waktu ini.") {
   if (!items || items.length === 0) {
-    return `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:24px 0;">Belum ada data sesi pada rentang waktu ini.</div>`;
+    return `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:24px 0;">${emptyMsg}</div>`;
   }
   return `
     <div class="vchart-wrap">
-      ${items.map(it => `
-        <div class="vchart-col" title="${it.fullLabel}: ${it.pct}% (${it.detail})">
-          <div class="vchart-val">${it.pct}%</div>
-          <div class="vchart-bar-bg">
-            <div class="vchart-bar-fill" style="height:${Math.max(it.pct, it.pct > 0 ? 6 : 0)}%;"></div>
+      ${items.map(it => {
+        const displayTop = it.topText !== undefined ? it.topText : (it.pct + "%");
+        return `
+          <div class="vchart-col" title="${it.fullLabel}: ${displayTop} (${it.detail})">
+            <div class="vchart-val">${displayTop}</div>
+            <div class="vchart-bar-bg">
+              <div class="vchart-bar-fill" style="height:${Math.max(it.pct, it.pct > 0 ? 6 : 0)}%;"></div>
+            </div>
+            <div class="vchart-lbl">${it.label}</div>
           </div>
-          <div class="vchart-lbl">${it.label}</div>
-        </div>
-      `).join("")}
+        `;
+      }).join("")}
     </div>
   `;
 }
@@ -2196,6 +2457,25 @@ function openSantriDetailModal(santriId) {
     </div>
   `).join("");
 
+  const santriKas = appState.kasTransaksi.filter(t => t.santriId === s.id && t.jenis === "MASUK");
+  const totalKasSantri = santriKas.reduce((sum, cur) => sum + (Number(cur.nominal) || 0), 0);
+  const kasBox = document.getElementById("detSantriKasBox");
+  kasBox.innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+      <span style="font-size:12px;font-weight:700;">Total Setoran Kas / Infaq</span>
+      <span class="badge" style="background:var(--accent);color:var(--accent-text);">${formatRupiah(totalKasSantri)}</span>
+    </div>
+    ${santriKas.length === 0
+      ? `<div style="font-size:12px;color:var(--text-secondary);">Belum ada catatan setoran kas/infaq dari santri ini.</div>`
+      : santriKas.slice(0, 4).map(tx => `
+          <div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-top:1px solid var(--border);">
+            <span>${tx.kategori} <span style="color:var(--text-secondary);">(${tx.tanggal})</span></span>
+            <strong>${formatRupiah(tx.nominal)}</strong>
+          </div>
+        `).join("")
+    }
+  `;
+
   const userScores = appState.skor.filter(sc => sc.santriId === s.id);
   const skorBox = document.getElementById("detSantriSkorBox");
   if (userScores.length === 0) {
@@ -2236,6 +2516,184 @@ function openSantriDetailModal(santriId) {
   openModal("modalDetailSantri");
 }
 
+function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
+  const kasTxList = getFilteredKasTransactions(targetIds, kelasFilter);
+  const dList = appState.danaKategori || [...defaultDanaKategori];
+
+  let kasMasuk = 0;
+  let kasKeluar = 0;
+  const posMasukMap = {};
+  dList.forEach(d => { posMasukMap[d] = 0; });
+
+  const santriContribMap = {};
+
+  kasTxList.forEach(t => {
+    const nom = Number(t.nominal) || 0;
+    if (t.jenis === "KELUAR") {
+      kasKeluar += nom;
+    } else {
+      kasMasuk += nom;
+      posMasukMap[t.kategori] = (posMasukMap[t.kategori] || 0) + nom;
+      if (t.santriId) {
+        if (!santriContribMap[t.santriId]) {
+          santriContribMap[t.santriId] = { total: 0, count: 0 };
+        }
+        santriContribMap[t.santriId].total += nom;
+        santriContribMap[t.santriId].count += 1;
+      }
+    }
+  });
+
+  const kasBersih = kasMasuk - kasKeluar;
+
+  document.getElementById("analisaKasBadge").textContent = `${kasTxList.length} Transaksi`;
+
+  document.getElementById("analisaKasSummary").innerHTML = `
+    <div class="stat-box" style="padding:10px 6px;">
+      <div class="stat-val" style="font-size:15px;">${formatRupiahShort(kasBersih)}</div>
+      <div class="stat-lbl">Saldo Periode</div>
+    </div>
+    <div class="stat-box" style="padding:10px 6px;">
+      <div class="stat-val" style="font-size:15px;">${formatRupiahShort(kasMasuk)}</div>
+      <div class="stat-lbl">Kas Masuk</div>
+    </div>
+    <div class="stat-box" style="padding:10px 6px;">
+      <div class="stat-val" style="font-size:15px;">${formatRupiahShort(kasKeluar)}</div>
+      <div class="stat-lbl">Kas Keluar</div>
+    </div>
+  `;
+
+  let kasChartItems = [];
+  const masukTxList = kasTxList.filter(t => t.jenis === "MASUK");
+
+  if (analisaMode === "harian") {
+    document.getElementById("kasTrendChartTitle").textContent = `Pemasukan Kas Harian (${refDate})`;
+    const byPos = {};
+    masukTxList.forEach(t => {
+      byPos[t.kategori] = (byPos[t.kategori] || 0) + (Number(t.nominal) || 0);
+    });
+    const maxVal = Math.max(...Object.values(byPos), 1);
+    kasChartItems = Object.keys(byPos).map(pos => ({
+      label: pos.split(" ")[0],
+      fullLabel: pos,
+      pct: Math.round((byPos[pos] / maxVal) * 100),
+      topText: formatRupiahShort(byPos[pos]),
+      detail: formatRupiah(byPos[pos])
+    }));
+  } else if (analisaMode === "mingguan") {
+    document.getElementById("kasTrendChartTitle").textContent = "Grafik Pemasukan Kas Mingguan";
+    const wb = getWeekBounds(refDate);
+    const hariNama = ["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"];
+    const dayTotals = [];
+    for (let idx = 0; idx < 7; idx++) {
+      const cur = new Date(wb.startObj);
+      cur.setDate(wb.startObj.getDate() + idx);
+      const dStr = `${cur.getFullYear()}-${String(cur.getMonth() + 1).padStart(2, "0")}-${String(cur.getDate()).padStart(2, "0")}`;
+      const sum = masukTxList
+        .filter(t => t.tanggal === dStr)
+        .reduce((acc, c) => acc + (Number(c.nominal) || 0), 0);
+      dayTotals.push({ label: `${hariNama[idx]} ${dStr.slice(8, 10)}`, fullLabel: `${hariNama[idx]}, ${dStr}`, sum });
+    }
+    const maxVal = Math.max(...dayTotals.map(x => x.sum), 1);
+    kasChartItems = dayTotals.map(d => ({
+      label: d.label,
+      fullLabel: d.fullLabel,
+      pct: d.sum > 0 ? Math.round((d.sum / maxVal) * 100) : 0,
+      topText: d.sum > 0 ? formatRupiahShort(d.sum) : "0",
+      detail: formatRupiah(d.sum)
+    }));
+  } else {
+    document.getElementById("kasTrendChartTitle").textContent = analisaMode === "bulanan"
+      ? `Grafik Pemasukan Kas Bulanan (${refMonth})`
+      : "Grafik Pemasukan Kas Per Tanggal";
+    const byDate = {};
+    masukTxList.forEach(t => {
+      const tgl = t.tanggal || "Tanpa Tgl";
+      byDate[tgl] = (byDate[tgl] || 0) + (Number(t.nominal) || 0);
+    });
+    const sortedDates = Object.keys(byDate).sort();
+    const maxVal = Math.max(...Object.values(byDate), 1);
+    kasChartItems = sortedDates.map(tgl => ({
+      label: tgl.slice(5),
+      fullLabel: tgl,
+      pct: Math.round((byDate[tgl] / maxVal) * 100),
+      topText: formatRupiahShort(byDate[tgl]),
+      detail: formatRupiah(byDate[tgl])
+    }));
+  }
+
+  document.getElementById("kasTrendChartBox").innerHTML = renderVerticalBarChart(
+    kasChartItems,
+    "Belum ada pemasukan kas pada rentang waktu ini."
+  );
+
+  document.getElementById("kasPosDistTotalBadge").textContent = formatRupiah(kasMasuk);
+  const posDistEl = document.getElementById("kasPosDistChart");
+  if (kasMasuk <= 0) {
+    posDistEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);">Belum ada pemasukan dana pada filter ini.</div>`;
+  } else {
+    const posEntries = Object.entries(posMasukMap)
+      .filter(([, val]) => val > 0)
+      .sort((a, b) => b[1] - a[1]);
+    posDistEl.innerHTML = posEntries.map(([posName, val], idx) => {
+      const pct = Math.round((val / kasMasuk) * 100);
+      const opacity = Math.max(1 - idx * 0.16, 0.35);
+      return `
+        <div class="dist-row">
+          <div class="dist-meta">
+            <span>${posName}</span>
+            <span>${formatRupiah(val)} (${pct}%)</span>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:${pct}%;opacity:${opacity};"></div>
+          </div>
+        </div>
+      `;
+    }).join("");
+  }
+
+  const santriMap = {};
+  appState.santri.forEach(s => { santriMap[s.id] = s; });
+
+  const qContrib = getQuery("searchKasContrib");
+  const allContributors = Object.entries(santriContribMap)
+    .map(([sid, info]) => ({
+      santri: santriMap[sid],
+      total: info.total,
+      count: info.count
+    }))
+    .filter(item => item.santri)
+    .sort((a, b) => b.total - a.total)
+    .map((item, idx) => ({ ...item, rank: idx + 1 }));
+
+  const filteredContributors = qContrib
+    ? allContributors.filter(c =>
+        (c.santri.nama || "").toLowerCase().includes(qContrib) ||
+        (c.santri.kelas || "").toLowerCase().includes(qContrib)
+      )
+    : allContributors;
+
+  document.getElementById("kasContributorCountBadge").textContent = `${allContributors.length} Santri`;
+  const contribEl = document.getElementById("kasTopContributorsList");
+
+  if (filteredContributors.length === 0) {
+    contribEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:8px 0;">${allContributors.length === 0 ? "Belum ada catatan setoran kas dari santri pada periode ini." : "Nama santri tidak ditemukan."}</div>`;
+  } else {
+    contribEl.innerHTML = filteredContributors.map(c => `
+      <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" onclick="openSantriDetailModal('${c.santri.id}')">
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge" style="${c.rank <= 3 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${c.rank}</span>
+          <div>
+            <div style="font-size:13px;font-weight:700;">${c.santri.nama}</div>
+            <div style="font-size:11px;color:var(--text-secondary);">${c.santri.kelas} • ${c.count}x setoran</div>
+          </div>
+        </div>
+        <div style="font-weight:800;font-size:13px;">${formatRupiah(c.total)}</div>
+      </div>
+    `).join("");
+  }
+}
+
 function renderAnalisa() {
   const sessionInfo = getFilteredSessionKeys();
   const filteredKeys = sessionInfo.keys;
@@ -2273,7 +2731,10 @@ function renderAnalisa() {
     const pct = tot > 0 ? Math.round((h / tot) * 100) : 0;
     const scObj = appState.skor.find(sc => sc.santriId === s.id);
     const quizPoin = scObj ? Number(scObj.poin || 0) : null;
-    return { ...s, h, i, sk, a, tot, pct, quizPoin };
+    const kasTotal = appState.kasTransaksi
+      .filter(t => t.santriId === s.id && t.jenis === "MASUK")
+      .reduce((acc, cur) => acc + (Number(cur.nominal) || 0), 0);
+    return { ...s, h, i, sk, a, tot, pct, quizPoin, kasTotal };
   });
 
   const avgPct = totalRecords > 0 ? Math.round((totalH / totalRecords) * 100) : 0;
@@ -2386,6 +2847,8 @@ function renderAnalisa() {
         `;
       }).join("");
 
+  renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth);
+
   const sortedSkor = [...appState.skor]
     .filter(sc => kelasFilter === "ALL" || targetIds.has(sc.santriId))
     .sort((a, b) => b.poin - a.poin);
@@ -2431,6 +2894,7 @@ function renderAnalisa() {
   if (sortBy === "PCT_DESC") listSantri.sort((a, b) => b.pct - a.pct);
   else if (sortBy === "PCT_ASC") listSantri.sort((a, b) => a.pct - b.pct);
   else if (sortBy === "ALPA_DESC") listSantri.sort((a, b) => b.a - a.a);
+  else if (sortBy === "KAS_DESC") listSantri.sort((a, b) => b.kasTotal - a.kasTotal);
   else if (sortBy === "SKOR_DESC") listSantri.sort((a, b) => (b.quizPoin ?? -9999) - (a.quizPoin ?? -9999));
   else listSantri.sort((a, b) => a.nama.localeCompare(b.nama));
 
@@ -2443,6 +2907,7 @@ function renderAnalisa() {
         <div style="display:flex;justify-content:space-between;align-items:center;font-size:13px;font-weight:700;gap:8px;">
           <span>${s.nama} <span style="font-weight:400;color:var(--text-secondary);">(${s.kelas})</span></span>
           <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+            ${s.kasTotal > 0 ? `<span class="badge">${formatRupiahShort(s.kasTotal)}</span>` : ""}
             ${s.quizPoin !== null ? `<span class="badge">${s.quizPoin} Poin</span>` : ""}
             <span>${s.pct}%</span>
           </div>
@@ -2481,7 +2946,8 @@ if (localStorage.getItem("guru_permanent_unlocked") === "1") {
   document.getElementById("lockScreen").classList.add("hidden");
 }
 renderAll();
-initFirebase();
+updateSyncUI(hasPendingSync ? "pending" : (navigator.onLine ? "online" : "offline"));
+initFirebase(true);
 
 (function setupBustanulHadiIconAndPWA() {
   const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
