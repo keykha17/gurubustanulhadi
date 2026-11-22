@@ -105,7 +105,7 @@ body {
 .btn-block {
   width: 100%;
 }
-input, select, textarea {
+input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], select, textarea {
   width: 100%;
   background: var(--bg);
   color: var(--text-primary);
@@ -553,6 +553,30 @@ main {
   font-size: 15px;
   font-weight: 800;
 }
+.day-chip {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 9px 11px;
+  border-radius: 11px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.day-chip.is-libur {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
+.holiday-banner {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px dashed var(--text-secondary);
+  background: var(--bg);
+  margin-bottom: 10px;
+}
 </style>
 </head>
 <body>
@@ -600,14 +624,18 @@ main {
   <section id="sec-absensi" class="section active">
     <div class="section-header">
       <h2 class="section-title">Absensi Santri</h2>
-      <div style="display:flex;gap:6px;">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-sm" onclick="openModal('modalJadwalAbsen')">
+          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          Sesi & Libur
+        </button>
         <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">
           <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          Kelas / Kitab
+          Kelas
         </button>
         <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalSantri')">
           <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Akun Santri
+          Santri
         </button>
       </div>
     </div>
@@ -620,12 +648,24 @@ main {
         </div>
         <div>
           <label>Waktu / Sesi</label>
-          <select id="attSession" onchange="renderAbsensi()">
-            <option value="Subuh">Pengajian Subuh</option>
-            <option value="Magrib">Pengajian Magrib</option>
-            <option value="Isya" selected>Pengajian Isya / Malam</option>
-            <option value="Malam Jumat">Malam Jumat</option>
-          </select>
+          <select id="attSession" onchange="renderAbsensi()"></select>
+        </div>
+      </div>
+
+      <!-- BANNER HARI LIBUR RUTIN / MALAM JUMAT -->
+      <div id="attHolidayBanner" class="holiday-banner" style="display:none;">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+          <div>
+            <div style="font-size:13px;font-weight:800;" id="attHolidayTitle">Hari Libur Pengajian (Malam Jumat)</div>
+            <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;" id="attHolidayDesc">
+              Hari ini terdaftar sebagai jadwal libur rutin pengajian. Sesi ini tidak dihitung Alpa.
+            </div>
+          </div>
+          <span class="badge" id="attHolidayStatusBadge">Libur</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:10px;">
+          <button type="button" class="btn btn-primary btn-sm" style="flex:1;" id="btnMarkSessionLibur" onclick="markSessionLibur()">Tandai Sesi Libur</button>
+          <button type="button" class="btn btn-sm" style="flex:1;display:none;" id="btnCancelSessionLibur" onclick="cancelSessionLibur()">Buka Absensi Biasa</button>
         </div>
       </div>
 
@@ -937,7 +977,38 @@ main {
   </button>
 </nav>
 
-<!-- MODAL KELOLA BIDANG ILMU (BARU) -->
+<!-- MODAL PENGATURAN SESI & HARI LIBUR -->
+<div id="modalJadwalAbsen" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:4px;">Pengaturan Waktu / Sesi & Hari Libur</h3>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">
+      Atur jadwal hari libur rutin mingguan (misalnya <strong>Malam Jumat / Hari Kamis</strong>) dan daftar sesi pengajian.
+    </p>
+
+    <div class="neu-inset" style="padding:12px;margin-bottom:14px;">
+      <label style="margin-bottom:8px;color:var(--text-primary);">Hari Libur Rutin Mingguan (Klik untuk Ubah)</label>
+      <div class="grid-2" id="liburDaysGrid"></div>
+      <div style="font-size:11px;color:var(--text-secondary);margin-top:8px;">
+        Catatan: Dalam penanggalan Hijriah/Pesantren, <strong>Malam Jumat</strong> jatuh pada <strong>Kamis Malam</strong>.
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label id="sesiFormLabel">Tambah Waktu / Sesi Pengajian</label>
+      <input type="hidden" id="editSesiOldVal">
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="newSesiInput" placeholder="Contoh: Ashar / Dhuha / Muzakarah">
+        <button type="button" class="btn btn-primary" id="btnSaveSesi" onclick="saveSesiPengajian()">Tambah</button>
+        <button type="button" class="btn" id="btnCancelEditSesi" style="display:none;" onclick="cancelEditSesi()">Batal</button>
+      </div>
+    </div>
+
+    <div id="sesiManageList" style="max-height:220px;overflow-y:auto;margin-bottom:14px;"></div>
+    <button type="button" class="btn btn-block" onclick="closeModal('modalJadwalAbsen')">Selesai & Tutup</button>
+  </div>
+</div>
+
+<!-- MODAL KELOLA BIDANG ILMU -->
 <div id="modalBidangIlmu" class="modal-backdrop">
   <div class="modal-box">
     <h3 style="font-size:16px;margin-bottom:4px;">Pengaturan Bidang Ilmu</h3>
@@ -1196,6 +1267,22 @@ const STORAGE_KEY = "balai_pengajian_state";
 const PENDING_SYNC_KEY = "guru_pending_sync";
 const LAST_SYNC_KEY = "guru_last_sync";
 
+const HARI_MINGGUAN_OPTS = [
+  { dayIndex: 0, label: "Ahad (Malam Senin)" },
+  { dayIndex: 1, label: "Senin (Malam Selasa)" },
+  { dayIndex: 2, label: "Selasa (Malam Rabu)" },
+  { dayIndex: 3, label: "Rabu (Malam Kamis)" },
+  { dayIndex: 4, label: "Kamis (Malam Jumat)" },
+  { dayIndex: 5, label: "Jumat (Malam Sabtu)" },
+  { dayIndex: 6, label: "Sabtu (Malam Ahad)" }
+];
+
+const defaultSesiList = [
+  { value: "Subuh", label: "Pengajian Subuh" },
+  { value: "Magrib", label: "Pengajian Magrib" },
+  { value: "Isya", label: "Pengajian Isya / Malam" }
+];
+
 const defaultBidangIlmu = [
   "Umum",
   "Fiqih",
@@ -1222,6 +1309,9 @@ const defaultState = {
     "Matan Al Jurumiah",
     "Al Quran"
   ],
+  sesiList: [...defaultSesiList],
+  hariLiburMingguan: [4],
+  sesiLiburKhusus: {},
   bidangIlmuList: [...defaultBidangIlmu],
   danaKategori: [...defaultDanaKategori],
   kasTransaksi: [],
@@ -1327,6 +1417,18 @@ function sanitizeState(stateObj) {
   let list = Array.isArray(stateObj.kelasList) ? [...stateObj.kelasList] : [];
   if (!list.includes("Umum")) list.unshift("Umum");
   stateObj.kelasList = list;
+
+  let sesiList = Array.isArray(stateObj.sesiList) && stateObj.sesiList.length > 0
+    ? stateObj.sesiList.map(s => typeof s === "string" ? { value: s, label: s } : s)
+    : [...defaultSesiList];
+  stateObj.sesiList = sesiList;
+
+  stateObj.hariLiburMingguan = Array.isArray(stateObj.hariLiburMingguan)
+    ? stateObj.hariLiburMingguan.map(Number)
+    : [4];
+  stateObj.sesiLiburKhusus = stateObj.sesiLiburKhusus && typeof stateObj.sesiLiburKhusus === "object"
+    ? stateObj.sesiLiburKhusus
+    : {};
 
   let bidangList = Array.isArray(stateObj.bidangIlmuList) && stateObj.bidangIlmuList.length > 0
     ? [...stateObj.bidangIlmuList]
@@ -1633,6 +1735,9 @@ async function applyParsedJson(parsed) {
     ...parsed,
     pin: parsed.pin || appState.pin || "1234",
     kelasList: parsed.kelasList || ["Umum"],
+    sesiList: parsed.sesiList || appState.sesiList || [...defaultSesiList],
+    hariLiburMingguan: parsed.hariLiburMingguan || appState.hariLiburMingguan || [4],
+    sesiLiburKhusus: parsed.sesiLiburKhusus || appState.sesiLiburKhusus || {},
     bidangIlmuList: parsed.bidangIlmuList || appState.bidangIlmuList || [...defaultBidangIlmu],
     danaKategori: parsed.danaKategori || appState.danaKategori || [...defaultDanaKategori],
     kasTransaksi: parsed.kasTransaksi || appState.kasTransaksi || [],
@@ -1701,7 +1806,17 @@ function switchTab(tab, el) {
   el.classList.add("active");
 }
 
+function populateSesiDropdown() {
+  const sel = document.getElementById("attSession");
+  if (!sel) return;
+  const sList = appState.sesiList && appState.sesiList.length > 0 ? appState.sesiList : [...defaultSesiList];
+  const prev = sel.value || (sList.some(x => x.value === "Isya") ? "Isya" : sList[0].value);
+  sel.innerHTML = sList.map(s => `<option value="${s.value}">${s.label}</option>`).join("");
+  if ([...sel.options].some(o => o.value === prev)) sel.value = prev;
+}
+
 function populateKelasDropdowns() {
+  populateSesiDropdown();
   const list = appState.kelasList || ["Umum"];
 
   const attFilter = document.getElementById("attKelasFilter");
@@ -1739,6 +1854,139 @@ function populateKelasDropdowns() {
     materiKat.innerHTML = bList.map(b => `<option value="${b}">${b}</option>`).join("");
     if ([...materiKat.options].some(o => o.value === prevKat)) materiKat.value = prevKat;
   }
+}
+
+// =========================================================================
+// KELOLA WAKTU / SESI & HARI LIBUR RUTIN (MALAM JUMAT)
+// =========================================================================
+function renderJadwalAbsenManage() {
+  const daysGrid = document.getElementById("liburDaysGrid");
+  const liburSet = new Set(appState.hariLiburMingguan || [4]);
+
+  daysGrid.innerHTML = HARI_MINGGUAN_OPTS.map(d => {
+    const isLibur = liburSet.has(d.dayIndex);
+    return `
+      <div class="day-chip ${isLibur ? "is-libur" : ""}" onclick="toggleHariLibur(${d.dayIndex})">
+        <span>${d.label}</span>
+        <span>${isLibur ? "LIBUR" : "Masuk"}</span>
+      </div>
+    `;
+  }).join("");
+
+  const sesiEl = document.getElementById("sesiManageList");
+  const list = appState.sesiList || [...defaultSesiList];
+  sesiEl.innerHTML = list.map((s, idx) => {
+    const safeVal = s.value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    const safeLbl = s.label.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+        <div>
+          <div style="font-size:13px;font-weight:700;">${s.label}</div>
+          <div style="font-size:11px;color:var(--text-secondary);">Kode Sesi: ${s.value}</div>
+        </div>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="btn btn-sm" onclick="startEditSesi('${safeVal}', '${safeLbl}')">Ubah</button>
+          ${list.length > 1 ? `<button type="button" class="btn btn-sm" onclick="deleteSesiPengajian('${safeVal}')">Hapus</button>` : ""}
+        </div>
+      </div>
+    `;
+  }).join("");
+}
+
+async function toggleHariLibur(dayIdx) {
+  const set = new Set(appState.hariLiburMingguan || [4]);
+  if (set.has(dayIdx)) {
+    set.delete(dayIdx);
+  } else {
+    set.add(dayIdx);
+  }
+  appState.hariLiburMingguan = Array.from(set).sort();
+  renderJadwalAbsenManage();
+  await persistState();
+  const dObj = HARI_MINGGUAN_OPTS.find(x => x.dayIndex === dayIdx);
+  showToast(set.has(dayIdx) ? `${dObj.label} diatur sebagai Hari Libur` : `${dObj.label} diatur sebagai Hari Pengajian`);
+}
+
+function startEditSesi(val, lbl) {
+  document.getElementById("sesiFormLabel").textContent = `Ubah Nama Sesi "${lbl}"`;
+  document.getElementById("editSesiOldVal").value = val;
+  document.getElementById("newSesiInput").value = lbl;
+  document.getElementById("btnSaveSesi").textContent = "Simpan";
+  document.getElementById("btnCancelEditSesi").style.display = "inline-flex";
+  document.getElementById("newSesiInput").focus();
+}
+
+function cancelEditSesi() {
+  document.getElementById("sesiFormLabel").textContent = "Tambah Waktu / Sesi Pengajian";
+  document.getElementById("editSesiOldVal").value = "";
+  document.getElementById("newSesiInput").value = "";
+  document.getElementById("btnSaveSesi").textContent = "Tambah";
+  document.getElementById("btnCancelEditSesi").style.display = "none";
+}
+
+async function saveSesiPengajian() {
+  const input = document.getElementById("newSesiInput");
+  const rawLabel = input.value.trim();
+  const oldVal = document.getElementById("editSesiOldVal").value.trim();
+  if (!rawLabel) return showToast("Nama sesi pengajian tidak boleh kosong");
+
+  if (oldVal) {
+    const idx = appState.sesiList.findIndex(s => s.value === oldVal);
+    if (idx > -1) {
+      appState.sesiList[idx].label = rawLabel;
+    }
+    cancelEditSesi();
+    renderJadwalAbsenManage();
+    await persistState();
+    showToast("Nama sesi pengajian diperbarui");
+  } else {
+    const cleanCode = rawLabel.replace(/^Pengajian\s+/i, "").replace(/[^a-zA-Z0-9\s]/g, "").trim() || ("Sesi" + Date.now());
+    if (appState.sesiList.some(s => s.label.toLowerCase() === rawLabel.toLowerCase() || s.value.toLowerCase() === cleanCode.toLowerCase())) {
+      return showToast("Nama sesi tersebut sudah ada");
+    }
+    appState.sesiList.push({ value: cleanCode, label: rawLabel });
+    input.value = "";
+    renderJadwalAbsenManage();
+    await persistState();
+    showToast(`Sesi "${rawLabel}" ditambahkan`);
+  }
+}
+
+async function deleteSesiPengajian(val) {
+  if (appState.sesiList.length <= 1) return showToast("Minimal harus tersisa 1 sesi pengajian");
+  appState.sesiList = appState.sesiList.filter(s => s.value !== val);
+  if (document.getElementById("editSesiOldVal").value === val) cancelEditSesi();
+  renderJadwalAbsenManage();
+  await persistState();
+  showToast("Sesi pengajian dihapus");
+}
+
+function getDateDayInfo(dateStr) {
+  if (!dateStr) return { dayIndex: -1, dayLabel: "" };
+  const parts = dateStr.split("-").map(Number);
+  const dt = new Date(parts[0], parts[1] - 1, parts[2]);
+  const dayIndex = dt.getDay();
+  const found = HARI_MINGGUAN_OPTS.find(x => x.dayIndex === dayIndex);
+  return { dayIndex, dayLabel: found ? found.label : "" };
+}
+
+async function markSessionLibur() {
+  const key = getAttKey();
+  const dStr = document.getElementById("attDate").value;
+  const info = getDateDayInfo(dStr);
+  appState.sesiLiburKhusus[key] = info.dayLabel || "Libur Pengajian";
+  if (appState.absensi[key]) {
+    delete appState.absensi[key];
+  }
+  await persistState();
+  showToast("Sesi ditandai Libur • Tidak dihitung Alpa");
+}
+
+async function cancelSessionLibur() {
+  const key = getAttKey();
+  delete appState.sesiLiburKhusus[key];
+  await persistState();
+  showToast("Status libur dibuka • Silakan isi absensi");
 }
 
 // =========================================================================
@@ -1928,6 +2176,10 @@ function openModal(id) {
     cancelEditBidang();
     renderBidangIlmuManage();
   }
+  if (id === "modalJadwalAbsen") {
+    cancelEditSesi();
+    renderJadwalAbsenManage();
+  }
   document.getElementById(id).classList.add("open");
 }
 
@@ -1963,8 +2215,9 @@ function getSantriOverallPct(santriId) {
   const keys = Object.keys(appState.absensi || {});
   let h = 0, tot = 0;
   keys.forEach(k => {
+    if (appState.sesiLiburKhusus && appState.sesiLiburKhusus[k]) return;
     const st = (appState.absensi[k] || {})[santriId];
-    if (st) {
+    if (st && st !== "Libur") {
       tot++;
       if (st === "Hadir") h++;
     }
@@ -1992,6 +2245,42 @@ function resetAttFilters() {
 
 function renderAbsensi() {
   const key = getAttKey();
+  const dStr = document.getElementById("attDate").value;
+  const dayInfo = getDateDayInfo(dStr);
+  const isWeeklyLibur = (appState.hariLiburMingguan || [4]).includes(dayInfo.dayIndex);
+  const isExplicitLibur = Boolean(appState.sesiLiburKhusus && appState.sesiLiburKhusus[key]);
+  const hasRecordedAtt = Boolean(appState.absensi[key] && Object.keys(appState.absensi[key]).length > 0);
+
+  const bannerEl = document.getElementById("attHolidayBanner");
+  const btnMarkLibur = document.getElementById("btnMarkSessionLibur");
+  const btnCancelLibur = document.getElementById("btnCancelSessionLibur");
+  const badgeLibur = document.getElementById("attHolidayStatusBadge");
+
+  if (isWeeklyLibur || isExplicitLibur) {
+    bannerEl.style.display = "block";
+    document.getElementById("attHolidayTitle").textContent = `Jadwal Libur: ${dayInfo.dayLabel || "Libur Pengajian"}`;
+    if (isExplicitLibur) {
+      document.getElementById("attHolidayDesc").textContent =
+        "Sesi ini sudah ditandai LIBUR. Tidak ada santri yang dihitung Alpa pada sesi ini.";
+      badgeLibur.textContent = "Sudah Ditandai Libur";
+      badgeLibur.style.background = "var(--accent)";
+      badgeLibur.style.color = "var(--accent-text)";
+      btnMarkLibur.style.display = "none";
+      btnCancelLibur.style.display = "inline-flex";
+    } else {
+      document.getElementById("attHolidayDesc").textContent = hasRecordedAtt
+        ? "Hari ini jadwal libur rutin, namun sesi ini sedang dibuka untuk absensi manual."
+        : "Hari ini termasuk jadwal libur rutin pengajian. Klik tombol di bawah untuk mengonfirmasi libur, atau langsung absen jika ada pengajian pengganti.";
+      badgeLibur.textContent = "Libur Rutin";
+      badgeLibur.style.background = "";
+      badgeLibur.style.color = "";
+      btnMarkLibur.style.display = "inline-flex";
+      btnCancelLibur.style.display = "none";
+    }
+  } else {
+    bannerEl.style.display = "none";
+  }
+
   const currentRecord = appState.absensi[key] || {};
   const listEl = document.getElementById("attList");
   const filterKelas = document.getElementById("attKelasFilter").value || "ALL";
@@ -2003,10 +2292,30 @@ function renderAbsensi() {
     : appState.santri.filter(s => s.kelas === filterKelas);
 
   let counts = { Hadir: 0, Izin: 0, Sakit: 0, Alpa: 0 };
-  classSantri.forEach(st => {
-    const status = currentRecord[st.id] || "Hadir";
-    counts[status] = (counts[status] || 0) + 1;
-  });
+  if (!isExplicitLibur) {
+    classSantri.forEach(st => {
+      const status = currentRecord[st.id] || "Hadir";
+      counts[status] = (counts[status] || 0) + 1;
+    });
+  }
+
+  document.getElementById("attQuickStats").innerHTML = ["Hadir", "Izin", "Sakit", "Alpa"].map(k => `
+    <div class="stat-box" style="padding:8px;cursor:pointer;" onclick="setAttStatusFilter('${k}', document.querySelector('#attStatusPills .pill:nth-child(${["Hadir","Izin","Sakit","Alpa"].indexOf(k) + 2})'))">
+      <div class="stat-val" style="font-size:16px;">${counts[k]}</div>
+      <div class="stat-lbl">${k}</div>
+    </div>
+  `).join("");
+
+  if (isExplicitLibur) {
+    document.getElementById("attFilterSummary").textContent = "Sesi Libur Pengajian (Absensi dinonaktifkan)";
+    listEl.innerHTML = `
+      <div class="neu-card" style="text-align:center;padding:24px 16px;">
+        <div style="font-size:15px;font-weight:800;margin-bottom:4px;">Pengajian Libur (${dayInfo.dayLabel || dStr})</div>
+        <p style="font-size:12px;color:var(--text-secondary);">Seluruh santri diliburkan pada sesi ini dan tidak mengurangi persentase kehadiran.</p>
+      </div>
+    `;
+    return;
+  }
 
   let enrichedList = classSantri.map(st => {
     const isMarked = currentRecord[st.id] !== undefined;
@@ -2073,17 +2382,13 @@ function renderAbsensi() {
       `;
     }).join("");
   }
-
-  document.getElementById("attQuickStats").innerHTML = ["Hadir", "Izin", "Sakit", "Alpa"].map(k => `
-    <div class="stat-box" style="padding:8px;cursor:pointer;" onclick="setAttStatusFilter('${k}', document.querySelector('#attStatusPills .pill:nth-child(${["Hadir","Izin","Sakit","Alpa"].indexOf(k) + 2})'))">
-      <div class="stat-val" style="font-size:16px;">${counts[k]}</div>
-      <div class="stat-lbl">${k}</div>
-    </div>
-  `).join("");
 }
 
 function setSantriAtt(santriId, status) {
   const key = getAttKey();
+  if (appState.sesiLiburKhusus && appState.sesiLiburKhusus[key]) {
+    delete appState.sesiLiburKhusus[key];
+  }
   if (!appState.absensi[key]) {
     appState.absensi[key] = {};
     appState.santri.forEach(s => { appState.absensi[key][s.id] = "Hadir"; });
@@ -2094,6 +2399,9 @@ function setSantriAtt(santriId, status) {
 
 function markAllHadir() {
   const key = getAttKey();
+  if (appState.sesiLiburKhusus && appState.sesiLiburKhusus[key]) {
+    delete appState.sesiLiburKhusus[key];
+  }
   if (!appState.absensi[key]) appState.absensi[key] = {};
   const filterKelas = document.getElementById("attKelasFilter").value || "ALL";
   appState.santri.forEach(s => {
@@ -2107,6 +2415,9 @@ function markAllHadir() {
 
 async function saveAttendance() {
   const key = getAttKey();
+  if (appState.sesiLiburKhusus && appState.sesiLiburKhusus[key]) {
+    delete appState.sesiLiburKhusus[key];
+  }
   if (!appState.absensi[key]) {
     appState.absensi[key] = {};
     appState.santri.forEach(s => { appState.absensi[key][s.id] = "Hadir"; });
@@ -2477,7 +2788,9 @@ function getWeekBounds(dateStr) {
 }
 
 function getFilteredSessionKeys() {
-  const allKeys = Object.keys(appState.absensi).sort();
+  const allKeys = Object.keys(appState.absensi)
+    .filter(k => !(appState.sesiLiburKhusus && appState.sesiLiburKhusus[k]))
+    .sort();
   const refDate = document.getElementById("analisaRefDate").value || new Date().toISOString().slice(0, 10);
   const refMonth = document.getElementById("analisaRefMonth").value || refDate.slice(0, 7);
 
@@ -2597,7 +2910,7 @@ function openSantriDetailModal(santriId) {
 
   [...keys].reverse().forEach(k => {
     const st = (appState.absensi[k] || {})[s.id];
-    if (st) {
+    if (st && st !== "Libur") {
       if (st === "Hadir") h++;
       else if (st === "Izin") i++;
       else if (st === "Sakit") sk++;
