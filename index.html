@@ -352,6 +352,11 @@ main {
   border: 1px solid var(--border);
   color: var(--text-secondary);
 }
+.badge-major {
+  background: var(--accent);
+  color: var(--accent-text);
+  border-color: var(--accent);
+}
 .bar-track {
   width: 100%;
   height: 8px;
@@ -447,6 +452,19 @@ main {
 }
 .clickable-row:active {
   transform: scale(0.985);
+}
+.ann-card {
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-elevated);
+  margin-bottom: 10px;
+}
+.ann-card:last-child {
+  margin-bottom: 0;
+}
+.ann-card.major {
+  border-left: 4px solid var(--accent);
 }
 .bottom-nav {
   position: fixed;
@@ -836,18 +854,39 @@ main {
     <div id="linkList"></div>
   </section>
 
-  <!-- TAB 5: ANALISA KEHADIRAN, KAS & KUIS -->
+  <!-- TAB 5: ANALISA KEHADIRAN, KAS, PENGUMUMAN & KUIS -->
   <section id="sec-analisa" class="section">
     <div class="section-header">
-      <h2 class="section-title">Analisa Kehadiran & Kas</h2>
+      <h2 class="section-title">Laporan & Pengumuman</h2>
       <div style="display:flex;gap:6px;">
-        <button type="button" class="btn btn-sm" onclick="openModal('modalSettings')">Backup JSON</button>
+        <button type="button" class="btn btn-primary btn-sm" onclick="openPengumumanForm()">
+          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          Pengumuman
+        </button>
+        <button type="button" class="btn btn-sm" onclick="openModal('modalSettings')">Backup</button>
         <button type="button" class="btn btn-sm" onclick="resetScores()">Reset Skor</button>
       </div>
     </div>
 
+    <!-- PANEL PENGUMUMAN & ACARA BESAR -->
     <div class="neu-card">
-      <label>Filter Rentang Waktu</label>
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
+        <div>
+          <h3 style="font-size:14px;">Papan Pengumuman & Agenda Acara</h3>
+          <p style="font-size:11px;color:var(--text-secondary);">Kirim pengumuman acara besar atau info rutin ke Portal Santri & salin teks untuk WhatsApp.</p>
+        </div>
+        <button type="button" class="btn btn-sm" onclick="openPengumumanForm()">+ Buat</button>
+      </div>
+      <div class="pill-group" id="pengumumanFilterPills" style="margin-bottom:10px;">
+        <button type="button" class="pill active" onclick="setPengumumanFilter('ALL', this)">Semua</button>
+        <button type="button" class="pill" onclick="setPengumumanFilter('Acara Besar', this)">Acara Besar</button>
+        <button type="button" class="pill" onclick="setPengumumanFilter('Pengumuman Biasa', this)">Pengumuman Biasa</button>
+      </div>
+      <div id="pengumumanList"></div>
+    </div>
+
+    <div class="neu-card">
+      <label>Filter Rentang Waktu Laporan</label>
       <div class="pill-group" id="analisaPeriodPills" style="margin-bottom:10px;">
         <button type="button" class="pill active" onclick="setAnalisaMode('semua', this)">Semua Sesi</button>
         <button type="button" class="pill" onclick="setAnalisaMode('harian', this)">Harian</button>
@@ -995,9 +1034,49 @@ main {
   </button>
   <button type="button" class="nav-item" onclick="switchTab('analisa', this)">
     <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    <span>Analisa</span>
+    <span>Laporan</span>
   </button>
 </nav>
+
+<!-- MODAL KIRIM / EDIT PENGUMUMAN -->
+<div id="modalPengumuman" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:4px;" id="pengumumanModalTitle">Kirim Pengumuman Baru</h3>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">
+      Pengumuman akan tersimpan dan otomatis muncul di halaman santri saat online.
+    </p>
+    <input type="hidden" id="editPengumumanId">
+    <div class="grid-2">
+      <div class="form-group">
+        <label>Kategori Pengumuman</label>
+        <select id="annKategori">
+          <option value="Acara Besar">Acara Besar</option>
+          <option value="Pengumuman Biasa">Pengumuman Biasa</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Tanggal Acara / Berlaku</label>
+        <input type="date" id="annTanggal">
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Judul Pengumuman / Nama Acara</label>
+      <input type="text" id="annJudul" placeholder="Contoh: Peringatan Maulid Nabi / Gotong Royong">
+    </div>
+    <div class="form-group">
+      <label>Target Kelas / Santri</label>
+      <select id="annTargetKelas"></select>
+    </div>
+    <div class="form-group">
+      <label>Isi Pengumuman Lengkap</label>
+      <textarea id="annIsi" rows="4" placeholder="Tuliskan detail waktu, tempat, pakaian, atau hal yang perlu dipersiapkan santri..."></textarea>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button type="button" class="btn btn-primary" style="flex:1;" onclick="savePengumuman()">Kirim & Simpan</button>
+      <button type="button" class="btn" onclick="closeModal('modalPengumuman')">Batal</button>
+    </div>
+  </div>
+</div>
 
 <!-- MODAL KONFIRMASI KOSONGKAN ABSEN -->
 <div id="modalConfirmClearAbsen" class="modal-backdrop">
@@ -1352,6 +1431,7 @@ const defaultState = {
   bidangIlmuList: [...defaultBidangIlmu],
   danaKategori: [...defaultDanaKategori],
   kasTransaksi: [],
+  pengumuman: [],
   santri: [
     { id: "s1", nama: "Aswir", username: "aswir", pin: "1234", kelas: "Umum" },
     { id: "s2", nama: "Ilham", username: "ilham", pin: "1234", kelas: "Umum" },
@@ -1480,6 +1560,7 @@ function sanitizeState(stateObj) {
   stateObj.danaKategori = danaList;
 
   stateObj.kasTransaksi = Array.isArray(stateObj.kasTransaksi) ? stateObj.kasTransaksi : [];
+  stateObj.pengumuman = Array.isArray(stateObj.pengumuman) ? stateObj.pengumuman : [];
   stateObj.santri = Array.isArray(stateObj.santri) ? stateObj.santri : [];
   stateObj.absensi = stateObj.absensi && typeof stateObj.absensi === "object" ? stateObj.absensi : {};
   stateObj.materi = Array.isArray(stateObj.materi) ? stateObj.materi : [];
@@ -1517,6 +1598,7 @@ let docRef = null;
 let selectedKategori = "Semua";
 let analisaMode = "semua";
 let attStatusFilter = "ALL";
+let pengumumanFilter = "ALL";
 
 function formatRupiah(num) {
   const val = Number(num) || 0;
@@ -1676,7 +1758,6 @@ async function flushPendingSync(silent = true) {
 
   try {
     sanitizeState(appState);
-    // Gunakan set tanpa merge agar penghapusan sesi absensi / hari libur ikut terhapus di Firestore
     await docRef.set(appState);
     setPendingFlag(false);
     localStorage.setItem(LAST_SYNC_KEY, new Date().toLocaleString("id-ID"));
@@ -1779,6 +1860,7 @@ async function applyParsedJson(parsed) {
     bidangIlmuList: parsed.bidangIlmuList || appState.bidangIlmuList || [...defaultBidangIlmu],
     danaKategori: parsed.danaKategori || appState.danaKategori || [...defaultDanaKategori],
     kasTransaksi: parsed.kasTransaksi || appState.kasTransaksi || [],
+    pengumuman: parsed.pengumuman || appState.pengumuman || [],
     santri: parsed.santri,
     absensi: parsed.absensi || {},
     materi: parsed.materi || [],
@@ -1885,6 +1967,14 @@ function populateKelasDropdowns() {
     if ([...materiKitab.options].some(o => o.value === prevMK)) materiKitab.value = prevMK;
   }
 
+  const annTarget = document.getElementById("annTargetKelas");
+  if (annTarget) {
+    const prevAnn = annTarget.value || "Semua Santri";
+    annTarget.innerHTML = `<option value="Semua Santri">Semua Santri & Wali</option>` +
+      list.filter(k => k !== "Umum").map(k => `<option value="${k}">Khusus Kelas ${k}</option>`).join("");
+    if ([...annTarget.options].some(o => o.value === prevAnn)) annTarget.value = prevAnn;
+  }
+
   const materiKat = document.getElementById("materiKategori");
   if (materiKat) {
     const bList = appState.bidangIlmuList || [...defaultBidangIlmu];
@@ -1892,6 +1982,145 @@ function populateKelasDropdowns() {
     materiKat.innerHTML = bList.map(b => `<option value="${b}">${b}</option>`).join("");
     if ([...materiKat.options].some(o => o.value === prevKat)) materiKat.value = prevKat;
   }
+}
+
+// =========================================================================
+// PENGUMUMAN & AGENDA ACARA BESAR
+// =========================================================================
+function setPengumumanFilter(kat, btnEl) {
+  pengumumanFilter = kat;
+  document.querySelectorAll("#pengumumanFilterPills .pill").forEach(p => p.classList.remove("active"));
+  if (btnEl) btnEl.classList.add("active");
+  renderPengumuman();
+}
+
+function openPengumumanForm() {
+  populateKelasDropdowns();
+  document.getElementById("pengumumanModalTitle").textContent = "Kirim Pengumuman Baru";
+  document.getElementById("editPengumumanId").value = "";
+  document.getElementById("annKategori").value = "Acara Besar";
+  document.getElementById("annTanggal").value = new Date().toISOString().slice(0, 10);
+  document.getElementById("annJudul").value = "";
+  document.getElementById("annTargetKelas").value = "Semua Santri";
+  document.getElementById("annIsi").value = "";
+  openModal("modalPengumuman");
+}
+
+function editPengumuman(id) {
+  populateKelasDropdowns();
+  const item = (appState.pengumuman || []).find(x => x.id === id);
+  if (!item) return;
+  document.getElementById("pengumumanModalTitle").textContent = "Edit Pengumuman";
+  document.getElementById("editPengumumanId").value = item.id;
+  document.getElementById("annKategori").value = item.kategori || "Acara Besar";
+  document.getElementById("annTanggal").value = item.tanggal || new Date().toISOString().slice(0, 10);
+  document.getElementById("annJudul").value = item.judul || "";
+  document.getElementById("annTargetKelas").value = item.target || "Semua Santri";
+  document.getElementById("annIsi").value = item.isi || "";
+  openModal("modalPengumuman");
+}
+
+async function savePengumuman() {
+  const id = document.getElementById("editPengumumanId").value;
+  const kategori = document.getElementById("annKategori").value || "Acara Besar";
+  const tanggal = document.getElementById("annTanggal").value || new Date().toISOString().slice(0, 10);
+  const judul = document.getElementById("annJudul").value.trim();
+  const target = document.getElementById("annTargetKelas").value || "Semua Santri";
+  const isi = document.getElementById("annIsi").value.trim();
+
+  if (!judul || !isi) return showToast("Judul dan isi pengumuman wajib diisi");
+
+  if (!Array.isArray(appState.pengumuman)) appState.pengumuman = [];
+
+  if (id) {
+    const idx = appState.pengumuman.findIndex(x => x.id === id);
+    if (idx > -1) {
+      appState.pengumuman[idx] = {
+        ...appState.pengumuman[idx],
+        kategori,
+        tanggal,
+        judul,
+        target,
+        isi,
+        updatedAt: new Date().toLocaleString("id-ID")
+      };
+    }
+  } else {
+    appState.pengumuman.unshift({
+      id: "ann_" + Date.now(),
+      kategori,
+      tanggal,
+      judul,
+      target,
+      isi,
+      dibuatPada: new Date().toLocaleString("id-ID")
+    });
+  }
+
+  closeModal("modalPengumuman");
+  await persistState();
+  showToast(navigator.onLine ? "Pengumuman dikirim & tersinkron" : "Pengumuman tersimpan (auto-kirim saat online)");
+}
+
+async function deletePengumuman(id) {
+  appState.pengumuman = (appState.pengumuman || []).filter(x => x.id !== id);
+  await persistState();
+  showToast("Pengumuman dihapus");
+}
+
+async function copyPengumumanText(id) {
+  const item = (appState.pengumuman || []).find(x => x.id === id);
+  if (!item) return;
+  const formatted = `*PENGUMUMAN BUSTANUL HADI*\n` +
+    `[${item.kategori.toUpperCase()}]\n\n` +
+    `*${item.judul}*\n` +
+    `Tanggal: ${item.tanggal}\n` +
+    `Tujuan: ${item.target}\n\n` +
+    `${item.isi}\n\n` +
+    `_Wassalamu'alaikum Wr. Wb._`;
+  try {
+    await navigator.clipboard.writeText(formatted);
+    showToast("Teks pengumuman disalin • Siap tempel ke WhatsApp");
+  } catch (e) {
+    showToast("Gagal menyalin teks otomatis");
+  }
+}
+
+function renderPengumuman() {
+  const listEl = document.getElementById("pengumumanList");
+  if (!listEl) return;
+
+  const all = Array.isArray(appState.pengumuman) ? appState.pengumuman : [];
+  const filtered = pengumumanFilter === "ALL"
+    ? all
+    : all.filter(x => x.kategori === pengumumanFilter);
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:12px 0;">Belum ada pengumuman yang dikirim. Klik tombol <strong>+ Buat</strong> untuk membuat pengumuman acara besar atau info rutin.</div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(item => {
+    const isMajor = item.kategori === "Acara Besar";
+    return `
+      <div class="ann-card ${isMajor ? "major" : ""}">
+        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:6px;">
+          <div>
+            <span class="badge ${isMajor ? "badge-major" : ""}">${item.kategori}</span>
+            <span class="badge" style="margin-left:4px;">${item.tanggal}</span>
+          </div>
+          <span style="font-size:10.5px;color:var(--text-secondary);">${item.target || "Semua Santri"}</span>
+        </div>
+        <div style="font-size:14px;font-weight:800;margin-bottom:4px;">${item.judul}</div>
+        <p style="font-size:12.5px;color:var(--text-secondary);white-space:pre-line;margin-bottom:10px;">${item.isi}</p>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-primary btn-sm" onclick="copyPengumumanText('${item.id}')">Salin Teks</button>
+          <button type="button" class="btn btn-sm" onclick="editPengumuman('${item.id}')">Edit</button>
+          <button type="button" class="btn btn-sm" onclick="deletePengumuman('${item.id}')">Hapus</button>
+        </div>
+      </div>
+    `;
+  }).join("");
 }
 
 // =========================================================================
@@ -2339,7 +2568,6 @@ function renderAbsensi() {
   const isExplicitLibur = Boolean(appState.sesiLiburKhusus && appState.sesiLiburKhusus[key]);
   const hasRecordedAtt = Boolean(appState.absensi[key] && Object.keys(appState.absensi[key]).length > 0);
 
-  // Perbarui bar status sesi saat ini
   const statusBar = document.getElementById("attSessionStatusBar");
   const statusTitle = document.getElementById("attSessionStatusTitle");
   const statusSub = document.getElementById("attSessionStatusSub");
@@ -3544,6 +3772,7 @@ function renderAll() {
   renderMateri();
   renderSoal();
   renderLinks();
+  renderPengumuman();
   renderAnalisa();
 }
 
