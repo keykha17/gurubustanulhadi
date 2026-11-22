@@ -681,8 +681,9 @@ main {
   <section id="sec-materi" class="section">
     <div class="section-header">
       <h2 class="section-title">Materi & Kitab</h2>
-      <div style="display:flex;gap:6px;">
-        <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">Atur Kelas / Kitab</button>
+      <div style="display:flex;gap:6px;flex-wrap:wrap;">
+        <button type="button" class="btn btn-sm" onclick="openModal('modalBidangIlmu')">Bidang Ilmu</button>
+        <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">Kelas / Kitab</button>
         <button type="button" class="btn btn-primary btn-sm" onclick="openMateriForm()">
           <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
           Materi Baru
@@ -691,7 +692,7 @@ main {
     </div>
     <div class="search-wrap" id="wrapSearchMateri">
       <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchMateri" placeholder="Cari judul materi, kitab, atau isi matan..." oninput="onSearchInput('searchMateri','wrapSearchMateri',renderMateri)">
+      <input type="text" id="searchMateri" placeholder="Cari judul materi, bidang ilmu, kitab, atau isi matan..." oninput="onSearchInput('searchMateri','wrapSearchMateri',renderMateri)">
       <button type="button" class="search-clear" onclick="clearSearch('searchMateri','wrapSearchMateri',renderMateri)">×</button>
     </div>
     <div class="pill-group" id="materiFilter"></div>
@@ -936,6 +937,27 @@ main {
   </button>
 </nav>
 
+<!-- MODAL KELOLA BIDANG ILMU (BARU) -->
+<div id="modalBidangIlmu" class="modal-backdrop">
+  <div class="modal-box">
+    <h3 style="font-size:16px;margin-bottom:4px;">Pengaturan Bidang Ilmu</h3>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:12px;">
+      Tambah, ubah nama, atau hapus kategori Bidang Ilmu. Jika suatu bidang ilmu dihapus, materinya otomatis dipindahkan ke <strong>Umum</strong>.
+    </p>
+    <div class="form-group">
+      <label id="bidangFormLabel">Tambah Bidang Ilmu Baru</label>
+      <input type="hidden" id="editBidangOldName">
+      <div style="display:flex;gap:8px;">
+        <input type="text" id="newBidangInput" placeholder="Contoh: Nahwu / Sharaf / Hadits">
+        <button type="button" class="btn btn-primary" id="btnSaveBidang" onclick="saveBidangIlmu()">Tambah</button>
+        <button type="button" class="btn" id="btnCancelEditBidang" style="display:none;" onclick="cancelEditBidang()">Batal</button>
+      </div>
+    </div>
+    <div id="bidangManageList" style="max-height:260px;overflow-y:auto;margin-bottom:14px;"></div>
+    <button type="button" class="btn btn-block" onclick="closeModal('modalBidangIlmu')">Selesai & Tutup</button>
+  </div>
+</div>
+
 <!-- MODAL DETAIL SANTRI -->
 <div id="modalDetailSantri" class="modal-backdrop">
   <div class="modal-box">
@@ -1025,14 +1047,11 @@ main {
     </div>
     <div class="grid-2">
       <div class="form-group">
-        <label>Bidang Ilmu</label>
-        <select id="materiKategori">
-          <option value="Fiqih">Fiqih</option>
-          <option value="Tauhid">Tauhid</option>
-          <option value="Tasawuf">Tasawuf</option>
-          <option value="Tajwid">Tajwid</option>
-          <option value="Akhlak">Akhlak</option>
-        </select>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <label style="margin-bottom:0;">Bidang Ilmu</label>
+          <button type="button" style="background:none;border:none;color:var(--text-primary);font-size:11px;font-weight:700;cursor:pointer;" onclick="openModal('modalBidangIlmu')">+ Atur</button>
+        </div>
+        <select id="materiKategori"></select>
       </div>
       <div class="form-group">
         <label>Kelas / Kitab Target</label>
@@ -1177,6 +1196,17 @@ const STORAGE_KEY = "balai_pengajian_state";
 const PENDING_SYNC_KEY = "guru_pending_sync";
 const LAST_SYNC_KEY = "guru_last_sync";
 
+const defaultBidangIlmu = [
+  "Umum",
+  "Fiqih",
+  "Tauhid",
+  "Tasawuf",
+  "Tajwid",
+  "Akhlak",
+  "Nahwu",
+  "Sharaf"
+];
+
 const defaultDanaKategori = [
   "Kas Umum Pengajian",
   "Infaq Malam Jumat",
@@ -1192,6 +1222,7 @@ const defaultState = {
     "Matan Al Jurumiah",
     "Al Quran"
   ],
+  bidangIlmuList: [...defaultBidangIlmu],
   danaKategori: [...defaultDanaKategori],
   kasTransaksi: [],
   santri: [
@@ -1297,6 +1328,12 @@ function sanitizeState(stateObj) {
   if (!list.includes("Umum")) list.unshift("Umum");
   stateObj.kelasList = list;
 
+  let bidangList = Array.isArray(stateObj.bidangIlmuList) && stateObj.bidangIlmuList.length > 0
+    ? [...stateObj.bidangIlmuList]
+    : [...defaultBidangIlmu];
+  if (!bidangList.includes("Umum")) bidangList.unshift("Umum");
+  stateObj.bidangIlmuList = bidangList;
+
   let danaList = Array.isArray(stateObj.danaKategori) && stateObj.danaKategori.length > 0
     ? [...stateObj.danaKategori]
     : [...defaultDanaKategori];
@@ -1319,6 +1356,10 @@ function sanitizeState(stateObj) {
   });
   stateObj.materi.forEach(m => {
     if (!m.kitab || !list.includes(m.kitab)) m.kitab = "Umum";
+    if (m.kategori && !stateObj.bidangIlmuList.includes(m.kategori)) {
+      stateObj.bidangIlmuList.push(m.kategori);
+    }
+    if (!m.kategori) m.kategori = "Umum";
   });
   stateObj.kasTransaksi.forEach(t => {
     if (!t.kategori || !danaList.includes(t.kategori)) t.kategori = "Kas Umum Pengajian";
@@ -1592,6 +1633,7 @@ async function applyParsedJson(parsed) {
     ...parsed,
     pin: parsed.pin || appState.pin || "1234",
     kelasList: parsed.kelasList || ["Umum"],
+    bidangIlmuList: parsed.bidangIlmuList || appState.bidangIlmuList || [...defaultBidangIlmu],
     danaKategori: parsed.danaKategori || appState.danaKategori || [...defaultDanaKategori],
     kasTransaksi: parsed.kasTransaksi || appState.kasTransaksi || [],
     santri: parsed.santri,
@@ -1685,7 +1727,123 @@ function populateKelasDropdowns() {
 
   const materiKitab = document.getElementById("materiKitabSelect");
   if (materiKitab) {
+    const prevMK = materiKitab.value || "Umum";
     materiKitab.innerHTML = list.map(k => `<option value="${k}">${k === "Umum" ? "Umum (Semua Santri)" : k}</option>`).join("");
+    if ([...materiKitab.options].some(o => o.value === prevMK)) materiKitab.value = prevMK;
+  }
+
+  const materiKat = document.getElementById("materiKategori");
+  if (materiKat) {
+    const bList = appState.bidangIlmuList || [...defaultBidangIlmu];
+    const prevKat = materiKat.value || (bList.includes("Fiqih") ? "Fiqih" : bList[0]);
+    materiKat.innerHTML = bList.map(b => `<option value="${b}">${b}</option>`).join("");
+    if ([...materiKat.options].some(o => o.value === prevKat)) materiKat.value = prevKat;
+  }
+}
+
+// =========================================================================
+// KELOLA BIDANG ILMU (TAMBAH, EDIT NAMA / RENAME, HAPUS)
+// =========================================================================
+function renderBidangIlmuManage() {
+  const el = document.getElementById("bidangManageList");
+  const list = appState.bidangIlmuList || [...defaultBidangIlmu];
+  el.innerHTML = list.map(b => {
+    const isUmum = b === "Umum";
+    const countMateri = appState.materi.filter(m => m.kategori === b).length;
+    const safeName = b.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    return `
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+        <div>
+          <div style="font-size:13px;font-weight:700;">${b} ${isUmum ? "(Default)" : ""}</div>
+          <div style="font-size:11px;color:var(--text-secondary);">${countMateri} materi terdaftar</div>
+        </div>
+        ${isUmum ? `<span class="badge">Wajib</span>` : `
+          <div style="display:flex;gap:6px;">
+            <button type="button" class="btn btn-sm" onclick="startEditBidang('${safeName}')">Ubah</button>
+            <button type="button" class="btn btn-sm" onclick="deleteBidangIlmu('${safeName}')">Hapus</button>
+          </div>
+        `}
+      </div>
+    `;
+  }).join("");
+}
+
+function startEditBidang(nama) {
+  if (nama === "Umum") return;
+  document.getElementById("bidangFormLabel").textContent = `Ubah Nama Bidang Ilmu "${nama}"`;
+  document.getElementById("editBidangOldName").value = nama;
+  document.getElementById("newBidangInput").value = nama;
+  document.getElementById("btnSaveBidang").textContent = "Simpan";
+  document.getElementById("btnCancelEditBidang").style.display = "inline-flex";
+  document.getElementById("newBidangInput").focus();
+}
+
+function cancelEditBidang() {
+  document.getElementById("bidangFormLabel").textContent = "Tambah Bidang Ilmu Baru";
+  document.getElementById("editBidangOldName").value = "";
+  document.getElementById("newBidangInput").value = "";
+  document.getElementById("btnSaveBidang").textContent = "Tambah";
+  document.getElementById("btnCancelEditBidang").style.display = "none";
+}
+
+async function saveBidangIlmu() {
+  const input = document.getElementById("newBidangInput");
+  const namaBaru = input.value.trim();
+  const namaLama = document.getElementById("editBidangOldName").value.trim();
+
+  if (!namaBaru) return showToast("Nama bidang ilmu tidak boleh kosong");
+
+  if (namaLama) {
+    if (namaLama.toLowerCase() !== namaBaru.toLowerCase() &&
+        appState.bidangIlmuList.some(b => b.toLowerCase() === namaBaru.toLowerCase())) {
+      return showToast("Nama bidang ilmu sudah ada di daftar");
+    }
+    const idx = appState.bidangIlmuList.findIndex(b => b === namaLama);
+    if (idx > -1) appState.bidangIlmuList[idx] = namaBaru;
+
+    appState.materi.forEach(m => {
+      if (m.kategori === namaLama) m.kategori = namaBaru;
+    });
+    if (selectedKategori === namaLama) selectedKategori = namaBaru;
+
+    cancelEditBidang();
+    renderBidangIlmuManage();
+    await persistState();
+    showToast(`Bidang ilmu diubah menjadi "${namaBaru}"`);
+  } else {
+    if (appState.bidangIlmuList.some(b => b.toLowerCase() === namaBaru.toLowerCase())) {
+      return showToast("Bidang ilmu sudah ada di daftar");
+    }
+    appState.bidangIlmuList.push(namaBaru);
+    input.value = "";
+    renderBidangIlmuManage();
+    await persistState();
+    const materiKat = document.getElementById("materiKategori");
+    if (materiKat) materiKat.value = namaBaru;
+    showToast(`Bidang ilmu "${namaBaru}" ditambahkan`);
+  }
+}
+
+async function deleteBidangIlmu(nama) {
+  if (nama === "Umum") return;
+  let movedMateri = 0;
+  appState.materi.forEach(m => {
+    if (m.kategori === nama) {
+      m.kategori = "Umum";
+      movedMateri++;
+    }
+  });
+  if (selectedKategori === nama) selectedKategori = "Semua";
+
+  appState.bidangIlmuList = appState.bidangIlmuList.filter(b => b !== nama);
+  if (document.getElementById("editBidangOldName").value === nama) cancelEditBidang();
+  renderBidangIlmuManage();
+  await persistState();
+
+  if (movedMateri > 0) {
+    showToast(`Dihapus • ${movedMateri} materi dipindah ke Umum`);
+  } else {
+    showToast("Bidang ilmu dihapus");
   }
 }
 
@@ -1766,6 +1924,10 @@ function openModal(id) {
   }
   if (id === "modalSantri") renderSantriManage();
   if (id === "modalKelas") renderKelasManage();
+  if (id === "modalBidangIlmu") {
+    cancelEditBidang();
+    renderBidangIlmuManage();
+  }
   document.getElementById(id).classList.add("open");
 }
 
@@ -2018,16 +2180,21 @@ async function deleteSantri(id) {
 }
 
 function renderMateri() {
-  const cats = ["Semua", "Fiqih", "Tauhid", "Tasawuf", "Tajwid", "Akhlak"];
-  document.getElementById("materiFilter").innerHTML = cats.map(c => `
-    <button type="button" class="pill ${selectedKategori === c ? "active" : ""}" onclick="filterMateri('${c}')">${c}</button>
-  `).join("");
+  const bList = appState.bidangIlmuList || [...defaultBidangIlmu];
+  const cats = ["Semua", ...bList];
+  if (!cats.includes(selectedKategori)) selectedKategori = "Semua";
+
+  document.getElementById("materiFilter").innerHTML = cats.map(c => {
+    const safeCat = c.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
+    return `<button type="button" class="pill ${selectedKategori === c ? "active" : ""}" onclick="filterMateri('${safeCat}')">${c}</button>`;
+  }).join("");
 
   const q = getQuery("searchMateri");
   let filtered = selectedKategori === "Semua" ? appState.materi : appState.materi.filter(m => m.kategori === selectedKategori);
   if (q) {
     filtered = filtered.filter(m =>
       (m.judul || "").toLowerCase().includes(q) ||
+      (m.kategori || "").toLowerCase().includes(q) ||
       (m.kitab || "").toLowerCase().includes(q) ||
       (m.isi || "").toLowerCase().includes(q)
     );
@@ -2063,9 +2230,11 @@ function filterMateri(cat) {
 
 function openMateriForm() {
   populateKelasDropdowns();
+  const bList = appState.bidangIlmuList || [...defaultBidangIlmu];
   document.getElementById("materiModalTitle").textContent = "Tambah Materi Belajar";
   document.getElementById("editMateriId").value = "";
   document.getElementById("materiJudul").value = "";
+  document.getElementById("materiKategori").value = bList.includes("Fiqih") ? "Fiqih" : bList[0];
   document.getElementById("materiKitabSelect").value = "Umum";
   document.getElementById("materiIsi").value = "";
   openModal("modalMateri");
@@ -2078,7 +2247,7 @@ function editMateri(id) {
   document.getElementById("materiModalTitle").textContent = "Edit Materi Belajar";
   document.getElementById("editMateriId").value = m.id;
   document.getElementById("materiJudul").value = m.judul;
-  document.getElementById("materiKategori").value = m.kategori;
+  document.getElementById("materiKategori").value = m.kategori || "Umum";
   document.getElementById("materiKitabSelect").value = m.kitab || "Umum";
   document.getElementById("materiIsi").value = m.isi;
   openModal("modalMateri");
@@ -2087,7 +2256,7 @@ function editMateri(id) {
 async function saveMateri() {
   const id = document.getElementById("editMateriId").value;
   const judul = document.getElementById("materiJudul").value.trim();
-  const kategori = document.getElementById("materiKategori").value;
+  const kategori = document.getElementById("materiKategori").value || "Umum";
   const kitab = document.getElementById("materiKitabSelect").value || "Umum";
   const isi = document.getElementById("materiIsi").value.trim();
   if (!judul || !isi) return showToast("Judul dan isi materi wajib diisi");
