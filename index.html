@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
 <title>BUSTANUL HADI - Portal Guru</title>
-<meta name="theme-color" content="#f7f7f7" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#171717" media="(prefers-color-scheme: dark)">
+<meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0c0b10" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -16,62 +16,134 @@
 <link id="appManifest" rel="manifest" href="">
 <style>
 :root {
-  --bg: #f0f0f0;
-  --surface: #f7f7f7;
-  --surface-elevated: #ffffff;
-  --border: #dcdcdc;
-  --text-primary: #141414;
-  --text-secondary: #525252;
-  --text-muted: #737373;
-  --accent: #141414;
-  --accent-text: #ffffff;
-  --shadow-dark: #d1d1d1;
-  --shadow-light: #ffffff;
+  --bg: #f4f1ea;
+  --surface: rgba(255, 253, 248, 0.82);
+  --surface-elevated: rgba(255, 255, 255, 0.94);
+  --border: rgba(180, 134, 42, 0.22);
+  --text-primary: #1a1712;
+  --text-secondary: #5c5342;
+  --text-muted: #857963;
+  --accent: #b87b14;
+  --accent-secondary: #d99b26;
+  --accent-soft: rgba(217, 155, 38, 0.16);
+  --accent-text: #fffdf9;
+  --orb-1: rgba(245, 184, 65, 0.42);
+  --orb-2: rgba(217, 119, 6, 0.24);
+  --orb-3: rgba(253, 224, 130, 0.55);
+  --shadow-dark: rgba(130, 102, 42, 0.14);
+  --shadow-light: rgba(255, 255, 255, 0.9);
+  --glass-blur: blur(18px);
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg: #121212;
-    --surface: #171717;
-    --surface-elevated: #1e1e1e;
-    --border: #2a2a2a;
-    --text-primary: #f5f5f5;
-    --text-secondary: #a3a3a3;
-    --text-muted: #737373;
-    --accent: #ffffff;
-    --accent-text: #121212;
-    --shadow-dark: #0a0a0a;
-    --shadow-light: #222222;
+    --bg: #0b0a0f;
+    --surface: rgba(21, 19, 29, 0.78);
+    --surface-elevated: rgba(31, 28, 42, 0.92);
+    --border: rgba(246, 193, 86, 0.22);
+    --text-primary: #fbf7ee;
+    --text-secondary: #b9afa0;
+    --text-muted: #7c7468;
+    --accent: #f5be4f;
+    --accent-secondary: #e09424;
+    --accent-soft: rgba(245, 190, 79, 0.15);
+    --accent-text: #141008;
+    --orb-1: rgba(245, 185, 66, 0.28);
+    --orb-2: rgba(180, 83, 9, 0.24);
+    --orb-3: rgba(251, 191, 36, 0.16);
+    --shadow-dark: rgba(0, 0, 0, 0.55);
+    --shadow-light: rgba(255, 226, 155, 0.05);
+    --glass-blur: blur(20px);
   }
 }
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
   -webkit-tap-highlight-color: transparent;
 }
+
 body {
   background-color: var(--bg);
   color: var(--text-primary);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   min-height: 100vh;
-  padding-bottom: calc(84px + env(safe-area-inset-bottom));
-  transition: background-color 0.2s ease, color 0.2s ease;
+  padding-bottom: calc(92px + env(safe-area-inset-bottom));
+  transition: background-color 0.25s ease, color 0.25s ease;
+  position: relative;
+  overflow-x: hidden;
 }
+
+/* Aurelia Ambient Orb Background */
+.aurelia-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  overflow: hidden;
+  pointer-events: none;
+  background: radial-gradient(circle at 50% 0%, var(--accent-soft), transparent 65%);
+}
+.aurelia-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(56px);
+  opacity: 0.9;
+  animation: aureliaFloat 14s ease-in-out infinite alternate;
+  will-change: transform;
+}
+.aurelia-orb.orb-1 {
+  width: 340px;
+  height: 340px;
+  top: -90px;
+  right: -70px;
+  background: radial-gradient(circle, var(--orb-1), transparent 70%);
+  animation-duration: 15s;
+}
+.aurelia-orb.orb-2 {
+  width: 300px;
+  height: 300px;
+  bottom: 90px;
+  left: -90px;
+  background: radial-gradient(circle, var(--orb-2), transparent 70%);
+  animation-duration: 18s;
+  animation-delay: -4s;
+}
+.aurelia-orb.orb-3 {
+  width: 220px;
+  height: 220px;
+  top: 42%;
+  left: 55%;
+  background: radial-gradient(circle, var(--orb-3), transparent 72%);
+  animation-duration: 12s;
+  animation-delay: -7s;
+}
+
+@keyframes aureliaFloat {
+  0% { transform: translate(0px, 0px) scale(1); }
+  50% { transform: translate(-18px, 22px) scale(1.07); }
+  100% { transform: translate(16px, -16px) scale(0.96); }
+}
+
 .neu-card {
   background: var(--surface);
-  border-radius: 16px;
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-radius: 20px;
   border: 1px solid var(--border);
-  box-shadow: 6px 6px 14px var(--shadow-dark), -4px -4px 10px var(--shadow-light);
+  box-shadow: 0 10px 28px var(--shadow-dark), inset 0 1px 0 var(--shadow-light);
   padding: 16px;
   margin-bottom: 14px;
+  position: relative;
 }
+
 .neu-inset {
-  background: var(--bg);
-  border-radius: 12px;
+  background: var(--accent-soft);
+  border-radius: 14px;
   border: 1px solid var(--border);
-  box-shadow: inset 4px 4px 8px var(--shadow-dark), inset -3px -3px 7px var(--shadow-light);
+  box-shadow: inset 0 1px 4px var(--shadow-dark);
 }
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -80,46 +152,53 @@ body {
   background: var(--surface-elevated);
   color: var(--text-primary);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 13px;
   padding: 10px 14px;
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  box-shadow: 4px 4px 8px var(--shadow-dark), -2px -2px 6px var(--shadow-light);
-  transition: transform 0.12s ease;
+  box-shadow: 0 4px 12px var(--shadow-dark), inset 0 1px 0 var(--shadow-light);
+  transition: transform 0.14s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.btn:hover {
+  border-color: var(--accent);
 }
 .btn:active {
   transform: scale(0.97);
-  box-shadow: inset 3px 3px 6px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
 }
 .btn-primary {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   color: var(--accent-text);
-  border-color: var(--accent);
+  border-color: transparent;
+  box-shadow: 0 6px 18px rgba(217, 155, 38, 0.32), inset 0 1px 1px rgba(255, 255, 255, 0.35);
 }
 .btn-sm {
-  padding: 7px 10px;
+  padding: 7px 11px;
   font-size: 12px;
-  border-radius: 10px;
+  border-radius: 11px;
 }
 .btn-block {
   width: 100%;
 }
+
 input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], select, textarea {
   width: 100%;
-  background: var(--bg);
+  background: var(--surface-elevated);
   color: var(--text-primary);
   border: 1px solid var(--border);
-  border-radius: 12px;
+  border-radius: 13px;
   padding: 11px 13px;
   font-size: 14px;
   font-family: inherit;
-  box-shadow: inset 3px 3px 7px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
+  box-shadow: inset 0 2px 5px var(--shadow-dark);
   outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 input:focus, select:focus, textarea:focus {
-  border-color: var(--text-secondary);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
 }
+
 label {
   display: block;
   font-size: 12px;
@@ -130,6 +209,7 @@ label {
 .form-group {
   margin-bottom: 12px;
 }
+
 .search-wrap {
   position: relative;
   margin-bottom: 12px;
@@ -141,7 +221,7 @@ label {
   transform: translateY(-50%);
   width: 16px;
   height: 16px;
-  color: var(--text-muted);
+  color: var(--accent);
   pointer-events: none;
 }
 .search-wrap input {
@@ -170,11 +250,14 @@ label {
 .search-wrap.has-text .search-clear {
   display: flex;
 }
+
 header {
   position: sticky;
   top: 0;
   z-index: 40;
   background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-bottom: 1px solid var(--border);
   padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
   display: flex;
@@ -187,49 +270,57 @@ header {
   gap: 10px;
 }
 .brand-icon {
-  width: 36px;
-  height: 36px;
-  border-radius: 11px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, var(--accent), var(--accent-secondary));
+  color: var(--accent-text);
+  border: 1px solid rgba(255, 255, 255, 0.35);
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 3px 3px 7px var(--shadow-dark), -2px -2px 5px var(--shadow-light);
+  box-shadow: 0 0 18px var(--orb-1), 0 4px 10px var(--shadow-dark);
 }
 .brand h1 {
   font-size: 15px;
-  font-weight: 700;
+  font-weight: 800;
+  letter-spacing: 0.3px;
 }
 .brand span {
   font-size: 11px;
   color: var(--text-secondary);
   display: block;
 }
+
 .status-pill {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 5px 10px;
+  padding: 6px 11px;
   border-radius: 999px;
   background: var(--surface-elevated);
   border: 1px solid var(--border);
   font-size: 11px;
+  font-weight: 600;
   color: var(--text-secondary);
   cursor: pointer;
+  box-shadow: 0 2px 8px var(--shadow-dark);
 }
 .status-dot {
-  width: 7px;
-  height: 7px;
+  width: 8px;
+  height: 8px;
   border-radius: 50%;
   background: var(--text-muted);
 }
 .status-dot.online {
-  background: var(--accent);
+  background: #22c55e;
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
 }
 .status-dot.pending {
-  background: #eab308;
+  background: var(--accent);
+  box-shadow: 0 0 8px var(--orb-1);
 }
+
 main {
   max-width: 680px;
   margin: 0 auto;
@@ -240,7 +331,13 @@ main {
 }
 .section.active {
   display: block;
+  animation: fadeSlideIn 0.24s ease;
 }
+@keyframes fadeSlideIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .section-header {
   display: flex;
   align-items: center;
@@ -250,9 +347,13 @@ main {
   flex-wrap: wrap;
 }
 .section-title {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 18px;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--text-primary), var(--accent));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
 }
+
 .grid-2 {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -268,13 +369,16 @@ main {
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
 }
+
 .stat-box {
   background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 16px;
   padding: 12px;
   text-align: center;
-  box-shadow: 4px 4px 10px var(--shadow-dark), -3px -3px 7px var(--shadow-light);
+  box-shadow: 0 6px 18px var(--shadow-dark), inset 0 1px 0 var(--shadow-light);
 }
 .stat-val {
   font-size: 20px;
@@ -286,6 +390,7 @@ main {
   color: var(--text-secondary);
   margin-top: 2px;
 }
+
 .pill-group {
   display: flex;
   gap: 6px;
@@ -294,7 +399,7 @@ main {
   margin-bottom: 12px;
 }
 .pill {
-  padding: 6px 12px;
+  padding: 6px 13px;
   border-radius: 999px;
   background: var(--surface);
   border: 1px solid var(--border);
@@ -303,21 +408,27 @@ main {
   font-weight: 600;
   white-space: nowrap;
   cursor: pointer;
+  transition: all 0.15s ease;
 }
 .pill.active {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   color: var(--accent-text);
-  border-color: var(--accent);
+  border-color: transparent;
+  box-shadow: 0 4px 12px rgba(217, 155, 38, 0.28);
 }
+
 .att-item {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 12px;
+  padding: 13px;
   background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: 16px;
   margin-bottom: 10px;
+  box-shadow: 0 4px 14px var(--shadow-dark);
 }
 .att-top {
   display: flex;
@@ -327,40 +438,44 @@ main {
 }
 .att-btn {
   padding: 7px 4px;
-  border-radius: 9px;
+  border-radius: 10px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--surface-elevated);
   color: var(--text-secondary);
   font-size: 11px;
   font-weight: 600;
   cursor: pointer;
   text-align: center;
+  transition: all 0.14s ease;
 }
 .att-btn.selected {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   color: var(--accent-text);
-  border-color: var(--accent);
+  border-color: transparent;
   font-weight: 700;
+  box-shadow: 0 3px 10px rgba(217, 155, 38, 0.28);
 }
+
 .badge {
   display: inline-block;
-  padding: 3px 8px;
-  border-radius: 6px;
+  padding: 3px 9px;
+  border-radius: 999px;
   font-size: 11px;
-  font-weight: 600;
-  background: var(--surface-elevated);
+  font-weight: 700;
+  background: var(--accent-soft);
   border: 1px solid var(--border);
-  color: var(--text-secondary);
+  color: var(--text-primary);
 }
 .badge-major {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   color: var(--accent-text);
-  border-color: var(--accent);
+  border-color: transparent;
 }
+
 .bar-track {
   width: 100%;
   height: 8px;
-  background: var(--bg);
+  background: var(--accent-soft);
   border-radius: 999px;
   overflow: hidden;
   border: 1px solid var(--border);
@@ -368,10 +483,11 @@ main {
 }
 .bar-fill {
   height: 100%;
-  background: var(--accent);
+  background: linear-gradient(90deg, var(--accent-secondary), var(--accent));
   border-radius: 999px;
   transition: width 0.3s ease;
 }
+
 .vchart-wrap {
   display: flex;
   align-items: flex-end;
@@ -379,10 +495,9 @@ main {
   height: 156px;
   padding: 16px 10px 8px;
   overflow-x: auto;
-  border-radius: 12px;
-  background: var(--bg);
+  border-radius: 14px;
+  background: var(--accent-soft);
   border: 1px solid var(--border);
-  box-shadow: inset 3px 3px 7px var(--shadow-dark), inset -2px -2px 5px var(--shadow-light);
 }
 .vchart-col {
   flex: 1;
@@ -403,17 +518,17 @@ main {
 .vchart-bar-bg {
   width: 24px;
   height: 92px;
-  background: var(--surface);
+  background: var(--surface-elevated);
   border: 1px solid var(--border);
-  border-radius: 7px;
+  border-radius: 8px;
   display: flex;
   align-items: flex-end;
   overflow: hidden;
 }
 .vchart-bar-fill {
   width: 100%;
-  background: var(--accent);
-  border-radius: 5px 5px 0 0;
+  background: linear-gradient(180deg, var(--accent), var(--accent-secondary));
+  border-radius: 6px 6px 0 0;
   transition: height 0.35s ease;
 }
 .vchart-lbl {
@@ -425,6 +540,7 @@ main {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .dist-row {
   margin-bottom: 10px;
 }
@@ -438,14 +554,18 @@ main {
   font-weight: 600;
   margin-bottom: 4px;
 }
+
 .clickable-row {
   cursor: pointer;
-  padding: 11px 10px;
-  border-radius: 12px;
+  padding: 11px 12px;
+  border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--surface-elevated);
   margin-bottom: 8px;
-  transition: transform 0.12s ease;
+  transition: transform 0.12s ease, border-color 0.2s ease;
+}
+.clickable-row:hover {
+  border-color: var(--accent);
 }
 .clickable-row:last-child {
   margin-bottom: 0;
@@ -453,9 +573,10 @@ main {
 .clickable-row:active {
   transform: scale(0.985);
 }
+
 .ann-card {
   padding: 12px;
-  border-radius: 12px;
+  border-radius: 14px;
   border: 1px solid var(--border);
   background: var(--surface-elevated);
   margin-bottom: 10px;
@@ -466,6 +587,7 @@ main {
 .ann-card.major {
   border-left: 4px solid var(--accent);
 }
+
 .bottom-nav {
   position: fixed;
   bottom: 0;
@@ -473,10 +595,13 @@ main {
   right: 0;
   z-index: 40;
   background: var(--surface);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
   border-top: 1px solid var(--border);
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   padding: 6px 4px calc(10px + env(safe-area-inset-bottom));
+  box-shadow: 0 -8px 24px var(--shadow-dark);
 }
 .nav-item {
   display: flex;
@@ -488,18 +613,24 @@ main {
   border: none;
   color: var(--text-muted);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 700;
   cursor: pointer;
-  padding: 4px 0;
+  padding: 5px 0;
+  border-radius: 12px;
+  transition: color 0.15s ease, transform 0.15s ease;
 }
 .nav-item.active {
   color: var(--accent);
+  background: var(--accent-soft);
 }
+
 .modal-backdrop {
   position: fixed;
   inset: 0;
   z-index: 60;
-  background: rgba(0, 0, 0, 0.72);
+  background: rgba(8, 7, 12, 0.72);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -513,11 +644,13 @@ main {
   max-width: 480px;
   max-height: 88vh;
   overflow-y: auto;
-  background: var(--surface);
+  background: var(--surface-elevated);
   border: 1px solid var(--border);
-  border-radius: 18px;
+  border-radius: 22px;
   padding: 18px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 28px var(--orb-1);
 }
+
 .lock-screen {
   position: fixed;
   inset: 0;
@@ -531,20 +664,23 @@ main {
 .lock-screen.hidden {
   display: none;
 }
+
 .toast {
   position: fixed;
-  top: 66px;
+  top: 70px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 80;
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   color: var(--accent-text);
   padding: 9px 16px;
   border-radius: 999px;
   font-size: 12px;
   font-weight: 700;
   display: none;
+  box-shadow: 0 8px 22px rgba(217, 155, 38, 0.35);
 }
+
 .icon {
   width: 18px;
   height: 18px;
@@ -576,23 +712,23 @@ main {
   align-items: center;
   justify-content: space-between;
   padding: 9px 11px;
-  border-radius: 11px;
+  border-radius: 12px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--surface-elevated);
   font-size: 12px;
   font-weight: 600;
   cursor: pointer;
 }
 .day-chip.is-libur {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
   color: var(--accent-text);
-  border-color: var(--accent);
+  border-color: transparent;
 }
 .holiday-banner {
   padding: 12px;
-  border-radius: 12px;
-  border: 1px dashed var(--text-secondary);
-  background: var(--bg);
+  border-radius: 14px;
+  border: 1px dashed var(--accent);
+  background: var(--accent-soft);
   margin-bottom: 10px;
 }
 .session-status-bar {
@@ -601,9 +737,9 @@ main {
   align-items: center;
   gap: 8px;
   padding: 9px 12px;
-  border-radius: 11px;
+  border-radius: 13px;
   border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--surface-elevated);
   margin-bottom: 10px;
   font-size: 11.5px;
 }
@@ -611,12 +747,18 @@ main {
 </head>
 <body>
 
+<div class="aurelia-bg" aria-hidden="true">
+  <div class="aurelia-orb orb-1"></div>
+  <div class="aurelia-orb orb-2"></div>
+  <div class="aurelia-orb orb-3"></div>
+</div>
+
 <div id="lockScreen" class="lock-screen">
-  <div class="neu-card" style="width:100%;max-width:360px;text-align:center;padding:24px;">
-    <div class="brand-icon" style="width:52px;height:52px;margin:0 auto 14px;">
-      <svg class="icon" style="width:26px;height:26px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  <div class="neu-card" style="width:100%;max-width:360px;text-align:center;padding:26px;">
+    <div class="brand-icon" style="width:62px;height:62px;margin:0 auto 14px;">
+      <svg class="icon" style="width:28px;height:28px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
-    <h2 style="font-size:18px;margin-bottom:4px;">BUSTANUL HADI</h2>
+    <h2 style="font-size:19px;font-weight:800;margin-bottom:4px;">BUSTANUL HADI</h2>
     <p style="font-size:12px;color:var(--text-secondary);margin-bottom:18px;">Offline-First • Otomatis Sinkron Saat Online</p>
     <div class="form-group">
       <input type="password" id="pinInput" inputmode="numeric" maxlength="8" placeholder="PIN (Default: 1234)" style="text-align:center;font-size:18px;letter-spacing:6px;">
@@ -743,7 +885,7 @@ main {
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;color:var(--text-secondary);">
         <span id="attFilterSummary">Menampilkan semua santri</span>
-        <button type="button" id="btnResetAttFilter" style="background:none;border:none;color:var(--text-primary);font-size:11px;font-weight:700;cursor:pointer;display:none;" onclick="resetAttFilters()">Reset Filter</button>
+        <button type="button" id="btnResetAttFilter" style="background:none;border:none;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;display:none;" onclick="resetAttFilters()">Reset Filter</button>
       </div>
 
       <div class="grid-3">
@@ -1236,7 +1378,7 @@ main {
       <div class="form-group">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
           <label style="margin-bottom:0;">Bidang Ilmu</label>
-          <button type="button" style="background:none;border:none;color:var(--text-primary);font-size:11px;font-weight:700;cursor:pointer;" onclick="openModal('modalBidangIlmu')">+ Atur</button>
+          <button type="button" style="background:none;border:none;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;" onclick="openModal('modalBidangIlmu')">+ Atur</button>
         </div>
         <select id="materiKategori"></select>
       </div>
@@ -2600,8 +2742,7 @@ function renderAbsensi() {
       document.getElementById("attHolidayDesc").textContent =
         "Sesi ini sudah ditandai LIBUR. Tidak ada santri yang dihitung Alpa pada sesi ini.";
       badgeLibur.textContent = "Sudah Ditandai Libur";
-      badgeLibur.style.background = "var(--accent)";
-      badgeLibur.style.color = "var(--accent-text)";
+      badgeLibur.className = "badge badge-major";
       btnMarkLibur.style.display = "none";
       btnCancelLibur.style.display = "inline-flex";
     } else {
@@ -2609,8 +2750,7 @@ function renderAbsensi() {
         ? "Hari ini jadwal libur rutin, namun sesi ini sedang dibuka untuk absensi manual."
         : "Hari ini termasuk jadwal libur rutin pengajian. Klik tombol di bawah untuk mengonfirmasi libur, atau langsung absen jika ada pengajian pengganti.";
       badgeLibur.textContent = "Libur Rutin";
-      badgeLibur.style.background = "";
-      badgeLibur.style.color = "";
+      badgeLibur.className = "badge";
       btnMarkLibur.style.display = "inline-flex";
       btnCancelLibur.style.display = "none";
     }
@@ -2707,7 +2847,7 @@ function renderAbsensi() {
             </div>
             <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
               ${!st.isMarked ? `<span class="badge" style="font-size:10px;">Default</span>` : ""}
-              <span class="badge" style="${st.status === "Hadir" ? "background:var(--accent);color:var(--accent-text);" : ""}">${st.status}</span>
+              <span class="badge ${st.status === "Hadir" ? "badge-major" : ""}">${st.status}</span>
             </div>
           </div>
           <div class="grid-4">
@@ -2970,7 +3110,7 @@ function renderSoal() {
       <div style="font-weight:700;font-size:14px;margin-bottom:8px;">${item.pertanyaan}</div>
       <div style="display:grid;gap:4px;font-size:12px;">
         ${item.opsi.map((op, idx) => `
-          <div style="padding:6px 10px;border-radius:8px;background:${idx === Number(item.kunci) ? "var(--accent)" : "var(--bg)"};color:${idx === Number(item.kunci) ? "var(--accent-text)" : "var(--text-secondary)"};font-weight:${idx === Number(item.kunci) ? "700" : "400"};">
+          <div style="padding:7px 11px;border-radius:9px;background:${idx === Number(item.kunci) ? "linear-gradient(135deg, var(--accent), var(--accent-secondary))" : "var(--surface-elevated)"};color:${idx === Number(item.kunci) ? "var(--accent-text)" : "var(--text-secondary)"};border:1px solid var(--border);font-weight:${idx === Number(item.kunci) ? "700" : "400"};">
             ${huruf[idx]}. ${op} ${idx === Number(item.kunci) ? "(Kunci)" : ""}
           </div>
         `).join("")}
@@ -3283,7 +3423,7 @@ function openSantriDetailModal(santriId) {
   kasBox.innerHTML = `
     <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
       <span style="font-size:12px;font-weight:700;">Total Setoran Kas / Infaq</span>
-      <span class="badge" style="background:var(--accent);color:var(--accent-text);">${formatRupiah(totalKasSantri)}</span>
+      <span class="badge badge-major">${formatRupiah(totalKasSantri)}</span>
     </div>
     ${santriKas.length === 0
       ? `<div style="font-size:12px;color:var(--text-secondary);">Belum ada catatan setoran kas/infaq dari santri ini.</div>`
@@ -3311,7 +3451,7 @@ function openSantriDetailModal(santriId) {
         return `
           <div style="display:flex;justify-content:space-between;align-items:center;font-size:12px;">
             <span>Benar <strong>${sc.benar}/${sc.total}</strong>${salahTxt} • <span style="color:var(--text-secondary);">${sc.waktu}</span></span>
-            <span class="badge" style="background:var(--accent);color:var(--accent-text);">${sc.poin} Poin</span>
+            <span class="badge badge-major">${sc.poin} Poin</span>
           </div>
         `;
       }).join("")}
@@ -3328,7 +3468,7 @@ function openSantriDetailModal(santriId) {
           <div style="font-weight:700;">Pengajian ${log.sesi}</div>
           <div style="color:var(--text-secondary);font-size:11px;">${log.tgl}</div>
         </div>
-        <span class="badge" style="${log.st === "Hadir" ? "background:var(--accent);color:var(--accent-text);" : ""}">${log.st}</span>
+        <span class="badge ${log.st === "Hadir" ? "badge-major" : ""}">${log.st}</span>
       </div>
     `).join("");
   }
@@ -3507,7 +3647,7 @@ function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
     contribEl.innerHTML = filteredContributors.map(c => `
       <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" onclick="openSantriDetailModal('${c.santri.id}')">
         <div style="display:flex;align-items:center;gap:10px;">
-          <span class="badge" style="${c.rank <= 3 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${c.rank}</span>
+          <span class="badge ${c.rank <= 3 ? "badge-major" : ""}">#${c.rank}</span>
           <div>
             <div style="font-size:13px;font-weight:700;">${c.santri.nama}</div>
             <div style="font-size:11px;color:var(--text-secondary);">${c.santri.kelas} • ${c.count}x setoran</div>
@@ -3684,7 +3824,7 @@ function renderAnalisa() {
       return `
         <div class="clickable-row" style="display:flex;justify-content:space-between;align-items:center;" ${clickAttr}>
           <div style="display:flex;align-items:center;gap:10px;">
-            <span class="badge" style="${idx === 0 ? "background:var(--accent);color:var(--accent-text);" : ""}">#${idx + 1}</span>
+            <span class="badge ${idx === 0 ? "badge-major" : ""}">#${idx + 1}</span>
             <div>
               <div style="font-weight:700;font-size:13px;">${sc.nama}</div>
               <div style="font-size:11px;color:var(--text-secondary);">Benar ${sc.benar}/${sc.total}${salahInfo} • ${sc.waktu}</div>
@@ -3750,7 +3890,7 @@ function renderAnalisa() {
           <div style="display:flex;align-items:center;gap:5px;flex-shrink:0;">
             ${s.kasTotal > 0 ? `<span class="badge">${formatRupiahShort(s.kasTotal)}</span>` : ""}
             ${s.bestSkor > -99999 ? `<span class="badge">${s.bestSkor} Poin</span>` : ""}
-            <span class="badge" style="${s.pct >= 80 ? "background:var(--accent);color:var(--accent-text);" : ""}">${s.pct}%</span>
+            <span class="badge ${s.pct >= 80 ? "badge-major" : ""}">${s.pct}%</span>
           </div>
         </div>
         <div style="font-size:11px;color:var(--text-secondary);margin-top:3px;">Hadir ${s.h} • Izin ${s.i} • Sakit ${s.sk} • Alpa ${s.a} • Kas: ${formatRupiah(s.kasTotal)}</div>
@@ -3791,7 +3931,7 @@ initFirebase(true);
 (function setupBustanulHadiIconAndPWA() {
   function syncThemeColorMeta() {
     const darkNow = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const color = darkNow ? "#171717" : "#f7f7f7";
+    const color = darkNow ? "#0c0b10" : "#f7f4ec";
     let meta = document.querySelector('meta[name="theme-color"]:not([media])');
     if (!meta) {
       meta = document.createElement("meta");
@@ -3806,17 +3946,25 @@ initFirebase(true);
   }
 
   const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <rect width="512" height="512" rx="112" fill="#141414"/>
-    <rect x="34" y="34" width="444" height="444" rx="88" fill="none" stroke="#ffffff" stroke-opacity="0.18" stroke-width="6"/>
-    <g transform="translate(88, 96)" fill="none" stroke="#ffffff" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <defs>
+      <radialGradient id="aureliaGlow" cx="50%" cy="35%" r="65%">
+        <stop offset="0%" stop-color="#f5be4f"/>
+        <stop offset="65%" stop-color="#b87b14"/>
+        <stop offset="100%" stop-color="#14110b"/>
+      </radialGradient>
+    </defs>
+    <rect width="512" height="512" rx="112" fill="#120f0a"/>
+    <circle cx="256" cy="210" r="175" fill="url(#aureliaGlow)" opacity="0.35"/>
+    <rect x="34" y="34" width="444" height="444" rx="88" fill="none" stroke="#f5be4f" stroke-opacity="0.32" stroke-width="6"/>
+    <g transform="translate(88, 96)" fill="none" stroke="#fff8e7" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
       <path d="M168 56 C128 24, 56 24, 16 48 L16 256 C56 232, 128 232, 168 264 Z"/>
       <path d="M168 56 C208 24, 280 24, 320 48 L320 256 C280 232, 208 232, 168 264 Z"/>
-      <path d="M56 104 C88 94, 120 98, 138 110" stroke-width="16" stroke-opacity="0.7"/>
-      <path d="M56 148 C88 138, 120 142, 138 154" stroke-width="16" stroke-opacity="0.7"/>
-      <path d="M280 104 C248 94, 216 98, 198 110" stroke-width="16" stroke-opacity="0.7"/>
-      <path d="M280 148 C248 138, 216 142, 198 154" stroke-width="16" stroke-opacity="0.7"/>
+      <path d="M56 104 C88 94, 120 98, 138 110" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
+      <path d="M56 148 C88 138, 120 142, 138 154" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
+      <path d="M280 104 C248 94, 216 98, 198 110" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
+      <path d="M280 148 C248 138, 216 142, 198 154" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
     </g>
-    <text x="256" y="428" text-anchor="middle" fill="#ffffff" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="800" letter-spacing="4">BUSTANUL HADI</text>
+    <text x="256" y="428" text-anchor="middle" fill="#f5be4f" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="800" letter-spacing="4">BUSTANUL HADI</text>
   </svg>`;
 
   const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(logoSvg);
@@ -3841,8 +3989,8 @@ initFirebase(true);
       short_name: "Guru Bustanul Hadi",
       start_url: window.location.href,
       display: "standalone",
-      background_color: isDark ? "#121212" : "#f0f0f0",
-      theme_color: isDark ? "#171717" : "#f7f7f7",
+      background_color: isDark ? "#0b0a0f" : "#f4f1ea",
+      theme_color: isDark ? "#0c0b10" : "#f7f4ec",
       icons: [
         { src: pngDataUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
         { src: pngDataUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
