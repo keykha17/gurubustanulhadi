@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<title>BUSTANUL HADI - Portal Guru</title>
-<meta name="theme-color" content="#f7f4ec" media="(prefers-color-scheme: light)">
-<meta name="theme-color" content="#0c0b10" media="(prefers-color-scheme: dark)">
+<title>BUSTANUL HADI — Portal Guru</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<meta name="theme-color" content="#eef0f4" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#13151a" media="(prefers-color-scheme: dark)">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -15,1170 +18,1141 @@
 <link id="appAppleIcon" rel="apple-touch-icon" href="">
 <link id="appManifest" rel="manifest" href="">
 <style>
-:root {
-  --bg: #f4f1ea;
-  --surface: rgba(255, 253, 248, 0.82);
-  --surface-elevated: rgba(255, 255, 255, 0.94);
-  --border: rgba(180, 134, 42, 0.22);
-  --text-primary: #1a1712;
-  --text-secondary: #5c5342;
-  --text-muted: #857963;
-  --accent: #b87b14;
-  --accent-secondary: #d99b26;
-  --accent-soft: rgba(217, 155, 38, 0.16);
-  --accent-text: #fffdf9;
-  --orb-1: rgba(245, 184, 65, 0.42);
-  --orb-2: rgba(217, 119, 6, 0.24);
-  --orb-3: rgba(253, 224, 130, 0.55);
-  --shadow-dark: rgba(130, 102, 42, 0.14);
-  --shadow-light: rgba(255, 255, 255, 0.9);
-  --glass-blur: blur(18px);
-}
-@media (prefers-color-scheme: dark) {
   :root {
-    --bg: #0b0a0f;
-    --surface: rgba(21, 19, 29, 0.78);
-    --surface-elevated: rgba(31, 28, 42, 0.92);
-    --border: rgba(246, 193, 86, 0.22);
-    --text-primary: #fbf7ee;
-    --text-secondary: #b9afa0;
-    --text-muted: #7c7468;
-    --accent: #f5be4f;
-    --accent-secondary: #e09424;
-    --accent-soft: rgba(245, 190, 79, 0.15);
-    --accent-text: #141008;
-    --orb-1: rgba(245, 185, 66, 0.28);
-    --orb-2: rgba(180, 83, 9, 0.24);
-    --orb-3: rgba(251, 191, 36, 0.16);
-    --shadow-dark: rgba(0, 0, 0, 0.55);
-    --shadow-light: rgba(255, 226, 155, 0.05);
-    --glass-blur: blur(20px);
+    --bg-base: #eef0f4;
+    --bg-surface: #eef0f4;
+    --bg-elevated: #f7f8fa;
+    --text-primary: #14171f;
+    --text-secondary: #5a6275;
+    --text-muted: #8a93a6;
+    --border-subtle: rgba(20, 23, 31, 0.08);
+    --gold-primary: #c8962e;
+    --gold-light: #e5b954;
+    --gold-dark: #9c7018;
+    --gold-glow: rgba(200, 150, 46, 0.28);
+    --success: #229963;
+
+    --shadow-out: 6px 6px 14px #d1d5de, -6px -6px 14px #ffffff;
+    --shadow-out-sm: 3px 3px 7px #d1d5de, -3px -3px 7px #ffffff;
+    --shadow-in: inset 4px 4px 9px #d1d5de, inset -4px -4px 9px #ffffff;
+    --shadow-in-sm: inset 2px 2px 5px #d1d5de, inset -2px -2px 5px #ffffff;
   }
-}
 
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  -webkit-tap-highlight-color: transparent;
-}
+  html.dark {
+    --bg-base: #13151a;
+    --bg-surface: #181b22;
+    --bg-elevated: #1f232c;
+    --text-primary: #f2f4f8;
+    --text-secondary: #a1a9ba;
+    --text-muted: #687185;
+    --border-subtle: rgba(255, 255, 255, 0.07);
+    --gold-primary: #e0b04b;
+    --gold-light: #f6cf74;
+    --gold-dark: #a67c22;
+    --gold-glow: rgba(224, 176, 75, 0.25);
+    --success: #34c784;
 
-body {
-  background-color: var(--bg);
-  color: var(--text-primary);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  min-height: 100vh;
-  padding-bottom: calc(92px + env(safe-area-inset-bottom));
-  transition: background-color 0.25s ease, color 0.25s ease;
-  position: relative;
-  overflow-x: hidden;
-}
+    --shadow-out: 6px 6px 14px #0b0c0f, -6px -6px 14px #21252f;
+    --shadow-out-sm: 3px 3px 7px #0b0c0f, -3px -3px 7px #21252f;
+    --shadow-in: inset 4px 4px 9px #0b0c0f, inset -4px -4px 9px #21252f;
+    --shadow-in-sm: inset 2px 2px 5px #0b0c0f, inset -2px -2px 5px #21252f;
+  }
 
-/* Aurelia Ambient Orb Background */
-.aurelia-bg {
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  overflow: hidden;
-  pointer-events: none;
-  background: radial-gradient(circle at 50% 0%, var(--accent-soft), transparent 65%);
-}
-.aurelia-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(56px);
-  opacity: 0.9;
-  animation: aureliaFloat 14s ease-in-out infinite alternate;
-  will-change: transform;
-}
-.aurelia-orb.orb-1 {
-  width: 340px;
-  height: 340px;
-  top: -90px;
-  right: -70px;
-  background: radial-gradient(circle, var(--orb-1), transparent 70%);
-  animation-duration: 15s;
-}
-.aurelia-orb.orb-2 {
-  width: 300px;
-  height: 300px;
-  bottom: 90px;
-  left: -90px;
-  background: radial-gradient(circle, var(--orb-2), transparent 70%);
-  animation-duration: 18s;
-  animation-delay: -4s;
-}
-.aurelia-orb.orb-3 {
-  width: 220px;
-  height: 220px;
-  top: 42%;
-  left: 55%;
-  background: radial-gradient(circle, var(--orb-3), transparent 72%);
-  animation-duration: 12s;
-  animation-delay: -7s;
-}
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    -webkit-tap-highlight-color: transparent;
+  }
 
-@keyframes aureliaFloat {
-  0% { transform: translate(0px, 0px) scale(1); }
-  50% { transform: translate(-18px, 22px) scale(1.07); }
-  100% { transform: translate(16px, -16px) scale(0.96); }
-}
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    line-height: 1.5;
+    min-height: 100dvh;
+    padding-bottom: calc(92px + env(safe-area-inset-bottom));
+    transition: background-color 0.25s ease, color 0.25s ease;
+    overflow-x: hidden;
+  }
 
-.neu-card {
-  background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-radius: 20px;
-  border: 1px solid var(--border);
-  box-shadow: 0 10px 28px var(--shadow-dark), inset 0 1px 0 var(--shadow-light);
-  padding: 16px;
-  margin-bottom: 14px;
-  position: relative;
-}
+  .gold-text {
+    color: var(--gold-primary);
+  }
 
-.neu-inset {
-  background: var(--accent-soft);
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  box-shadow: inset 0 1px 4px var(--shadow-dark);
-}
+  .neu-card {
+    background: var(--bg-surface);
+    border-radius: 18px;
+    box-shadow: var(--shadow-out);
+    border: 1px solid var(--border-subtle);
+    padding: 15px;
+    margin-bottom: 13px;
+  }
 
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  background: var(--surface-elevated);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 10px 14px;
-  font-size: 13px;
-  font-weight: 600;
-  cursor: pointer;
-  box-shadow: 0 4px 12px var(--shadow-dark), inset 0 1px 0 var(--shadow-light);
-  transition: transform 0.14s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-.btn:hover {
-  border-color: var(--accent);
-}
-.btn:active {
-  transform: scale(0.97);
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  color: var(--accent-text);
-  border-color: transparent;
-  box-shadow: 0 6px 18px rgba(217, 155, 38, 0.32), inset 0 1px 1px rgba(255, 255, 255, 0.35);
-}
-.btn-sm {
-  padding: 7px 11px;
-  font-size: 12px;
-  border-radius: 11px;
-}
-.btn-block {
-  width: 100%;
-}
+  .neu-inset {
+    background: var(--bg-surface);
+    border-radius: 14px;
+    box-shadow: var(--shadow-in);
+    border: 1px solid var(--border-subtle);
+  }
 
-input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], select, textarea {
-  width: 100%;
-  background: var(--surface-elevated);
-  color: var(--text-primary);
-  border: 1px solid var(--border);
-  border-radius: 13px;
-  padding: 11px 13px;
-  font-size: 14px;
-  font-family: inherit;
-  box-shadow: inset 0 2px 5px var(--shadow-dark);
-  outline: none;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
-input:focus, select:focus, textarea:focus {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 13px;
+    padding: 10px 14px;
+    font-size: 12.5px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    box-shadow: var(--shadow-out-sm);
+    transition: transform 0.12s ease, box-shadow 0.15s ease, color 0.15s ease;
+  }
+  .btn:active {
+    transform: scale(0.97);
+    box-shadow: var(--shadow-in-sm);
+  }
+  .btn-primary {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+    color: #14120d;
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 5px 14px var(--gold-glow);
+  }
+  .btn-primary:active {
+    transform: scale(0.97);
+    box-shadow: 0 2px 8px var(--gold-glow);
+  }
+  .btn-sm {
+    padding: 7px 11px;
+    font-size: 11.5px;
+    border-radius: 11px;
+  }
+  .btn-block {
+    width: 100%;
+  }
 
-label {
-  display: block;
-  font-size: 12px;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-  font-weight: 600;
-}
-.form-group {
-  margin-bottom: 12px;
-}
+  input[type="text"], input[type="password"], input[type="number"], input[type="url"], input[type="date"], input[type="month"], select, textarea {
+    width: 100%;
+    background: var(--bg-surface);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 13px;
+    padding: 10px 13px;
+    font-size: 13.5px;
+    font-family: inherit;
+    box-shadow: var(--shadow-in-sm);
+    outline: none;
+    transition: border-color 0.15s ease;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--gold-primary);
+  }
 
-.search-wrap {
-  position: relative;
-  margin-bottom: 12px;
-}
-.search-wrap svg.search-ico {
-  position: absolute;
-  left: 12px;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 16px;
-  height: 16px;
-  color: var(--accent);
-  pointer-events: none;
-}
-.search-wrap input {
-  padding-left: 36px;
-  padding-right: 34px;
-  font-size: 13px;
-}
-.search-clear {
-  position: absolute;
-  right: 8px;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  display: none;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  font-size: 12px;
-  line-height: 1;
-}
-.search-wrap.has-text .search-clear {
-  display: flex;
-}
+  label {
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin-bottom: 6px;
+    font-weight: 600;
+  }
+  .form-group {
+    margin-bottom: 12px;
+  }
 
-header {
-  position: sticky;
-  top: 0;
-  z-index: 40;
-  background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-bottom: 1px solid var(--border);
-  padding: calc(12px + env(safe-area-inset-top)) 16px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.brand-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 30% 30%, var(--accent), var(--accent-secondary));
-  color: var(--accent-text);
-  border: 1px solid rgba(255, 255, 255, 0.35);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 18px var(--orb-1), 0 4px 10px var(--shadow-dark);
-}
-.brand h1 {
-  font-size: 15px;
-  font-weight: 800;
-  letter-spacing: 0.3px;
-}
-.brand span {
-  font-size: 11px;
-  color: var(--text-secondary);
-  display: block;
-}
+  .search-wrap {
+    position: relative;
+    margin-bottom: 12px;
+  }
+  .search-wrap svg.search-ico {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 15px;
+    height: 15px;
+    color: var(--text-muted);
+    pointer-events: none;
+  }
+  .search-wrap input {
+    padding-left: 36px;
+    padding-right: 34px;
+    font-size: 13px;
+  }
+  .search-clear {
+    position: absolute;
+    right: 8px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-out-sm);
+    color: var(--text-secondary);
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 12px;
+    line-height: 1;
+  }
+  .search-wrap.has-text .search-clear {
+    display: flex;
+  }
 
-.status-pill {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 11px;
-  border-radius: 999px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  cursor: pointer;
-  box-shadow: 0 2px 8px var(--shadow-dark);
-}
-.status-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--text-muted);
-}
-.status-dot.online {
-  background: #22c55e;
-  box-shadow: 0 0 8px rgba(34, 197, 94, 0.7);
-}
-.status-dot.pending {
-  background: var(--accent);
-  box-shadow: 0 0 8px var(--orb-1);
-}
+  .app-shell {
+    width: 100%;
+    max-width: 540px;
+    margin: 0 auto;
+    padding: 12px 14px 16px;
+  }
 
-main {
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 16px;
-}
-.section {
-  display: none;
-}
-.section.active {
-  display: block;
-  animation: fadeSlideIn 0.24s ease;
-}
-@keyframes fadeSlideIn {
-  from { opacity: 0; transform: translateY(6px); }
-  to { opacity: 1; transform: translateY(0); }
-}
+  header.top-bar {
+    position: sticky;
+    top: 10px;
+    z-index: 40;
+    background: var(--bg-surface);
+    border-radius: 18px;
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-out);
+    padding: 10px 13px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+  }
+  .brand-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 11px;
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
+    color: #14120d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 10px var(--gold-glow);
+    flex-shrink: 0;
+  }
+  .brand h1 {
+    font-size: 14px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    line-height: 1.15;
+  }
+  .brand span {
+    font-size: 10.5px;
+    color: var(--text-secondary);
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.section-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.section-title {
-  font-size: 18px;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--text-primary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    border-radius: 12px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-in-sm);
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--text-secondary);
+    cursor: pointer;
+  }
+  .status-dot {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--text-muted);
+  }
+  .status-dot.online {
+    background: var(--success);
+    box-shadow: 0 0 6px var(--success);
+  }
+  .status-dot.pending {
+    background: var(--gold-primary);
+    box-shadow: 0 0 6px var(--gold-primary);
+  }
 
-.grid-2 {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-}
-.grid-3 {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-}
-.grid-4 {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 6px;
-}
+  .section {
+    display: none;
+  }
+  .section.active {
+    display: block;
+  }
 
-.stat-box {
-  background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  padding: 12px;
-  text-align: center;
-  box-shadow: 0 6px 18px var(--shadow-dark), inset 0 1px 0 var(--shadow-light);
-}
-.stat-val {
-  font-size: 20px;
-  font-weight: 800;
-  color: var(--accent);
-}
-.stat-lbl {
-  font-size: 11px;
-  color: var(--text-secondary);
-  margin-top: 2px;
-}
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 12px;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+  .section-title {
+    font-size: 17px;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+  }
 
-.pill-group {
-  display: flex;
-  gap: 6px;
-  overflow-x: auto;
-  padding-bottom: 4px;
-  margin-bottom: 12px;
-}
-.pill {
-  padding: 6px 13px;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 600;
-  white-space: nowrap;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-.pill.active {
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  color: var(--accent-text);
-  border-color: transparent;
-  box-shadow: 0 4px 12px rgba(217, 155, 38, 0.28);
-}
+  .grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+  }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+  .grid-4 {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+  }
 
-.att-item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  padding: 13px;
-  background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  margin-bottom: 10px;
-  box-shadow: 0 4px 14px var(--shadow-dark);
-}
-.att-top {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-}
-.att-btn {
-  padding: 7px 4px;
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface-elevated);
-  color: var(--text-secondary);
-  font-size: 11px;
-  font-weight: 600;
-  cursor: pointer;
-  text-align: center;
-  transition: all 0.14s ease;
-}
-.att-btn.selected {
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  color: var(--accent-text);
-  border-color: transparent;
-  font-weight: 700;
-  box-shadow: 0 3px 10px rgba(217, 155, 38, 0.28);
-}
+  .stat-box {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 15px;
+    padding: 11px 8px;
+    text-align: center;
+    box-shadow: var(--shadow-out-sm);
+  }
+  .stat-val {
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--gold-primary);
+    font-variant-numeric: tabular-nums;
+  }
+  .stat-lbl {
+    font-size: 10.5px;
+    font-weight: 600;
+    color: var(--text-secondary);
+    margin-top: 2px;
+  }
 
-.badge {
-  display: inline-block;
-  padding: 3px 9px;
-  border-radius: 999px;
-  font-size: 11px;
-  font-weight: 700;
-  background: var(--accent-soft);
-  border: 1px solid var(--border);
-  color: var(--text-primary);
-}
-.badge-major {
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  color: var(--accent-text);
-  border-color: transparent;
-}
+  .pill-group {
+    display: flex;
+    gap: 7px;
+    overflow-x: auto;
+    padding: 2px 2px 6px;
+    margin-bottom: 10px;
+  }
+  .pill {
+    padding: 6px 12px;
+    border-radius: 11px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-out-sm);
+    color: var(--text-secondary);
+    font-size: 11.5px;
+    font-weight: 600;
+    font-family: inherit;
+    white-space: nowrap;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .pill.active {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+    color: #14120d;
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 4px 12px var(--gold-glow);
+  }
 
-.bar-track {
-  width: 100%;
-  height: 8px;
-  background: var(--accent-soft);
-  border-radius: 999px;
-  overflow: hidden;
-  border: 1px solid var(--border);
-  margin-top: 6px;
-}
-.bar-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--accent-secondary), var(--accent));
-  border-radius: 999px;
-  transition: width 0.3s ease;
-}
+  .att-item {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 13px;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    margin-bottom: 10px;
+    box-shadow: var(--shadow-out-sm);
+  }
+  .att-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+  }
+  .att-btn {
+    padding: 7px 4px;
+    border-radius: 10px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-out-sm);
+    color: var(--text-secondary);
+    font-size: 11px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.12s ease;
+  }
+  .att-btn:active {
+    box-shadow: var(--shadow-in-sm);
+  }
+  .att-btn.selected {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+    color: #14120d;
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 3px 10px var(--gold-glow);
+  }
 
-.vchart-wrap {
-  display: flex;
-  align-items: flex-end;
-  gap: 8px;
-  height: 156px;
-  padding: 16px 10px 8px;
-  overflow-x: auto;
-  border-radius: 14px;
-  background: var(--accent-soft);
-  border: 1px solid var(--border);
-}
-.vchart-col {
-  flex: 1;
-  min-width: 48px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-  gap: 4px;
-}
-.vchart-val {
-  font-size: 9.5px;
-  font-weight: 700;
-  color: var(--text-primary);
-  white-space: nowrap;
-}
-.vchart-bar-bg {
-  width: 24px;
-  height: 92px;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  display: flex;
-  align-items: flex-end;
-  overflow: hidden;
-}
-.vchart-bar-fill {
-  width: 100%;
-  background: linear-gradient(180deg, var(--accent), var(--accent-secondary));
-  border-radius: 6px 6px 0 0;
-  transition: height 0.35s ease;
-}
-.vchart-lbl {
-  font-size: 10px;
-  color: var(--text-secondary);
-  text-align: center;
-  white-space: nowrap;
-  max-width: 58px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
+  .badge {
+    display: inline-block;
+    padding: 3px 9px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    font-weight: 700;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    box-shadow: var(--shadow-in-sm);
+    color: var(--text-primary);
+  }
+  .badge-major {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+    color: #14120d;
+    border: none;
+    box-shadow: 0 2px 8px var(--gold-glow);
+  }
 
-.dist-row {
-  margin-bottom: 10px;
-}
-.dist-row:last-child {
-  margin-bottom: 0;
-}
-.dist-meta {
-  display: flex;
-  justify-content: space-between;
-  font-size: 12px;
-  font-weight: 600;
-  margin-bottom: 4px;
-}
+  .bar-track {
+    width: 100%;
+    height: 8px;
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-in-sm);
+    border-radius: 999px;
+    overflow: hidden;
+    border: 1px solid var(--border-subtle);
+    margin-top: 6px;
+  }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--gold-dark), var(--gold-light));
+    border-radius: 999px;
+    transition: width 0.3s ease;
+  }
 
-.clickable-row {
-  cursor: pointer;
-  padding: 11px 12px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--surface-elevated);
-  margin-bottom: 8px;
-  transition: transform 0.12s ease, border-color 0.2s ease;
-}
-.clickable-row:hover {
-  border-color: var(--accent);
-}
-.clickable-row:last-child {
-  margin-bottom: 0;
-}
-.clickable-row:active {
-  transform: scale(0.985);
-}
+  .vchart-wrap {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    height: 154px;
+    padding: 14px 10px 8px;
+    overflow-x: auto;
+    border-radius: 14px;
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-in);
+    border: 1px solid var(--border-subtle);
+  }
+  .vchart-col {
+    flex: 1;
+    min-width: 48px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 4px;
+  }
+  .vchart-val {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--text-primary);
+    white-space: nowrap;
+  }
+  .vchart-bar-bg {
+    width: 22px;
+    height: 90px;
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-in-sm);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+  }
+  .vchart-bar-fill {
+    width: 100%;
+    background: linear-gradient(180deg, var(--gold-light), var(--gold-primary));
+    border-radius: 6px 6px 0 0;
+    transition: height 0.35s ease;
+  }
+  .vchart-lbl {
+    font-size: 10px;
+    color: var(--text-secondary);
+    text-align: center;
+    white-space: nowrap;
+    max-width: 58px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
-.ann-card {
-  padding: 12px;
-  border-radius: 14px;
-  border: 1px solid var(--border);
-  background: var(--surface-elevated);
-  margin-bottom: 10px;
-}
-.ann-card:last-child {
-  margin-bottom: 0;
-}
-.ann-card.major {
-  border-left: 4px solid var(--accent);
-}
+  .dist-row {
+    margin-bottom: 10px;
+  }
+  .dist-row:last-child {
+    margin-bottom: 0;
+  }
+  .dist-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
 
-.bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 40;
-  background: var(--surface);
-  backdrop-filter: var(--glass-blur);
-  -webkit-backdrop-filter: var(--glass-blur);
-  border-top: 1px solid var(--border);
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  padding: 6px 4px calc(10px + env(safe-area-inset-bottom));
-  box-shadow: 0 -8px 24px var(--shadow-dark);
-}
-.nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 3px;
-  background: none;
-  border: none;
-  color: var(--text-muted);
-  font-size: 10px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 5px 0;
-  border-radius: 12px;
-  transition: color 0.15s ease, transform 0.15s ease;
-}
-.nav-item.active {
-  color: var(--accent);
-  background: var(--accent-soft);
-}
+  .clickable-row {
+    cursor: pointer;
+    padding: 11px 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-out-sm);
+    margin-bottom: 9px;
+    transition: transform 0.12s ease;
+  }
+  .clickable-row:last-child {
+    margin-bottom: 0;
+  }
+  .clickable-row:active {
+    transform: scale(0.98);
+    box-shadow: var(--shadow-in-sm);
+  }
 
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  z-index: 60;
-  background: rgba(8, 7, 12, 0.72);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 16px;
-}
-.modal-backdrop.open {
-  display: flex;
-}
-.modal-box {
-  width: 100%;
-  max-width: 480px;
-  max-height: 88vh;
-  overflow-y: auto;
-  background: var(--surface-elevated);
-  border: 1px solid var(--border);
-  border-radius: 22px;
-  padding: 18px;
-  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 28px var(--orb-1);
-}
+  .ann-card {
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-out-sm);
+    margin-bottom: 10px;
+  }
+  .ann-card:last-child {
+    margin-bottom: 0;
+  }
+  .ann-card.major {
+    border-left: 4px solid var(--gold-primary);
+  }
 
-.lock-screen {
-  position: fixed;
-  inset: 0;
-  z-index: 100;
-  background: var(--bg);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-}
-.lock-screen.hidden {
-  display: none;
-}
+  nav.bottom-nav {
+    position: fixed;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: calc(100% - 28px);
+    max-width: 512px;
+    height: 62px;
+    z-index: 40;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 18px;
+    box-shadow: var(--shadow-out);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    padding: 6px;
+  }
+  .nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    background: transparent;
+    border: none;
+    border-radius: 13px;
+    color: var(--text-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
+    transition: all 0.14s ease;
+  }
+  .nav-item.active {
+    color: var(--gold-primary);
+    box-shadow: var(--shadow-in-sm);
+    font-weight: 700;
+  }
 
-.toast {
-  position: fixed;
-  top: 70px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 80;
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  color: var(--accent-text);
-  padding: 9px 16px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  display: none;
-  box-shadow: 0 8px 22px rgba(217, 155, 38, 0.35);
-}
+  .modal-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(10, 12, 16, 0.72);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+  }
+  .modal-backdrop.open {
+    display: flex;
+  }
+  .modal-box {
+    width: 100%;
+    max-width: 480px;
+    max-height: 88dvh;
+    overflow-y: auto;
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    padding: 18px;
+    box-shadow: var(--shadow-out);
+  }
 
-.icon {
-  width: 18px;
-  height: 18px;
-  stroke: currentColor;
-  fill: none;
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-}
-.divider {
-  height: 1px;
-  background: var(--border);
-  margin: 14px 0;
-}
-.sub-heading-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 18px 0 10px;
-  padding-bottom: 6px;
-  border-bottom: 1px solid var(--border);
-}
-.sub-heading-bar h3 {
-  font-size: 15px;
-  font-weight: 800;
-}
-.day-chip {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 9px 11px;
-  border-radius: 12px;
-  border: 1px solid var(--border);
-  background: var(--surface-elevated);
-  font-size: 12px;
-  font-weight: 600;
-  cursor: pointer;
-}
-.day-chip.is-libur {
-  background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
-  color: var(--accent-text);
-  border-color: transparent;
-}
-.holiday-banner {
-  padding: 12px;
-  border-radius: 14px;
-  border: 1px dashed var(--accent);
-  background: var(--accent-soft);
-  margin-bottom: 10px;
-}
-.session-status-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 8px;
-  padding: 9px 12px;
-  border-radius: 13px;
-  border: 1px solid var(--border);
-  background: var(--surface-elevated);
-  margin-bottom: 10px;
-  font-size: 11.5px;
-}
+  .lock-screen {
+    position: fixed;
+    inset: 0;
+    z-index: 100;
+    background: var(--bg-base);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+  .lock-screen.hidden {
+    display: none;
+  }
+
+  .toast {
+    position: fixed;
+    top: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 110;
+    background: var(--bg-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--gold-primary);
+    padding: 10px 16px;
+    border-radius: 14px;
+    font-size: 12px;
+    font-weight: 700;
+    display: none;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.28);
+  }
+
+  .icon {
+    width: 18px;
+    height: 18px;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .divider {
+    height: 1px;
+    background: var(--border-subtle);
+    margin: 14px 0;
+  }
+  .sub-heading-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 18px 0 10px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border-subtle);
+  }
+  .sub-heading-bar h3 {
+    font-size: 14.5px;
+    font-weight: 800;
+  }
+  .day-chip {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 11px;
+    border-radius: 12px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-out-sm);
+    font-size: 11.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .day-chip.is-libur {
+    background: linear-gradient(135deg, var(--gold-light), var(--gold-primary));
+    color: #14120d;
+    border: none;
+    font-weight: 700;
+    box-shadow: 0 3px 10px var(--gold-glow);
+  }
+  .holiday-banner {
+    padding: 12px;
+    border-radius: 14px;
+    border: 1px solid var(--gold-primary);
+    background: var(--bg-elevated);
+    box-shadow: var(--shadow-in-sm);
+    margin-bottom: 10px;
+  }
+  .session-status-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 12px;
+    border-radius: 13px;
+    border: 1px solid var(--border-subtle);
+    background: var(--bg-surface);
+    box-shadow: var(--shadow-in-sm);
+    margin-bottom: 10px;
+    font-size: 11.5px;
+  }
 </style>
 </head>
 <body>
 
-<div class="aurelia-bg" aria-hidden="true">
-  <div class="aurelia-orb orb-1"></div>
-  <div class="aurelia-orb orb-2"></div>
-  <div class="aurelia-orb orb-3"></div>
-</div>
-
 <div id="lockScreen" class="lock-screen">
-  <div class="neu-card" style="width:100%;max-width:360px;text-align:center;padding:26px;">
-    <div class="brand-icon" style="width:62px;height:62px;margin:0 auto 14px;">
-      <svg class="icon" style="width:28px;height:28px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+  <div class="neu-card" style="width:100%;max-width:360px;text-align:center;padding:24px;">
+    <div class="brand-icon" style="width:56px;height:56px;border-radius:16px;margin:0 auto 14px;">
+      <svg class="icon" style="width:26px;height:26px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
     </div>
-    <h2 style="font-size:19px;font-weight:800;margin-bottom:4px;">BUSTANUL HADI</h2>
-    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:18px;">Offline-First • Otomatis Sinkron Saat Online</p>
+    <h2 style="font-size:18px;font-weight:800;margin-bottom:4px;">BUSTANUL <span class="gold-text">HADI</span></h2>
+    <p style="font-size:12px;color:var(--text-secondary);margin-bottom:16px;">Portal Guru • Offline-First & Auto-Sync</p>
     <div class="form-group">
-      <input type="password" id="pinInput" inputmode="numeric" maxlength="8" placeholder="PIN (Default: 1234)" style="text-align:center;font-size:18px;letter-spacing:6px;">
+      <input type="password" id="pinInput" inputmode="numeric" maxlength="8" placeholder="PIN (Default: 1234)" style="text-align:center;font-size:17px;letter-spacing:6px;">
     </div>
     <button type="button" class="btn btn-primary btn-block" onclick="verifyPin()">Masuk Portal Guru</button>
-    <p id="pinError" style="font-size:12px;color:var(--text-secondary);margin-top:10px;display:none;">PIN tidak sesuai. Silakan coba lagi.</p>
+    <p id="pinError" style="font-size:12px;color:var(--gold-primary);font-weight:600;margin-top:10px;display:none;">PIN tidak sesuai. Silakan coba lagi.</p>
   </div>
 </div>
 
 <div id="toast" class="toast"></div>
 
-<header>
-  <div class="brand">
-    <div class="brand-icon">
-      <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
-    </div>
-    <div>
-      <h1>BUSTANUL HADI</h1>
-      <span>Panel Kendali Guru • Offline & Auto-Sync</span>
-    </div>
-  </div>
-  <div style="display:flex;align-items:center;gap:6px;">
-    <button type="button" class="status-pill" onclick="openModal('modalSettings')" title="Status Sinkronisasi & Backup JSON">
-      <span id="syncDot" class="status-dot"></span>
-      <span id="syncLabel">Offline</span>
-    </button>
-    <button type="button" class="btn btn-sm" onclick="lockGuruPortal()" title="Kunci Portal">
-      <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-    </button>
-  </div>
-</header>
-
-<main>
-  <!-- TAB 1: ABSENSI -->
-  <section id="sec-absensi" class="section active">
-    <div class="section-header">
-      <h2 class="section-title">Absensi Santri</h2>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button type="button" class="btn btn-sm" onclick="openModal('modalJadwalAbsen')">
-          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          Sesi & Libur
-        </button>
-        <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">
-          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-          Kelas
-        </button>
-        <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalSantri')">
-          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Santri
-        </button>
+<div class="app-shell">
+  <header class="top-bar">
+    <div class="brand">
+      <div class="brand-icon">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+      </div>
+      <div>
+        <h1>BUSTANUL <span class="gold-text">HADI</span></h1>
+        <span>Portal Guru • Offline & Auto-Sync</span>
       </div>
     </div>
-
-    <div class="neu-card">
-      <div class="grid-2" style="margin-bottom:10px;">
-        <div>
-          <label>Tanggal Pengajian</label>
-          <input type="date" id="attDate" onchange="renderAbsensi()">
-        </div>
-        <div>
-          <label>Waktu / Sesi</label>
-          <select id="attSession" onchange="renderAbsensi()"></select>
-        </div>
-      </div>
-
-      <!-- STATUS SESI SAAT INI -->
-      <div class="session-status-bar" id="attSessionStatusBar">
-        <div style="min-width:0;">
-          <strong id="attSessionStatusTitle">Sesi Belum Diabsen</strong>
-          <div id="attSessionStatusSub" style="font-size:10.5px;color:var(--text-secondary);">Belum ada catatan tersimpan untuk sesi ini.</div>
-        </div>
-        <button type="button" class="btn btn-sm" id="btnQuickLibur" onclick="markSessionLibur()" style="flex-shrink:0;">Liburkan Sesi</button>
-      </div>
-
-      <!-- BANNER HARI LIBUR RUTIN / MALAM JUMAT -->
-      <div id="attHolidayBanner" class="holiday-banner" style="display:none;">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
-          <div>
-            <div style="font-size:13px;font-weight:800;" id="attHolidayTitle">Hari Libur Pengajian (Malam Jumat)</div>
-            <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;" id="attHolidayDesc">
-              Hari ini terdaftar sebagai jadwal libur rutin pengajian. Sesi ini tidak dihitung Alpa.
-            </div>
-          </div>
-          <span class="badge" id="attHolidayStatusBadge">Libur</span>
-        </div>
-        <div style="display:flex;gap:8px;margin-top:10px;">
-          <button type="button" class="btn btn-primary btn-sm" style="flex:1;" id="btnMarkSessionLibur" onclick="markSessionLibur()">Tandai Sesi Libur</button>
-          <button type="button" class="btn btn-sm" style="flex:1;display:none;" id="btnCancelSessionLibur" onclick="cancelSessionLibur()">Buka Absensi Biasa</button>
-        </div>
-      </div>
-
-      <div class="grid-2" style="margin-bottom:10px;">
-        <div>
-          <label>Filter Kelas / Kitab</label>
-          <select id="attKelasFilter" onchange="renderAbsensi()"></select>
-        </div>
-        <div>
-          <label>Urutkan Daftar</label>
-          <select id="attSortBy" onchange="renderAbsensi()">
-            <option value="NAMA_ASC">Nama (A - Z)</option>
-            <option value="NAMA_DESC">Nama (Z - A)</option>
-            <option value="STATUS_ORDER">Status (Hadir - Alpa)</option>
-            <option value="PCT_DESC">Kehadiran Tertinggi (%)</option>
-            <option value="PCT_ASC">Kehadiran Terendah (%)</option>
-          </select>
-        </div>
-      </div>
-
-      <label>Filter Status Kehadiran</label>
-      <div class="pill-group" id="attStatusPills" style="margin-bottom:10px;">
-        <button type="button" class="pill active" onclick="setAttStatusFilter('ALL', this)">Semua</button>
-        <button type="button" class="pill" onclick="setAttStatusFilter('Hadir', this)">Hadir</button>
-        <button type="button" class="pill" onclick="setAttStatusFilter('Izin', this)">Izin</button>
-        <button type="button" class="pill" onclick="setAttStatusFilter('Sakit', this)">Sakit</button>
-        <button type="button" class="pill" onclick="setAttStatusFilter('Alpa', this)">Alpa</button>
-        <button type="button" class="pill" onclick="setAttStatusFilter('UNMARKED', this)">Belum Diabsen</button>
-      </div>
-
-      <div class="search-wrap" id="wrapSearchAbsensi" style="margin-bottom:10px;">
-        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchAbsensi" placeholder="Cari nama santri atau username..." oninput="onSearchInput('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">
-        <button type="button" class="search-clear" onclick="clearSearch('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">×</button>
-      </div>
-
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;color:var(--text-secondary);">
-        <span id="attFilterSummary">Menampilkan semua santri</span>
-        <button type="button" id="btnResetAttFilter" style="background:none;border:none;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;display:none;" onclick="resetAttFilters()">Reset Filter</button>
-      </div>
-
-      <div class="grid-3">
-        <button type="button" class="btn btn-sm" onclick="markAllHadir()">Hadir Semua</button>
-        <button type="button" class="btn btn-sm" onclick="openModal('modalConfirmClearAbsen')">Kosongkan</button>
-        <button type="button" class="btn btn-primary btn-sm" onclick="saveAttendance()">Simpan</button>
-      </div>
-    </div>
-
-    <div class="grid-4" style="margin-bottom:14px;" id="attQuickStats"></div>
-    <div id="attList"></div>
-  </section>
-
-  <!-- TAB 2: MATERI -->
-  <section id="sec-materi" class="section">
-    <div class="section-header">
-      <h2 class="section-title">Materi & Kitab</h2>
-      <div style="display:flex;gap:6px;flex-wrap:wrap;">
-        <button type="button" class="btn btn-sm" onclick="openModal('modalBidangIlmu')">Bidang Ilmu</button>
-        <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">Kelas / Kitab</button>
-        <button type="button" class="btn btn-primary btn-sm" onclick="openMateriForm()">
-          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-          Materi Baru
-        </button>
-      </div>
-    </div>
-    <div class="search-wrap" id="wrapSearchMateri">
-      <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchMateri" placeholder="Cari judul materi, bidang ilmu, kitab, atau isi matan..." oninput="onSearchInput('searchMateri','wrapSearchMateri',renderMateri)">
-      <button type="button" class="search-clear" onclick="clearSearch('searchMateri','wrapSearchMateri',renderMateri)">×</button>
-    </div>
-    <div class="pill-group" id="materiFilter"></div>
-    <div id="materiList"></div>
-  </section>
-
-  <!-- TAB 3: KUIS -->
-  <section id="sec-kuis" class="section">
-    <div class="section-header">
-      <h2 class="section-title">Bank Soal Kuis Cerdas</h2>
-      <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalKuisConfig')">Atur Kuis & Pengurangan</button>
-    </div>
-
-    <div class="neu-inset" style="padding:10px 12px;margin-bottom:12px;font-size:12px;display:flex;justify-content:space-between;align-items:center;">
-      <span>Aturan Skor Salah Saat Ini:</span>
-      <strong id="kuisPenaltyBanner">-5 Poin / Salah</strong>
-    </div>
-
-    <div class="neu-card">
-      <h3 style="font-size:14px;margin-bottom:10px;" id="soalFormTitle">Tambah Pertanyaan Kuis</h3>
-      <input type="hidden" id="editSoalId">
-      <div class="form-group">
-        <label>Pertanyaan</label>
-        <textarea id="soalTeks" rows="2" placeholder="Tulis pertanyaan kuis untuk santri..."></textarea>
-      </div>
-      <div class="grid-2">
-        <div class="form-group"><label>Pilihan A</label><input type="text" id="optA" placeholder="Jawaban A"></div>
-        <div class="form-group"><label>Pilihan B</label><input type="text" id="optB" placeholder="Jawaban B"></div>
-        <div class="form-group"><label>Pilihan C</label><input type="text" id="optC" placeholder="Jawaban C"></div>
-        <div class="form-group"><label>Pilihan D</label><input type="text" id="optD" placeholder="Jawaban D"></div>
-      </div>
-      <div class="grid-2">
-        <div class="form-group">
-          <label>Kunci Jawaban Benar</label>
-          <select id="soalKunci">
-            <option value="0">Pilihan A</option>
-            <option value="1">Pilihan B</option>
-            <option value="2">Pilihan C</option>
-            <option value="3">Pilihan D</option>
-          </select>
-        </div>
-        <div class="form-group">
-          <label>Bobot Poin Benar</label>
-          <input type="number" id="soalPoin" value="20" min="5" max="100">
-        </div>
-      </div>
-      <div class="form-group">
-        <label>Penjelasan Jawaban Benar (Tampil setelah santri selesai kuis)</label>
-        <textarea id="soalPenjelasan" rows="3" placeholder="Tuliskan dalil, rujukan kitab, atau alasan mengapa jawaban tersebut benar..."></textarea>
-      </div>
-      <div style="display:flex;gap:8px;">
-        <button type="button" class="btn btn-primary" style="flex:1;" onclick="saveSoal()">Simpan Soal</button>
-        <button type="button" class="btn" id="btnCancelSoal" style="display:none;" onclick="resetSoalForm()">Batal</button>
-      </div>
-    </div>
-
-    <div class="search-wrap" id="wrapSearchSoal">
-      <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchSoal" placeholder="Cari pertanyaan, jawaban, atau penjelasan soal..." oninput="onSearchInput('searchSoal','wrapSearchSoal',renderSoal)">
-      <button type="button" class="search-clear" onclick="clearSearch('searchSoal','wrapSearchSoal',renderSoal)">×</button>
-    </div>
-    <div id="soalList"></div>
-  </section>
-
-  <!-- TAB 4: PUSTAKA -->
-  <section id="sec-pustaka" class="section">
-    <div class="section-header">
-      <h2 class="section-title">Pustaka Kitab & Aplikasi</h2>
-      <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalLink')">
-        <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-        Tautan
+    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0;">
+      <button type="button" class="status-pill" onclick="openModal('modalSettings')" title="Status Sinkronisasi & Backup JSON">
+        <span id="syncDot" class="status-dot"></span>
+        <span id="syncLabel">Offline</span>
+      </button>
+      <button type="button" class="btn btn-sm" id="btnThemeToggle" onclick="toggleThemeManual()" title="Ganti Tema Terang/Gelap">
+        <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/></svg>
+      </button>
+      <button type="button" class="btn btn-sm" onclick="lockGuruPortal()" title="Kunci Portal">
+        <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
       </button>
     </div>
-    <div class="search-wrap" id="wrapSearchPustaka">
-      <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-      <input type="text" id="searchPustaka" placeholder="Cari nama kitab, PDF, atau aplikasi..." oninput="onSearchInput('searchPustaka','wrapSearchPustaka',renderLinks)">
-      <button type="button" class="search-clear" onclick="clearSearch('searchPustaka','wrapSearchPustaka',renderLinks)">×</button>
-    </div>
-    <div id="linkList"></div>
-  </section>
+  </header>
 
-  <!-- TAB 5: ANALISA KEHADIRAN, KAS, PENGUMUMAN & KUIS -->
-  <section id="sec-analisa" class="section">
-    <div class="section-header">
-      <h2 class="section-title">Laporan & Pengumuman</h2>
-      <div style="display:flex;gap:6px;">
-        <button type="button" class="btn btn-primary btn-sm" onclick="openPengumumanForm()">
-          <svg class="icon" style="width:14px;height:14px;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-          Pengumuman
+  <main>
+    <!-- TAB 1: ABSENSI -->
+    <section id="sec-absensi" class="section active">
+      <div class="section-header">
+        <h2 class="section-title">Absensi <span class="gold-text">Santri</span></h2>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm" onclick="openModal('modalJadwalAbsen')">
+            <svg class="icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            Sesi & Libur
+          </button>
+          <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">
+            <svg class="icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Kelas
+          </button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalSantri')">
+            <svg class="icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Santri
+          </button>
+        </div>
+      </div>
+
+      <div class="neu-card">
+        <div class="grid-2" style="margin-bottom:10px;">
+          <div>
+            <label>Tanggal Pengajian</label>
+            <input type="date" id="attDate" onchange="renderAbsensi()">
+          </div>
+          <div>
+            <label>Waktu / Sesi</label>
+            <select id="attSession" onchange="renderAbsensi()"></select>
+          </div>
+        </div>
+
+        <div class="session-status-bar" id="attSessionStatusBar">
+          <div style="min-width:0;">
+            <strong id="attSessionStatusTitle">Sesi Belum Diabsen</strong>
+            <div id="attSessionStatusSub" style="font-size:10.5px;color:var(--text-secondary);">Belum ada catatan tersimpan untuk sesi ini.</div>
+          </div>
+          <button type="button" class="btn btn-sm" id="btnQuickLibur" onclick="markSessionLibur()" style="flex-shrink:0;">Liburkan Sesi</button>
+        </div>
+
+        <div id="attHolidayBanner" class="holiday-banner" style="display:none;">
+          <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+            <div>
+              <div style="font-size:13px;font-weight:800;" id="attHolidayTitle">Hari Libur Pengajian (Malam Jumat)</div>
+              <div style="font-size:11px;color:var(--text-secondary);margin-top:2px;" id="attHolidayDesc">
+                Hari ini terdaftar sebagai jadwal libur rutin pengajian. Sesi ini tidak dihitung Alpa.
+              </div>
+            </div>
+            <span class="badge" id="attHolidayStatusBadge">Libur</span>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:10px;">
+            <button type="button" class="btn btn-primary btn-sm" style="flex:1;" id="btnMarkSessionLibur" onclick="markSessionLibur()">Tandai Sesi Libur</button>
+            <button type="button" class="btn btn-sm" style="flex:1;display:none;" id="btnCancelSessionLibur" onclick="cancelSessionLibur()">Buka Absensi Biasa</button>
+          </div>
+        </div>
+
+        <div class="grid-2" style="margin-bottom:10px;">
+          <div>
+            <label>Filter Kelas / Kitab</label>
+            <select id="attKelasFilter" onchange="renderAbsensi()"></select>
+          </div>
+          <div>
+            <label>Urutkan Daftar</label>
+            <select id="attSortBy" onchange="renderAbsensi()">
+              <option value="NAMA_ASC">Nama (A - Z)</option>
+              <option value="NAMA_DESC">Nama (Z - A)</option>
+              <option value="STATUS_ORDER">Status (Hadir - Alpa)</option>
+              <option value="PCT_DESC">Kehadiran Tertinggi (%)</option>
+              <option value="PCT_ASC">Kehadiran Terendah (%)</option>
+            </select>
+          </div>
+        </div>
+
+        <label>Filter Status Kehadiran</label>
+        <div class="pill-group" id="attStatusPills" style="margin-bottom:10px;">
+          <button type="button" class="pill active" onclick="setAttStatusFilter('ALL', this)">Semua</button>
+          <button type="button" class="pill" onclick="setAttStatusFilter('Hadir', this)">Hadir</button>
+          <button type="button" class="pill" onclick="setAttStatusFilter('Izin', this)">Izin</button>
+          <button type="button" class="pill" onclick="setAttStatusFilter('Sakit', this)">Sakit</button>
+          <button type="button" class="pill" onclick="setAttStatusFilter('Alpa', this)">Alpa</button>
+          <button type="button" class="pill" onclick="setAttStatusFilter('UNMARKED', this)">Belum Diabsen</button>
+        </div>
+
+        <div class="search-wrap" id="wrapSearchAbsensi" style="margin-bottom:10px;">
+          <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchAbsensi" placeholder="Cari nama santri atau username..." oninput="onSearchInput('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">
+          <button type="button" class="search-clear" onclick="clearSearch('searchAbsensi','wrapSearchAbsensi',renderAbsensi)">×</button>
+        </div>
+
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;font-size:11px;color:var(--text-secondary);">
+          <span id="attFilterSummary">Menampilkan semua santri</span>
+          <button type="button" id="btnResetAttFilter" style="background:none;border:none;color:var(--gold-primary);font-size:11px;font-weight:700;cursor:pointer;display:none;" onclick="resetAttFilters()">Reset Filter</button>
+        </div>
+
+        <div class="grid-3">
+          <button type="button" class="btn btn-sm" onclick="markAllHadir()">Hadir Semua</button>
+          <button type="button" class="btn btn-sm" onclick="openModal('modalConfirmClearAbsen')">Kosongkan</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="saveAttendance()">Simpan</button>
+        </div>
+      </div>
+
+      <div class="grid-4" style="margin-bottom:14px;" id="attQuickStats"></div>
+      <div id="attList"></div>
+    </section>
+
+    <!-- TAB 2: MATERI -->
+    <section id="sec-materi" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Materi & <span class="gold-text">Kitab</span></h2>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <button type="button" class="btn btn-sm" onclick="openModal('modalBidangIlmu')">Bidang Ilmu</button>
+          <button type="button" class="btn btn-sm" onclick="openModal('modalKelas')">Kelas / Kitab</button>
+          <button type="button" class="btn btn-primary btn-sm" onclick="openMateriForm()">
+            <svg class="icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Materi Baru
+          </button>
+        </div>
+      </div>
+      <div class="search-wrap" id="wrapSearchMateri">
+        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchMateri" placeholder="Cari judul materi, bidang ilmu, kitab, atau isi matan..." oninput="onSearchInput('searchMateri','wrapSearchMateri',renderMateri)">
+        <button type="button" class="search-clear" onclick="clearSearch('searchMateri','wrapSearchMateri',renderMateri)">×</button>
+      </div>
+      <div class="pill-group" id="materiFilter"></div>
+      <div id="materiList"></div>
+    </section>
+
+    <!-- TAB 3: KUIS -->
+    <section id="sec-kuis" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Bank Soal <span class="gold-text">Kuis Cerdas</span></h2>
+        <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalKuisConfig')">Atur Kuis & Penalti</button>
+      </div>
+
+      <div class="neu-inset" style="padding:10px 12px;margin-bottom:12px;font-size:12px;display:flex;justify-content:space-between;align-items:center;">
+        <span>Aturan Skor Salah Saat Ini:</span>
+        <strong class="gold-text" id="kuisPenaltyBanner">-5 Poin / Salah</strong>
+      </div>
+
+      <div class="neu-card">
+        <h3 style="font-size:14px;margin-bottom:10px;" id="soalFormTitle">Tambah Pertanyaan Kuis</h3>
+        <input type="hidden" id="editSoalId">
+        <div class="form-group">
+          <label>Pertanyaan</label>
+          <textarea id="soalTeks" rows="2" placeholder="Tulis pertanyaan kuis untuk santri..."></textarea>
+        </div>
+        <div class="grid-2">
+          <div class="form-group"><label>Pilihan A</label><input type="text" id="optA" placeholder="Jawaban A"></div>
+          <div class="form-group"><label>Pilihan B</label><input type="text" id="optB" placeholder="Jawaban B"></div>
+          <div class="form-group"><label>Pilihan C</label><input type="text" id="optC" placeholder="Jawaban C"></div>
+          <div class="form-group"><label>Pilihan D</label><input type="text" id="optD" placeholder="Jawaban D"></div>
+        </div>
+        <div class="grid-2">
+          <div class="form-group">
+            <label>Kunci Jawaban Benar</label>
+            <select id="soalKunci">
+              <option value="0">Pilihan A</option>
+              <option value="1">Pilihan B</option>
+              <option value="2">Pilihan C</option>
+              <option value="3">Pilihan D</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Bobot Poin Benar</label>
+            <input type="number" id="soalPoin" value="20" min="5" max="100">
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Penjelasan Jawaban Benar (Tampil setelah santri selesai kuis)</label>
+          <textarea id="soalPenjelasan" rows="3" placeholder="Tuliskan dalil, rujukan kitab, atau alasan mengapa jawaban tersebut benar..."></textarea>
+        </div>
+        <div style="display:flex;gap:8px;">
+          <button type="button" class="btn btn-primary" style="flex:1;" onclick="saveSoal()">Simpan Soal</button>
+          <button type="button" class="btn" id="btnCancelSoal" style="display:none;" onclick="resetSoalForm()">Batal</button>
+        </div>
+      </div>
+
+      <div class="search-wrap" id="wrapSearchSoal">
+        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchSoal" placeholder="Cari pertanyaan, jawaban, atau penjelasan soal..." oninput="onSearchInput('searchSoal','wrapSearchSoal',renderSoal)">
+        <button type="button" class="search-clear" onclick="clearSearch('searchSoal','wrapSearchSoal',renderSoal)">×</button>
+      </div>
+      <div id="soalList"></div>
+    </section>
+
+    <!-- TAB 4: PUSTAKA -->
+    <section id="sec-pustaka" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Pustaka <span class="gold-text">Kitab</span></h2>
+        <button type="button" class="btn btn-primary btn-sm" onclick="openModal('modalLink')">
+          <svg class="icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          Tautan
         </button>
-        <button type="button" class="btn btn-sm" onclick="openModal('modalSettings')">Backup</button>
-        <button type="button" class="btn btn-sm" onclick="resetScores()">Reset Skor</button>
       </div>
-    </div>
+      <div class="search-wrap" id="wrapSearchPustaka">
+        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="searchPustaka" placeholder="Cari nama kitab, PDF, atau aplikasi..." oninput="onSearchInput('searchPustaka','wrapSearchPustaka',renderLinks)">
+        <button type="button" class="search-clear" onclick="clearSearch('searchPustaka','wrapSearchPustaka',renderLinks)">×</button>
+      </div>
+      <div id="linkList"></div>
+    </section>
 
-    <!-- PANEL PENGUMUMAN & ACARA BESAR -->
-    <div class="neu-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
-        <div>
-          <h3 style="font-size:14px;">Papan Pengumuman & Agenda Acara</h3>
-          <p style="font-size:11px;color:var(--text-secondary);">Kirim pengumuman acara besar atau info rutin ke Portal Santri & salin teks untuk WhatsApp.</p>
+    <!-- TAB 5: ANALISA KEHADIRAN, KAS, PENGUMUMAN & KUIS -->
+    <section id="sec-analisa" class="section">
+      <div class="section-header">
+        <h2 class="section-title">Laporan & <span class="gold-text">Info</span></h2>
+        <div style="display:flex;gap:6px;">
+          <button type="button" class="btn btn-primary btn-sm" onclick="openPengumumanForm()">
+            <svg class="icon" style="width:13px;height:13px;" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+            Pengumuman
+          </button>
+          <button type="button" class="btn btn-sm" onclick="openModal('modalSettings')">Backup</button>
+          <button type="button" class="btn btn-sm" onclick="resetScores()">Reset Skor</button>
         </div>
-        <button type="button" class="btn btn-sm" onclick="openPengumumanForm()">+ Buat</button>
-      </div>
-      <div class="pill-group" id="pengumumanFilterPills" style="margin-bottom:10px;">
-        <button type="button" class="pill active" onclick="setPengumumanFilter('ALL', this)">Semua</button>
-        <button type="button" class="pill" onclick="setPengumumanFilter('Acara Besar', this)">Acara Besar</button>
-        <button type="button" class="pill" onclick="setPengumumanFilter('Pengumuman Biasa', this)">Pengumuman Biasa</button>
-      </div>
-      <div id="pengumumanList"></div>
-    </div>
-
-    <div class="neu-card">
-      <label>Filter Rentang Waktu Laporan</label>
-      <div class="pill-group" id="analisaPeriodPills" style="margin-bottom:10px;">
-        <button type="button" class="pill active" onclick="setAnalisaMode('semua', this)">Semua Sesi</button>
-        <button type="button" class="pill" onclick="setAnalisaMode('harian', this)">Harian</button>
-        <button type="button" class="pill" onclick="setAnalisaMode('mingguan', this)">Mingguan</button>
-        <button type="button" class="pill" onclick="setAnalisaMode('bulanan', this)">Bulanan</button>
-      </div>
-      <div id="analisaDateWrap" style="display:none;margin-bottom:10px;">
-        <label id="analisaDateLabel">Pilih Tanggal</label>
-        <input type="date" id="analisaRefDate" onchange="renderAnalisa()">
-      </div>
-      <div id="analisaMonthWrap" style="display:none;margin-bottom:10px;">
-        <label>Pilih Bulan</label>
-        <input type="month" id="analisaRefMonth" onchange="renderAnalisa()">
       </div>
 
-      <div class="grid-2" style="margin-bottom:10px;">
-        <div>
-          <label>Filter Kelas / Kitab</label>
-          <select id="analisaKelasFilter" onchange="renderAnalisa()"></select>
+      <div class="neu-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;">
+          <div>
+            <h3 style="font-size:14px;">Papan Pengumuman & Agenda Acara</h3>
+            <p style="font-size:11px;color:var(--text-secondary);">Kirim pengumuman acara besar atau info rutin & salin teks untuk WhatsApp.</p>
+          </div>
+          <button type="button" class="btn btn-sm" onclick="openPengumumanForm()">+ Buat</button>
         </div>
-        <div>
-          <label>Filter Predikat Kehadiran</label>
-          <select id="analisaStatusFilter" onchange="renderAnalisa()">
-            <option value="ALL">Semua Santri</option>
-            <option value="RAJIN">Rajin (&ge; 80%)</option>
-            <option value="CUKUP">Cukup (50% - 79%)</option>
-            <option value="KURANG">Kurang (&lt; 50%)</option>
-            <option value="ADA_ALPA">Pernah Alpa</option>
-            <option value="ADA_SKOR">Sudah Ikut Kuis</option>
+        <div class="pill-group" id="pengumumanFilterPills" style="margin-bottom:10px;">
+          <button type="button" class="pill active" onclick="setPengumumanFilter('ALL', this)">Semua</button>
+          <button type="button" class="pill" onclick="setPengumumanFilter('Acara Besar', this)">Acara Besar</button>
+          <button type="button" class="pill" onclick="setPengumumanFilter('Pengumuman Biasa', this)">Pengumuman Biasa</button>
+        </div>
+        <div id="pengumumanList"></div>
+      </div>
+
+      <div class="neu-card">
+        <label>Filter Rentang Waktu Laporan</label>
+        <div class="pill-group" id="analisaPeriodPills" style="margin-bottom:10px;">
+          <button type="button" class="pill active" onclick="setAnalisaMode('semua', this)">Semua Sesi</button>
+          <button type="button" class="pill" onclick="setAnalisaMode('harian', this)">Harian</button>
+          <button type="button" class="pill" onclick="setAnalisaMode('mingguan', this)">Mingguan</button>
+          <button type="button" class="pill" onclick="setAnalisaMode('bulanan', this)">Bulanan</button>
+        </div>
+        <div id="analisaDateWrap" style="display:none;margin-bottom:10px;">
+          <label id="analisaDateLabel">Pilih Tanggal</label>
+          <input type="date" id="analisaRefDate" onchange="renderAnalisa()">
+        </div>
+        <div id="analisaMonthWrap" style="display:none;margin-bottom:10px;">
+          <label>Pilih Bulan</label>
+          <input type="month" id="analisaRefMonth" onchange="renderAnalisa()">
+        </div>
+
+        <div class="grid-2" style="margin-bottom:10px;">
+          <div>
+            <label>Filter Kelas / Kitab</label>
+            <select id="analisaKelasFilter" onchange="renderAnalisa()"></select>
+          </div>
+          <div>
+            <label>Filter Predikat Kehadiran</label>
+            <select id="analisaStatusFilter" onchange="renderAnalisa()">
+              <option value="ALL">Semua Santri</option>
+              <option value="RAJIN">Rajin (&ge; 80%)</option>
+              <option value="CUKUP">Cukup (50% - 79%)</option>
+              <option value="KURANG">Kurang (&lt; 50%)</option>
+              <option value="ADA_ALPA">Pernah Alpa</option>
+              <option value="ADA_SKOR">Sudah Ikut Kuis</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-bottom:6px;">
+          <label>Urutkan Daftar Santri</label>
+          <select id="analisaSortBy" onchange="renderAnalisa()">
+            <option value="NAMA_ASC">Nama Santri (A - Z)</option>
+            <option value="PCT_DESC">Kehadiran Tertinggi (%)</option>
+            <option value="PCT_ASC">Kehadiran Terendah (%)</option>
+            <option value="ALPA_DESC">Alpa Terbanyak</option>
+            <option value="KAS_DESC">Setoran Kas Tertinggi</option>
+            <option value="SKOR_DESC">Skor Kuis Tertinggi</option>
           </select>
         </div>
+
+        <div id="analisaPeriodRangeText" style="font-size:11px;color:var(--text-secondary);margin-top:6px;"></div>
       </div>
 
-      <div class="form-group" style="margin-bottom:6px;">
-        <label>Urutkan Daftar Santri</label>
-        <select id="analisaSortBy" onchange="renderAnalisa()">
-          <option value="NAMA_ASC">Nama Santri (A - Z)</option>
-          <option value="PCT_DESC">Kehadiran Tertinggi (%)</option>
-          <option value="PCT_ASC">Kehadiran Terendah (%)</option>
-          <option value="ALPA_DESC">Alpa Terbanyak</option>
-          <option value="KAS_DESC">Setoran Kas Tertinggi</option>
-          <option value="SKOR_DESC">Skor Kuis Tertinggi</option>
-        </select>
+      <div class="grid-4" style="margin-bottom:14px;" id="analisaSummary"></div>
+
+      <div class="neu-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 style="font-size:14px;" id="trendChartTitle">Grafik Tren Kehadiran (%)</h3>
+          <span class="badge" id="trendChartBadge">Persentase Hadir</span>
+        </div>
+        <div id="trendChartBox"></div>
       </div>
 
-      <div id="analisaPeriodRangeText" style="font-size:11px;color:var(--text-secondary);margin-top:6px;"></div>
-    </div>
-
-    <div class="grid-4" style="margin-bottom:14px;" id="analisaSummary"></div>
-
-    <div class="neu-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3 style="font-size:14px;" id="trendChartTitle">Grafik Tren Kehadiran (%)</h3>
-        <span class="badge" id="trendChartBadge">Persentase Hadir</span>
+      <div class="neu-card">
+        <h3 style="font-size:14px;margin-bottom:10px;">Grafik Komposisi Status Kehadiran</h3>
+        <div id="statusDistChart"></div>
       </div>
-      <div id="trendChartBox"></div>
-    </div>
 
-    <div class="neu-card">
-      <h3 style="font-size:14px;margin-bottom:10px;">Grafik Komposisi Status Kehadiran</h3>
-      <div id="statusDistChart"></div>
-    </div>
-
-    <div class="sub-heading-bar">
-      <h3>Analisa Kas & Infaq</h3>
-      <span class="badge" id="analisaKasBadge">0 Transaksi</span>
-    </div>
-
-    <div class="grid-3" style="margin-bottom:14px;" id="analisaKasSummary"></div>
-
-    <div class="neu-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3 style="font-size:14px;" id="kasTrendChartTitle">Grafik Pemasukan Kas</h3>
-        <span class="badge">Dana Masuk</span>
+      <div class="sub-heading-bar">
+        <h3>Analisa Kas & <span class="gold-text">Infaq</span></h3>
+        <span class="badge" id="analisaKasBadge">0 Transaksi</span>
       </div>
-      <div id="kasTrendChartBox"></div>
-    </div>
 
-    <div class="neu-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3 style="font-size:14px;">Distribusi Pemasukan Per Pos Dana</h3>
-        <span class="badge" id="kasPosDistTotalBadge">Rp 0</span>
-      </div>
-      <div id="kasPosDistChart"></div>
-    </div>
+      <div class="grid-3" style="margin-bottom:14px;" id="analisaKasSummary"></div>
 
-    <div class="neu-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3 style="font-size:14px;">Peringkat Kontribusi Setoran Santri</h3>
-        <span class="badge" id="kasContributorCountBadge">0 Santri</span>
+      <div class="neu-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 style="font-size:14px;" id="kasTrendChartTitle">Grafik Pemasukan Kas</h3>
+          <span class="badge">Dana Masuk</span>
+        </div>
+        <div id="kasTrendChartBox"></div>
       </div>
-      <div class="search-wrap" id="wrapSearchKasContrib" style="margin-bottom:10px;">
-        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchKasContrib" placeholder="Cari nama santri penyetor..." oninput="onSearchInput('searchKasContrib','wrapSearchKasContrib',renderAnalisa)">
-        <button type="button" class="search-clear" onclick="clearSearch('searchKasContrib','wrapSearchKasContrib',renderAnalisa)">×</button>
-      </div>
-      <div id="kasTopContributorsList"></div>
-    </div>
 
-    <div class="sub-heading-bar">
-      <h3>Klasemen Kuis & Rekap Santri</h3>
-      <span class="badge" id="santriAvgBadge">Rata-rata: 0%</span>
-    </div>
-
-    <div class="neu-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
-        <h3 style="font-size:14px;">Peringkat Kejuaraan Kuis Cerdas</h3>
-        <span class="badge">Klik Nama untuk Detail</span>
+      <div class="neu-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 style="font-size:14px;">Distribusi Pemasukan Per Pos Dana</h3>
+          <span class="badge" id="kasPosDistTotalBadge">Rp 0</span>
+        </div>
+        <div id="kasPosDistChart"></div>
       </div>
-      <div id="leaderboardList"></div>
-    </div>
 
-    <div class="neu-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
-        <h3 style="font-size:14px;">Rata-Rata & Detail Santri</h3>
-        <span class="badge">Absensi • Kas • Kuis</span>
+      <div class="neu-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 style="font-size:14px;">Peringkat Kontribusi Setoran Santri</h3>
+          <span class="badge" id="kasContributorCountBadge">0 Santri</span>
+        </div>
+        <div class="search-wrap" id="wrapSearchKasContrib" style="margin-bottom:10px;">
+          <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchKasContrib" placeholder="Cari nama santri penyetor..." oninput="onSearchInput('searchKasContrib','wrapSearchKasContrib',renderAnalisa)">
+          <button type="button" class="search-clear" onclick="clearSearch('searchKasContrib','wrapSearchKasContrib',renderAnalisa)">×</button>
+        </div>
+        <div id="kasTopContributorsList"></div>
       </div>
-      <p style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;">Klik kartu santri di bawah untuk melihat rincian absensi, setoran kas, dan skor kuis.</p>
-      <div class="search-wrap" id="wrapSearchAnalisa">
-        <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input type="text" id="searchAnalisa" placeholder="Cari nama santri..." oninput="onSearchInput('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">
-        <button type="button" class="search-clear" onclick="clearSearch('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">×</button>
-      </div>
-      <div id="analisaSantriList"></div>
-    </div>
-  </section>
-</main>
 
-<nav class="bottom-nav">
-  <button type="button" class="nav-item active" onclick="switchTab('absensi', this)">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    <span>Absensi</span>
-  </button>
-  <button type="button" class="nav-item" onclick="switchTab('materi', this)">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-    <span>Materi</span>
-  </button>
-  <button type="button" class="nav-item" onclick="switchTab('kuis', this)">
-    <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-    <span>Kuis</span>
-  </button>
-  <button type="button" class="nav-item" onclick="switchTab('pustaka', this)">
-    <svg class="icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-    <span>Pustaka</span>
-  </button>
-  <button type="button" class="nav-item" onclick="switchTab('analisa', this)">
-    <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
-    <span>Laporan</span>
-  </button>
-</nav>
+      <div class="sub-heading-bar">
+        <h3>Klasemen Kuis & <span class="gold-text">Rekap Santri</span></h3>
+        <span class="badge" id="santriAvgBadge">Rata-rata: 0%</span>
+      </div>
+
+      <div class="neu-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;">
+          <h3 style="font-size:14px;">Peringkat Kejuaraan Kuis Cerdas</h3>
+          <span class="badge">Klik Nama untuk Detail</span>
+        </div>
+        <div id="leaderboardList"></div>
+      </div>
+
+      <div class="neu-card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+          <h3 style="font-size:14px;">Rata-Rata & Detail Santri</h3>
+          <span class="badge">Absensi • Kas • Kuis</span>
+        </div>
+        <p style="font-size:11px;color:var(--text-secondary);margin-bottom:10px;">Klik kartu santri di bawah untuk melihat rincian absensi, setoran kas, dan skor kuis.</p>
+        <div class="search-wrap" id="wrapSearchAnalisa">
+          <svg class="icon search-ico" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="searchAnalisa" placeholder="Cari nama santri..." oninput="onSearchInput('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">
+          <button type="button" class="search-clear" onclick="clearSearch('searchAnalisa','wrapSearchAnalisa',renderAnalisa)">×</button>
+        </div>
+        <div id="analisaSantriList"></div>
+      </div>
+    </section>
+  </main>
+
+  <nav class="bottom-nav">
+    <button type="button" class="nav-item active" onclick="switchTab('absensi', this)">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+      <span>Absensi</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('materi', this)">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>Materi</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('kuis', this)">
+      <svg class="icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      <span>Kuis</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('pustaka', this)">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+      <span>Pustaka</span>
+    </button>
+    <button type="button" class="nav-item" onclick="switchTab('analisa', this)">
+      <svg class="icon" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+      <span>Laporan</span>
+    </button>
+  </nav>
+</div>
 
 <!-- MODAL KIRIM / EDIT PENGUMUMAN -->
 <div id="modalPengumuman" class="modal-backdrop">
@@ -1378,7 +1352,7 @@ main {
       <div class="form-group">
         <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
           <label style="margin-bottom:0;">Bidang Ilmu</label>
-          <button type="button" style="background:none;border:none;color:var(--accent);font-size:11px;font-weight:700;cursor:pointer;" onclick="openModal('modalBidangIlmu')">+ Atur</button>
+          <button type="button" style="background:none;border:none;color:var(--gold-primary);font-size:11px;font-weight:700;cursor:pointer;" onclick="openModal('modalBidangIlmu')">+ Atur</button>
         </div>
         <select id="materiKategori"></select>
       </div>
@@ -1524,6 +1498,7 @@ const firebaseConfig = {
 const STORAGE_KEY = "balai_pengajian_state";
 const PENDING_SYNC_KEY = "guru_pending_sync";
 const LAST_SYNC_KEY = "guru_last_sync";
+const THEME_KEY = "bustanul_hadi_theme";
 
 const HARI_MINGGUAN_OPTS = [
   { dayIndex: 0, label: "Ahad (Malam Senin)" },
@@ -1741,6 +1716,21 @@ let selectedKategori = "Semua";
 let analisaMode = "semua";
 let attStatusFilter = "ALL";
 let pengumumanFilter = "ALL";
+
+function applyInitialTheme() {
+  const saved = localStorage.getItem(THEME_KEY);
+  const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+  if (saved === "dark" || (!saved && prefersDark)) {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}
+
+function toggleThemeManual() {
+  const isDark = document.documentElement.classList.toggle("dark");
+  localStorage.setItem(THEME_KEY, isDark ? "dark" : "light");
+}
 
 function formatRupiah(num) {
   const val = Number(num) || 0;
@@ -2066,6 +2056,7 @@ function switchTab(tab, el) {
   document.querySelectorAll(".nav-item").forEach(n => n.classList.remove("active"));
   document.getElementById("sec-" + tab).classList.add("active");
   el.classList.add("active");
+  window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
 function populateSesiDropdown() {
@@ -2126,9 +2117,6 @@ function populateKelasDropdowns() {
   }
 }
 
-// =========================================================================
-// PENGUMUMAN & AGENDA ACARA BESAR
-// =========================================================================
 function setPengumumanFilter(kat, btnEl) {
   pengumumanFilter = kat;
   document.querySelectorAll("#pengumumanFilterPills .pill").forEach(p => p.classList.remove("active"));
@@ -2265,9 +2253,6 @@ function renderPengumuman() {
   }).join("");
 }
 
-// =========================================================================
-// KOSONGKAN ABSEN PADA HARI / SESI TERTENTU
-// =========================================================================
 async function clearCurrentSessionAttendance() {
   const key = getAttKey();
   const dStr = document.getElementById("attDate").value;
@@ -2308,9 +2293,6 @@ async function clearWholeDateAttendance() {
     : `Tanggal ${dStr} sudah dalam keadaan kosong`);
 }
 
-// =========================================================================
-// KELOLA WAKTU / SESI & HARI LIBUR RUTIN (MALAM JUMAT)
-// =========================================================================
 function renderJadwalAbsenManage() {
   const daysGrid = document.getElementById("liburDaysGrid");
   const liburSet = new Set(appState.hariLiburMingguan || [4]);
@@ -2331,7 +2313,7 @@ function renderJadwalAbsenManage() {
     const safeVal = s.value.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
     const safeLbl = s.label.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
     return `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-subtle);gap:8px;">
         <div>
           <div style="font-size:13px;font-weight:700;">${s.label}</div>
           <div style="font-size:11px;color:var(--text-secondary);">Kode Sesi: ${s.value}</div>
@@ -2441,9 +2423,6 @@ async function cancelSessionLibur() {
   showToast("Status libur dibuka • Silakan isi absensi");
 }
 
-// =========================================================================
-// KELOLA BIDANG ILMU (TAMBAH, EDIT NAMA / RENAME, HAPUS)
-// =========================================================================
 function renderBidangIlmuManage() {
   const el = document.getElementById("bidangManageList");
   const list = appState.bidangIlmuList || [...defaultBidangIlmu];
@@ -2452,7 +2431,7 @@ function renderBidangIlmuManage() {
     const countMateri = appState.materi.filter(m => m.kategori === b).length;
     const safeName = b.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
     return `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-subtle);gap:8px;">
         <div>
           <div style="font-size:13px;font-weight:700;">${b} ${isUmum ? "(Default)" : ""}</div>
           <div style="font-size:11px;color:var(--text-secondary);">${countMateri} materi terdaftar</div>
@@ -2555,7 +2534,7 @@ function renderKelasManage() {
     const countSantri = appState.santri.filter(s => s.kelas === k).length;
     const safeName = k.replace(/\\/g, "\\\\").replace(/'/g, "\\'");
     return `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-subtle);gap:8px;">
         <div>
           <div style="font-size:13px;font-weight:700;">${k} ${isUmum ? "(Default)" : ""}</div>
           <div style="font-size:11px;color:var(--text-secondary);">${isUmum ? "Mencakup semua santri & materi umum" : countSantri + " santri terdaftar"}</div>
@@ -2921,7 +2900,7 @@ function renderSantriManage() {
   }
 
   el.innerHTML = filtered.map(s => `
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:8px;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border-subtle);gap:8px;">
       <div style="min-width:0;flex:1;">
         <div style="font-size:13px;font-weight:700;">${s.nama}</div>
         <div style="font-size:11px;color:var(--text-secondary);margin-bottom:6px;">User: <strong>${s.username || s.id}</strong> • PIN: <strong>${s.pin || "1234"}</strong></div>
@@ -3108,12 +3087,15 @@ function renderSoal() {
         </div>
       </div>
       <div style="font-weight:700;font-size:14px;margin-bottom:8px;">${item.pertanyaan}</div>
-      <div style="display:grid;gap:4px;font-size:12px;">
-        ${item.opsi.map((op, idx) => `
-          <div style="padding:7px 11px;border-radius:9px;background:${idx === Number(item.kunci) ? "linear-gradient(135deg, var(--accent), var(--accent-secondary))" : "var(--surface-elevated)"};color:${idx === Number(item.kunci) ? "var(--accent-text)" : "var(--text-secondary)"};border:1px solid var(--border);font-weight:${idx === Number(item.kunci) ? "700" : "400"};">
-            ${huruf[idx]}. ${op} ${idx === Number(item.kunci) ? "(Kunci)" : ""}
-          </div>
-        `).join("")}
+      <div style="display:grid;gap:5px;font-size:12px;">
+        ${item.opsi.map((op, idx) => {
+          const isKey = idx === Number(item.kunci);
+          return `
+            <div style="padding:7px 11px;border-radius:10px;background:${isKey ? "linear-gradient(135deg, var(--gold-light), var(--gold-primary))" : "var(--bg-surface)"};color:${isKey ? "#14120d" : "var(--text-secondary)"};border:1px solid var(--border-subtle);box-shadow:${isKey ? "0 3px 10px var(--gold-glow)" : "var(--shadow-in-sm)"};font-weight:${isKey ? "700" : "500"};">
+              ${huruf[idx]}. ${op} ${isKey ? "(Kunci)" : ""}
+            </div>
+          `;
+        }).join("")}
       </div>
       ${item.penjelasan ? `
         <div class="neu-inset" style="margin-top:10px;padding:10px 12px;font-size:12px;color:var(--text-secondary);">
@@ -3428,7 +3410,7 @@ function openSantriDetailModal(santriId) {
     ${santriKas.length === 0
       ? `<div style="font-size:12px;color:var(--text-secondary);">Belum ada catatan setoran kas/infaq dari santri ini.</div>`
       : santriKas.slice(0, 4).map(tx => `
-          <div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-top:1px solid var(--border);">
+          <div style="display:flex;justify-content:space-between;font-size:11px;padding:4px 0;border-top:1px solid var(--border-subtle);">
             <span>${tx.kategori} <span style="color:var(--text-secondary);">(${tx.tanggal})</span></span>
             <strong>${formatRupiah(tx.nominal)}</strong>
           </div>
@@ -3463,7 +3445,7 @@ function openSantriDetailModal(santriId) {
     attListEl.innerHTML = `<div style="font-size:12px;color:var(--text-secondary);text-align:center;padding:14px 0;">Belum ada catatan absensi pada periode yang dipilih.</div>`;
   } else {
     attListEl.innerHTML = sessionLogs.map(log => `
-      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border-subtle);font-size:12px;">
         <div>
           <div style="font-weight:700;">Pengajian ${log.sesi}</div>
           <div style="color:var(--text-secondary);font-size:11px;">${log.tgl}</div>
@@ -3653,7 +3635,7 @@ function renderAnalisaKas(targetIds, kelasFilter, refDate, refMonth) {
             <div style="font-size:11px;color:var(--text-secondary);">${c.santri.kelas} • ${c.count}x setoran</div>
           </div>
         </div>
-        <div style="font-weight:800;font-size:13px;">${formatRupiah(c.total)}</div>
+        <div style="font-weight:800;font-size:13px;" class="gold-text">${formatRupiah(c.total)}</div>
       </div>
     `).join("");
   }
@@ -3830,7 +3812,7 @@ function renderAnalisa() {
               <div style="font-size:11px;color:var(--text-secondary);">Benar ${sc.benar}/${sc.total}${salahInfo} • ${sc.waktu}</div>
             </div>
           </div>
-          <div style="font-weight:800;font-size:14px;">${sc.poin} Poin</div>
+          <div style="font-weight:800;font-size:14px;" class="gold-text">${sc.poin} Poin</div>
         </div>
       `;
     }).join("");
@@ -3916,6 +3898,7 @@ function renderAll() {
   renderAnalisa();
 }
 
+applyInitialTheme();
 const todayIso = new Date().toISOString().slice(0, 10);
 document.getElementById("attDate").value = todayIso;
 document.getElementById("analisaRefDate").value = todayIso;
@@ -3930,8 +3913,8 @@ initFirebase(true);
 
 (function setupBustanulHadiIconAndPWA() {
   function syncThemeColorMeta() {
-    const darkNow = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const color = darkNow ? "#0c0b10" : "#f7f4ec";
+    const darkNow = document.documentElement.classList.contains("dark");
+    const color = darkNow ? "#13151a" : "#eef0f4";
     let meta = document.querySelector('meta[name="theme-color"]:not([media])');
     if (!meta) {
       meta = document.createElement("meta");
@@ -3941,30 +3924,19 @@ initFirebase(true);
     meta.setAttribute("content", color);
   }
   syncThemeColorMeta();
-  if (window.matchMedia) {
-    window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", syncThemeColorMeta);
-  }
 
   const logoSvg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-    <defs>
-      <radialGradient id="aureliaGlow" cx="50%" cy="35%" r="65%">
-        <stop offset="0%" stop-color="#f5be4f"/>
-        <stop offset="65%" stop-color="#b87b14"/>
-        <stop offset="100%" stop-color="#14110b"/>
-      </radialGradient>
-    </defs>
-    <rect width="512" height="512" rx="112" fill="#120f0a"/>
-    <circle cx="256" cy="210" r="175" fill="url(#aureliaGlow)" opacity="0.35"/>
-    <rect x="34" y="34" width="444" height="444" rx="88" fill="none" stroke="#f5be4f" stroke-opacity="0.32" stroke-width="6"/>
-    <g transform="translate(88, 96)" fill="none" stroke="#fff8e7" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
+    <rect width="512" height="512" rx="112" fill="#181b22"/>
+    <rect x="28" y="28" width="456" height="456" rx="88" fill="none" stroke="#e0b04b" stroke-opacity="0.35" stroke-width="6"/>
+    <g transform="translate(88, 96)" fill="none" stroke="#f2f4f8" stroke-width="24" stroke-linecap="round" stroke-linejoin="round">
       <path d="M168 56 C128 24, 56 24, 16 48 L16 256 C56 232, 128 232, 168 264 Z"/>
       <path d="M168 56 C208 24, 280 24, 320 48 L320 256 C280 232, 208 232, 168 264 Z"/>
-      <path d="M56 104 C88 94, 120 98, 138 110" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
-      <path d="M56 148 C88 138, 120 142, 138 154" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
-      <path d="M280 104 C248 94, 216 98, 198 110" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
-      <path d="M280 148 C248 138, 216 142, 198 154" stroke="#f5be4f" stroke-width="16" stroke-opacity="0.85"/>
+      <path d="M56 104 C88 94, 120 98, 138 110" stroke="#e0b04b" stroke-width="16"/>
+      <path d="M56 148 C88 138, 120 142, 138 154" stroke="#e0b04b" stroke-width="16"/>
+      <path d="M280 104 C248 94, 216 98, 198 110" stroke="#e0b04b" stroke-width="16"/>
+      <path d="M280 148 C248 138, 216 142, 198 154" stroke="#e0b04b" stroke-width="16"/>
     </g>
-    <text x="256" y="428" text-anchor="middle" fill="#f5be4f" font-family="system-ui, -apple-system, sans-serif" font-size="38" font-weight="800" letter-spacing="4">BUSTANUL HADI</text>
+    <text x="256" y="428" text-anchor="middle" fill="#e0b04b" font-family="Inter, system-ui, sans-serif" font-size="36" font-weight="800" letter-spacing="3">BUSTANUL HADI</text>
   </svg>`;
 
   const svgUrl = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(logoSvg);
@@ -3983,14 +3955,14 @@ initFirebase(true);
     const appleEl = document.getElementById("appAppleIcon");
     if (appleEl) appleEl.href = pngDataUrl;
 
-    const isDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
     const manifestObj = {
-      name: "BUSTANUL HADI - Portal Guru",
+      name: "BUSTANUL HADI — Portal Guru",
       short_name: "Guru Bustanul Hadi",
       start_url: window.location.href,
       display: "standalone",
-      background_color: isDark ? "#0b0a0f" : "#f4f1ea",
-      theme_color: isDark ? "#0c0b10" : "#f7f4ec",
+      background_color: isDark ? "#13151a" : "#eef0f4",
+      theme_color: isDark ? "#13151a" : "#eef0f4",
       icons: [
         { src: pngDataUrl, sizes: "192x192", type: "image/png", purpose: "any maskable" },
         { src: pngDataUrl, sizes: "512x512", type: "image/png", purpose: "any maskable" }
